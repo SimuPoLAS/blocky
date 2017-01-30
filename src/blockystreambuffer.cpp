@@ -1,4 +1,5 @@
 #include <string>
+#include <string.h>
 
 #include <blockystreambuffer.hpp>
 
@@ -18,6 +19,8 @@ BlockyStreamBuffer::~BlockyStreamBuffer()
 
 BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 {
+    std::cout << "Buffer will be opened" << '\n';
+
     if (is_open())
         return 0;
 
@@ -38,6 +41,8 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
     char* fmodeptr = fmode;
 
     if (mode & std::ios::in)
+        *fmodeptr++ = 'r';
+    if (mode & std::ios::out)
         *fmodeptr++ = 'w';
     *fmodeptr++ = 'b';
     *fmodeptr = '\0';
@@ -56,6 +61,8 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
 BlockyStreamBuffer* BlockyStreamBuffer::close()
 {
+    std::cout << "buffer will be closed" << '\n';
+
     if (is_open())
     {
         sync();
@@ -68,6 +75,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
+    std::cout << "underflow" << '\n';
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
@@ -83,14 +91,27 @@ int BlockyStreamBuffer::underflow()
 
 int BlockyStreamBuffer::flush_buffer()
 {
+    std::cout << "flushing buffer" << '\n';
     int w = pptr() - pbase();
 
-    pbump(-w);
-    return w;
+    Token* tokens[4096];
+
+    std::cout << "lexer read" << '\n';
+    int processed = lexer->read(tokens, 4096, w);
+
+    // if (fwrite(pbase(), 1, w, file) == EOF)
+    //     return EOF;
+
+    // copy rest to beginning of buffer
+    memcpy(buffer, buffer + processed, (bufferSize - processed));
+    pbump(-processed);
+
+    return processed;
 }
 
 int BlockyStreamBuffer::overflow(int c)
 {
+    std::cout << "overflow" << '\n';
     if (!(mode & std::ios::out) || !opened)
         return EOF;
 
@@ -108,6 +129,7 @@ int BlockyStreamBuffer::overflow(int c)
 
 int BlockyStreamBuffer::sync()
 {
+    std::cout << "sync" << '\n';
     if (pptr() && pptr() > pbase())
     {
         if (flush_buffer() == EOF)

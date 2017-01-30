@@ -10,7 +10,7 @@
 using namespace std;
 
 class BlockyStreamBuffer
-    : std::streambuf
+    : public std::streambuf
 {
 private:
     static const int bufferSize = 4096;

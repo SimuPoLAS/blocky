@@ -9,7 +9,7 @@
 class BlockyStreamBase
     : virtual public std::ios
 {
-private:
+protected:
     BlockyStreamBuffer buffer;
 
 public:
@@ -17,7 +17,11 @@ public:
     BlockyStreamBase(const char* name, int open_mode);
     ~BlockyStreamBase();
 
-    BlockyStreamBuffer* rdbuf() { return buffer; }
+    BlockyStreamBuffer* rdbuf()
+    {
+        std::cout << "rdbuf" << '\n';
+        return &buffer;
+    }
 
     void open(const char* name, int open_mode);
     void close();

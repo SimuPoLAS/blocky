@@ -45,8 +45,8 @@ private:
     void record(uint32_t count);
     void append(char value);
     void clear();
-    Token create_token(TokenType type);
-    Token create_token(TokenType type, string data);
+    Token* create_token(TokenType type);
+    Token* create_token(TokenType type, string data);
     void start_token();
     char eat();
     bool eat_until(char const*values, int size);
@@ -71,10 +71,8 @@ public:
     Lexer(char (&buffer)[bufferSize])
         : Lexer(buffer, true) {}
 
-    ~Lexer();
-
-    Token next_token();
-    // int32_t read(Token[] buf, int offset, int count);
+    Token* next_token();
+    int read(Token* buf[], int size, int w);
 };
 
 #endif /* end of include guard: LEXER_HPP */
