@@ -4,7 +4,9 @@
 #include <methods/compressionmethod.hpp>
 #include <blockymetadata.hpp>
 
+static const int PATTERNTYPE_COUNT = 5;
 enum struct PatternType { Same, Offset, Pingpong, Reserved, Count };
+static const int SAVINGGRADE_COUNT = 4;
 enum struct SavingGrade { Exp, NoExp, Pattern, Count };
 
 struct Block
@@ -24,6 +26,9 @@ struct Block
     bool IsValid;
 
     CompressionMethod const* Method;
+
+    Block()
+        : Index(0) { }
 
     Block
     (
@@ -45,6 +50,8 @@ struct Block
         BlockyMetadata const& metadata,
         uint8_t& newNb
     );
+
+    Block& operator=(Block const& other);
 };
 
 #endif /* end of include guard: BLOCK_HPP */

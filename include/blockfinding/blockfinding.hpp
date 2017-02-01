@@ -6,11 +6,11 @@
 #include <blockfinding/headersizes.hpp>
 #include <blockfinding/blockcalculation.hpp>
 #include <blockfinding/blockreplacingcalculation.hpp>
+#include <blockfinding/patternpredictor.hpp>
 #include <methods/compressionmethod.hpp>
 #include <methods/methods.hpp>
 #include <blockynumber.hpp>
-
-struct Block;
+#include <block.hpp>
 
 class Blockfinding {
 private:
@@ -22,10 +22,10 @@ private:
     bool isAppendingCalculationValid;
     vector<BlockCalculation> calculations;
     // Length = length of SabingGrade enum
-    BlockReplacingCalculation replacingCalculations[SavingGrade::Count];
+    BlockReplacingCalculation replacingCalculations[SAVINGGRADE_COUNT];
     PatternPredictor patternPredictor;
     bool hasRunningPatternCalculation;
-    CompressionMethod initializedCompressionMethods[Methods::Count];
+    CompressionMethod const* initializedCompressionMethods[METHODS_COUNT];
 
     void add_new_block(BlockCalculation calc);
     void replace_newest_block(BlockCalculation with);

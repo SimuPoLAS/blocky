@@ -71,3 +71,8 @@ int32_t Block::difference_with_nb
     }
     return (NeededBits - newNb) * Length;
 }
+
+Block& Block::operator=(Block const& other)
+{
+    
+}

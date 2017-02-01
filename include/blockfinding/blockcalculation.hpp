@@ -10,13 +10,15 @@ struct BlockCalculation
     int32_t SavedBits;
     Block VirtualBlock;
 
+    BlockCalculation() { }
+
     BlockCalculation(int32_t savedBits, Block virtualBlock)
         : SavedBits(savedBits)
         , VirtualBlock(virtualBlock) { }
 
     bool process_value(BlockyNumber value, int32_t index)
     {
-        return VirtualBlock.Method.process_value
+        return VirtualBlock.Method->process_value
         (
             VirtualBlock,
             value,

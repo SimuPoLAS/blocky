@@ -9,14 +9,14 @@ class PatternPredictor
 {
 private:
     vector<BlockyNumber> const& values;
-    in32_t limit;
+    int32_t limit;
 
 public:
     int32_t Index;
 
     PatternPredictor(vector<BlockyNumber> const& values, int32_t index = 0)
         : values(values)
-        , limit(values.length() - 2)
+        , limit(values.size() - 2)
         , Index(index) { }
 
     bool predict_next(BlockyNumber const& current)
@@ -29,7 +29,7 @@ public:
         if (next.Number == current.Number && next.Exponent == current.Exponent) //same pattern
             return true;
 
-        var ahead = _values[Index + 1];
+        auto ahead = values[Index + 1];
         if
         (
             next.Number + (next.Number - current.Number) == ahead.Number
