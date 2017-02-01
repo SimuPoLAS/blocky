@@ -6,12 +6,13 @@
 class BitWriter {
 private:
     FILE* file;
+    // TODO: try use it as reference and notas pointer
     uint8_t* buffer;
     uint8_t offset;
 
 public:
     BitWriter(FILE* file)
-        : file(file) {}
+        : file(file) { }
 
     ~BitWriter();
 
