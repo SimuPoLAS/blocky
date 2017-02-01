@@ -7,60 +7,60 @@ using namespace std;;
 
 BlockyNumber::BlockyNumber(int64_t number, int16_t exponent)
 {
-    isNegative = number < 0;
-    this->number = abs(number);
+    IsNegative = number < 0;
+    this->Number = abs(number);
 
     if (number != 0)
-        this->exponent = exponent;
+        this->Exponent = exponent;
     else
-        this->exponent = 0;
-    neededBitsNumber = uint8_t(floor(log2(abs(number))) + 1);
-    neededBitsExponent = uint8_t(floor(log2(abs(exponent))) + 1);
+        this->Exponent = 0;
+    NeededBitsNumber = uint8_t(floor(log2(abs(number))) + 1);
+    NeededBitsExponent = uint8_t(floor(log2(abs(exponent))) + 1);
 }
 
 
 BlockyNumber& BlockyNumber::add_each(BlockyNumber const& other)
 {
     BlockyNumber& num = *this;
-    num.number += other.number * (other.isNegative ? -1 : 1);
-    num.exponent += other.exponent;
+    num.Number += other.Number * (other.IsNegative ? -1 : 1);
+    num.Exponent += other.Exponent;
     return num;
 }
 
 BlockyNumber& BlockyNumber::subtract_each(BlockyNumber const& other)
 {
     BlockyNumber& num = *this;
-    num.number -= other.number * (other.isNegative ? -1 : 1);
-    num.exponent -= other.exponent;
+    num.Number -= other.Number * (other.IsNegative ? -1 : 1);
+    num.Exponent -= other.Exponent;
     return num;
 }
 
 BlockyNumber& BlockyNumber::linear_multiply_each(int32_t const& num)
 {
     BlockyNumber& res = *this;
-    res.number *= num;
-    res.exponent *= int16_t(num);
+    res.Number *= num;
+    res.Exponent *= int16_t(num);
     return res;
 }
 
 double BlockyNumber::reconstructed() const
 {
-    return number * (isNegative ? -1 : 1) * pow(10, exponent);
+    return Number * (IsNegative ? -1 : 1) * pow(10, Exponent);
 }
 
 void BlockyNumber::recalculate_metadata()
 {
-    isNegative = number < 0;
-    number = abs(number);
-    neededBitsNumber = uint8_t(floor(log2(abs(number))) + 1);
-    neededBitsExponent = uint8_t(floor(log2(abs(exponent))) + 1);
+    IsNegative = Number < 0;
+    Number = abs(Number);
+    NeededBitsNumber = uint8_t(floor(log2(abs(Number))) + 1);
+    NeededBitsExponent = uint8_t(floor(log2(abs(Exponent))) + 1);
 }
 
 bool BlockyNumber::equals(BlockyNumber const& other)
 {
-    return isNegative == other.isNegative
-        && number == other.number
-        && exponent == other.exponent;
+    return IsNegative == other.IsNegative
+        && Number == other.Number
+        && Exponent == other.Exponent;
 }
 
 string BlockyNumber::to_s()
@@ -68,12 +68,12 @@ string BlockyNumber::to_s()
     string s;
     s += "Reconstructed: " + to_string(reconstructed()) + ", ";
     s += "Number: "
-        + to_string(number)
-        + "(" + to_string(neededBitsNumber) + ")"
+        + to_string(Number)
+        + "(" + to_string(NeededBitsNumber) + ")"
         + ", ";
     s += "Exponent: "
-        + to_string(exponent)
-        + "(" + to_string(neededBitsExponent) + ")";
+        + to_string(Exponent)
+        + "(" + to_string(NeededBitsExponent) + ")";
     return s;
 }
 
@@ -145,16 +145,16 @@ bool operator>(double const& f, BlockyNumber const& s)
 
 BlockyNumber operator+(BlockyNumber const& f, BlockyNumber const& s)
 {
-    BlockyNumber b(f.number, f.exponent);
-    b.number += (int32_t)(s.number * pow(10, s.exponent - f.exponent));
+    BlockyNumber b(f.Number, f.Exponent);
+    b.Number += (int32_t)(s.Number * pow(10, s.Exponent - f.Exponent));
     b.recalculate_metadata();
     return b;
 }
 
 BlockyNumber operator-(BlockyNumber const& f, BlockyNumber const& s)
 {
-    BlockyNumber b(f.number, f.exponent);
-    b.number -= (int32_t)(s.number * pow(10, s.exponent - f.exponent));
+    BlockyNumber b(f.Number, f.Exponent);
+    b.Number -= (int32_t)(s.Number * pow(10, s.Exponent - f.Exponent));
     b.recalculate_metadata();
     return b;
 }

@@ -1,6 +1,12 @@
 #ifndef BLOCKYMETADATA_HPP
 #define BLOCKYMETADATA_HPP
 
+#include <vector>
+
+#include <bitreader.hpp>
+#include <bitwriter.hpp>
+#include <blockynumber.hpp>
+
 class BlockyMetadata
 {
 private:
@@ -16,7 +22,10 @@ public:
     bool NoExponent;
     uint64_t LargestPossibleValue;
 
-    static BlockyMetadata from_bit_stream()
+    void write(BitWriter& writer);
+
+    static BlockyMetadata from_bit_stream(BitReader& reader);
+    static BlockyMetadata from_data(BlockyNumber* values, size_t n);
 };
 
 #endif /* end of include guard: BLOCKYMETADATA_HPP */

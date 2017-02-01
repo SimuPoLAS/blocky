@@ -28,7 +28,7 @@ void BitWriter::write(uint64_t data, uint8_t count)
         } while (count > 0);
 }
 
-void BitWriter::write(uint8_t data, uint8_t count)
+void BitWriter::write_byte(uint8_t data, uint8_t count)
 {
     write(data, count);
 }

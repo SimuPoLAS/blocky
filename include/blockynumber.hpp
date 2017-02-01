@@ -7,11 +7,11 @@ using namespace std;
 
 struct BlockyNumber
 {
-    bool isNegative;
-    int64_t number;
-    int16_t exponent;
-    int8_t neededBitsNumber;
-    int8_t neededBitsExponent;
+    bool IsNegative;
+    int64_t Number;
+    int16_t Exponent;
+    int8_t NeededBitsNumber;
+    int8_t NeededBitsExponent;
 
     BlockyNumber(int64_t number, int16_t exponent);
 

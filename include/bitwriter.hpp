@@ -17,7 +17,7 @@ public:
     ~BitWriter();
 
     void write(uint64_t data, uint8_t count);
-    void write(uint8_t data, uint8_t count);
+    void write_byte(uint8_t data, uint8_t count);
     void flush();
 };
 
