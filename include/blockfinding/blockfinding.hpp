@@ -3,15 +3,60 @@
 
 #include <vector>
 
-#include <BlockyNumber.hpp>
+#include <blockfinding/headersizes.hpp>
+#include <blockfinding/blockcalculation.hpp>
+#include <blockfinding/blockreplacingcalculation.hpp>
+#include <methods/compressionmethod.hpp>
+#include <methods/methods.hpp>
+#include <blockynumber.hpp>
+
+struct Block;
 
 class Blockfinding {
 private:
+    vector<Block> blocks;
+    int32_t index;
+    BlockCalculation appendingCalculation;
+    int32_t appendingCalculationSavingGrade;
+    Block lastStableBlock;
+    bool isAppendingCalculationValid;
+    vector<BlockCalculation> calculations;
+    // Length = length of SabingGrade enum
+    BlockReplacingCalculation replacingCalculations[SavingGrade::Count];
+    PatternPredictor patternPredictor;
+    bool hasRunningPatternCalculation;
+    CompressionMethod initializedCompressionMethods[Methods::Count];
+
+    void add_new_block(BlockCalculation calc);
+    void replace_newest_block(BlockCalculation with);
+    void transform_calcs_to_replace_cals_or_delete
+    (
+        Block oldConcurrent,
+        int32_t oldConcurrentSavedGrade,
+        int32_t exclude = -1
+    );
+    void update_replacing_calculations
+    (
+        BlockyNumber& value,
+        int32_t bitDiffDiff = 0
+    );
 
 public:
-    vector<BlockyNumber> const Values;
+
+    vector<BlockyNumber> const& Values;
     int32_t const ValueCount;
-    
+    BlockyMetadata const& Metadata;
+    HeaderSizes const Headers;
+
+    Blockfinding
+    (
+        vector<BlockyNumber> const& values,
+        BlockyMetadata const& metadata
+    );
+
+    vector<Block>& FindAllBlocks();
+    CompressionMethod& get_initializedMethod(Methods method);
+    bool process_next_value();
 
 };
 

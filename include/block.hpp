@@ -2,28 +2,28 @@
 #define BLOCK_HPP
 
 #include <methods/compressionmethod.hpp>
+#include <blockymetadata.hpp>
 
-enum struct PatternType { Same, Offset, Pingpong, Reserved };
-enum struct SavingGrade { Exp, NoExp, Pattern };
+enum struct PatternType { Same, Offset, Pingpong, Reserved, Count };
+enum struct SavingGrade { Exp, NoExp, Pattern, Count };
 
 struct Block
 {
-    static const Block INVALID_BLOCK = default(block);
+    int32_t const Index;
+    bool HasExponent;
+    bool HasPattern;
+    PatternType Pattern;
 
-    int32_t const index;
-    bool hasExponent;
-    bool hasPattern;
-    PatternType pattern;
+    int16_t Exponent;
+    bool OverrideGlobalNb;
+    uint8_t NeededBits;
+    uint8_t Length;
+    bool AbsoluteSign;
+    bool IsSignNegative;
+    uint64_t BiggestNumber;
+    bool IsValid;
 
-    int16_t exponent;
-    bool overrideGlobalNb;
-    uint8_t neededBits;
-    uint8_t length;
-    bool absoluteSign;
-    bool isSignNegative;
-    uint64_t biggestNumber;
-
-    CompressionMethod method;
+    CompressionMethod const* Method;
 
     Block
     (
@@ -32,9 +32,18 @@ struct Block
         uint8_t nb,
         bool isSignNegative,
         int64_t biggestNumber,
-        Blockfinding context,
-        Blockfinding.Methods method,
+        CompressionMethod const** methods,
+        Methods const method,
         bool hasPattern
+    );
+
+    bool is_valid();
+    SavingGrade savinggrade();
+    bool should_override_nb(BlockyMetadata const& metadata);
+    int32_t difference_with_nb
+    (
+        BlockyMetadata const& metadata,
+        uint8_t& newNb
     );
 };
 
