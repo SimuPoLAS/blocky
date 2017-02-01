@@ -1,4 +1,4 @@
-#include <blockystreambase.hpp>
+#include <io/blockystreambase.hpp>
 
 BlockyStreamBase::BlockyStreamBase()
 {

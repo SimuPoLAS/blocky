@@ -1,7 +1,7 @@
 #include <string>
 #include <string.h>
 
-#include <blockystreambuffer.hpp>
+#include <io/blockystreambuffer.hpp>
 
 using namespace std;
 

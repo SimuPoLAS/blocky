@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <blockystreambuffer.hpp>
+#include <io/blockystreambuffer.hpp>
 
 class BlockyStreamBase
     : virtual public std::ios

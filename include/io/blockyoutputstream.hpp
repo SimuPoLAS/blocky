@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <blockystreambase.hpp>
+#include <io/blockystreambase.hpp>
 
 class BlockyOutputStream
     : public std::ostream
@@ -20,7 +20,7 @@ public:
 
     BlockyStreamBuffer* rdbuf()
     {
-        std::cout << "rdbuf" << '\n'; 
+        std::cout << "rdbuf" << '\n';
         return BlockyStreamBase::rdbuf();
     }
     void open(const char* name, int open_mode = std::ios::out)

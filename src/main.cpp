@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <blockyoutputstream.hpp>
+#include <io/blockyoutputstream.hpp>
 
 int main(int argc, char const *argv[])
 {

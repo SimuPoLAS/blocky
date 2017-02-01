@@ -2,7 +2,7 @@
 #include <functional>
 #include <iostream>
 
-#include <lexer.hpp>
+#include <parsing/lexer.hpp>
 
 Lexer::Lexer(char (&buffer)[bufferSize], bool recordPosition)
     : length(0)

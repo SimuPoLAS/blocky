@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include <lexer.hpp>
+#include <parsing/lexer.hpp>
 
 using namespace std;
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-#include <token.hpp>
+#include <parsing/token.hpp>
 
 using namespace std;
 

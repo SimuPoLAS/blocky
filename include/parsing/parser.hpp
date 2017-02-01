@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <token.hpp>
+#include <parsing/token.hpp>
 
 using namespace std;
 
