@@ -2,6 +2,7 @@
 #define BLOCKREPLACINGCALCULATION_HPP
 
 #include <block.hpp>
+#include <methods/compressionmethod.hpp>
 
 struct BlockReplacingCalculation
 {

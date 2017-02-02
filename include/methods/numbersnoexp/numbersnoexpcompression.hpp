@@ -22,7 +22,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        BlockyNumber value,
+        BlockyNumber const& value,
         int32_t index,
         int32_t& bitDiff
     ) const override;

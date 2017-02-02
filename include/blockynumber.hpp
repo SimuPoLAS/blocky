@@ -10,8 +10,8 @@ struct BlockyNumber
     bool IsNegative;
     int64_t Number;
     int16_t Exponent;
-    int8_t NeededBitsNumber;
-    int8_t NeededBitsExponent;
+    uint8_t NeededBitsNumber;
+    uint8_t NeededBitsExponent;
 
     BlockyNumber(int64_t number, int16_t exponent);
 

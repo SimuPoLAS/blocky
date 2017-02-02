@@ -1,8 +1,10 @@
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 
-#include <methods/compressionmethod.hpp>
 #include <blockymetadata.hpp>
+#include <methods/methods.hpp>
+
+class CompressionMethod;
 
 static const int PATTERNTYPE_COUNT = 5;
 enum struct PatternType { Same, Offset, Pingpong, Reserved, Count };

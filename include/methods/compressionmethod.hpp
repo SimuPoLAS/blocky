@@ -9,7 +9,7 @@
 #include <blockymetadata.hpp>
 #include <methods/methods.hpp>
 
-struct Block;
+#include <block.hpp>
 
 class CompressionMethod {
 protected:
@@ -19,12 +19,16 @@ protected:
     CompressionMethod const** methods;
     HeaderSizes const& headers;
 
-    void write_default_blockheader(BitWriter writer, Block block);
+    void write_default_blockheader
+    (
+        BitWriter writer,
+        Block block
+    ) const;
     void write_single_value_without_controlbit
     (
         BitWriter writer,
         BlockyNumber value
-    );
+    ) const;
 
 public:
     CompressionMethod
@@ -42,7 +46,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        BlockyNumber value,
+        BlockyNumber const& value,
         int32_t index,
         int32_t& bitDiff
     ) const = 0;

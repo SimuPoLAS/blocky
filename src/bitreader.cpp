@@ -16,6 +16,7 @@ uint8_t BitReader::read_unaligned_byte()
 {
     auto c = getc(file);
     if (c == EOF)
+        // TODO: Throw a specified for this case value (not just 0)
         throw 0;
     return uint8_t(c);
 }
