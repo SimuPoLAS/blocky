@@ -55,6 +55,7 @@ public:
     );
 
     vector<Block>& find_all_blocks();
+    CompressionMethod* initialized_method(Methods const method);
     bool process_next_value();
 
 };

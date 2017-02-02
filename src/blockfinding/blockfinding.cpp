@@ -67,6 +67,11 @@ vector<Block>& Blockfinding::find_all_blocks()
     return blocks;
 }
 
+CompressionMethod* Blockfinding::initialized_method(Methods const method)
+{
+    return initializedCompressionMethods[(int)method];
+}
+
 void Blockfinding::add_new_block(BlockCalculation const& calc)
 {
     lastStableBlock = calc.VirtualBlock;

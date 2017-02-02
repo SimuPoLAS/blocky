@@ -9,10 +9,9 @@
 
 class BlockyMetadata
 {
-private:
+public:
     BlockyMetadata() { }
 
-public:
     int32_t ValueCount;
     uint8_t MaxNeededBitsNumber;
     uint8_t MaxNeededBitsNeededBitsNumber;

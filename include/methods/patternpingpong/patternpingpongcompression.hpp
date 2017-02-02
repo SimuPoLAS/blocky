@@ -26,7 +26,7 @@ public:
             , BlockIndex(other.BlockIndex) { }
     };
 
-    vector<PatternPingPongMetadata> const PingPongPatternLengths;
+    vector<PatternPingPongMetadata> PingPongPatternLengths;
 
     PatternPingPongCompression
     (
