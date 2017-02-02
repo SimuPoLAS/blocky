@@ -61,6 +61,12 @@ Blockfinding::Blockfinding
         );
 }
 
+vector<Block>& Blockfinding::find_all_blocks()
+{
+    while(process_next_value()) { }
+    return blocks;
+}
+
 void Blockfinding::add_new_block(BlockCalculation const& calc)
 {
     lastStableBlock = calc.VirtualBlock;

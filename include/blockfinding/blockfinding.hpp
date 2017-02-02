@@ -54,7 +54,7 @@ public:
         BlockyMetadata const& metadata
     );
 
-    vector<Block>& FindAllBlocks();
+    vector<Block>& find_all_blocks();
     bool process_next_value();
 
 };
