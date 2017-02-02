@@ -14,7 +14,7 @@ public:
         vector<BlockyNumber> const& values,
         BlockyMetadata const& metadata,
         HeaderSizes const& headers,
-        CompressionMethod const** methods
+        CompressionMethod** methods
     )
         : CompressionMethod(values, metadata, headers, methods) { }
 
@@ -24,14 +24,14 @@ public:
         BlockyNumber const& value,
         int32_t index,
         int32_t& bitDiff
-    ) const override;
+    ) override;
 
     void virtual write
     (
         BitWriter writer,
         Block block,
         int32_t& valueIndex
-    ) const override;
+    ) override;
 };
 
 #endif /* end of include guard: FLOATSIMMILARCOMPRESSION_HPP */

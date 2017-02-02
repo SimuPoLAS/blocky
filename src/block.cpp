@@ -7,7 +7,7 @@ Block::Block
     uint8_t nb,
     bool isSignNegative,
     int64_t biggestNumber,
-    CompressionMethod const** methods,
+    CompressionMethod** methods,
     Methods const method,
     bool hasPattern
 )
@@ -74,5 +74,5 @@ int32_t Block::difference_with_nb
 
 Block& Block::operator=(Block const& other)
 {
-    
+
 }

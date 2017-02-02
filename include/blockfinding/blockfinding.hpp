@@ -25,7 +25,7 @@ private:
     BlockReplacingCalculation replacingCalculations[SAVINGGRADE_COUNT];
     PatternPredictor patternPredictor;
     bool hasRunningPatternCalculation;
-    CompressionMethod const* initializedCompressionMethods[METHODS_COUNT];
+    CompressionMethod* initializedCompressionMethods[METHODS_COUNT];
 
     void add_new_block(BlockCalculation calc);
     void replace_newest_block(BlockCalculation with);

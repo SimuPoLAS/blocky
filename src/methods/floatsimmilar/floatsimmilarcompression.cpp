@@ -11,7 +11,7 @@ bool FloatSimmilarCompression::process_value
     BlockyNumber const& value,
     int32_t index,
     int32_t& bitDiff
-) const
+)
 {
     if (block.Length == 255)
         return false;
@@ -126,7 +126,7 @@ void FloatSimmilarCompression::write
     BitWriter writer,
     Block block,
     int32_t& valueIndex
-) const
+)
 {
     write_default_blockheader(writer, block);
 

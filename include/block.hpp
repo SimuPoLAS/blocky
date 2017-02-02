@@ -27,7 +27,7 @@ struct Block
     uint64_t BiggestNumber;
     bool IsValid;
 
-    CompressionMethod const* Method;
+    CompressionMethod* Method;
 
     Block()
         : Index(0) { }
@@ -39,7 +39,7 @@ struct Block
         uint8_t nb,
         bool isSignNegative,
         int64_t biggestNumber,
-        CompressionMethod const** methods,
+        CompressionMethod** methods,
         Methods const method,
         bool hasPattern
     );

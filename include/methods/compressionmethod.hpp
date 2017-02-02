@@ -16,7 +16,7 @@ protected:
     vector<BlockyNumber> const& values;
     BlockyMetadata const& metadata;
     // length equals size of methods enum
-    CompressionMethod const** methods;
+    CompressionMethod** methods;
     HeaderSizes const& headers;
 
     void write_default_blockheader
@@ -36,7 +36,7 @@ public:
         vector<BlockyNumber> const& values,
         BlockyMetadata const& metadata,
         HeaderSizes const& headers,
-        CompressionMethod const** methods
+        CompressionMethod** methods
     )
         : values(values)
         , metadata(metadata)
@@ -49,14 +49,14 @@ public:
         BlockyNumber const& value,
         int32_t index,
         int32_t& bitDiff
-    ) const = 0;
+    ) = 0;
 
     void virtual write
     (
         BitWriter writer,
         Block block,
         int32_t& valueIndex
-    ) const = 0;
+    ) = 0;
 };
 
 #endif /* end of include guard: COMPRESSIONMETHOD_HPP */
