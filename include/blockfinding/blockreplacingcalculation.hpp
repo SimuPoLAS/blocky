@@ -14,7 +14,7 @@ struct BlockReplacingCalculation
 
     BlockReplacingCalculation() { }
 
-    void Initialize
+    void initialize
     (
         int32_t savedBits,
         Block virtualBlock,

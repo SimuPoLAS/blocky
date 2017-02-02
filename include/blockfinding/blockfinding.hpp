@@ -27,12 +27,12 @@ private:
     bool hasRunningPatternCalculation;
     CompressionMethod* initializedCompressionMethods[METHODS_COUNT];
 
-    void add_new_block(BlockCalculation calc);
+    void add_new_block(BlockCalculation const& calc);
     void replace_newest_block(BlockCalculation with);
     void transform_calcs_to_replace_cals_or_delete
     (
         Block oldConcurrent,
-        int32_t oldConcurrentSavedGrade,
+        int32_t oldConcurrentSavedBits,
         int32_t exclude = -1
     );
     void update_replacing_calculations
@@ -55,7 +55,6 @@ public:
     );
 
     vector<Block>& FindAllBlocks();
-    CompressionMethod& get_initializedMethod(Methods method);
     bool process_next_value();
 
 };

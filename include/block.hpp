@@ -13,7 +13,7 @@ enum struct SavingGrade { Exp, NoExp, Pattern, Count };
 
 struct Block
 {
-    int32_t const Index;
+    int32_t Index;
     bool HasExponent;
     bool HasPattern;
     PatternType Pattern;
@@ -45,8 +45,8 @@ struct Block
     );
 
     bool is_valid();
-    SavingGrade savinggrade();
-    bool should_override_nb(BlockyMetadata const& metadata);
+    SavingGrade savinggrade() const;
+    bool should_override_nb(BlockyMetadata const& metadata) const;
     int32_t difference_with_nb
     (
         BlockyMetadata const& metadata,

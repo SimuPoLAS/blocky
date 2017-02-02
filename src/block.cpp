@@ -29,14 +29,14 @@ bool Block::is_valid()
     return Length > 0;
 }
 
-SavingGrade Block::savinggrade()
+SavingGrade Block::savinggrade() const
 {
     if (HasPattern)
         return SavingGrade::Pattern;
     return HasExponent ? SavingGrade::Exp : SavingGrade::NoExp;
 }
 
-bool Block::should_override_nb(BlockyMetadata const&  metadata)
+bool Block::should_override_nb(BlockyMetadata const&  metadata) const
 {
     return metadata.MaxNeededBitsNeededBitsNumber
       < (metadata.MaxNeededBitsNumber - NeededBits) * Length
@@ -74,5 +74,19 @@ int32_t Block::difference_with_nb
 
 Block& Block::operator=(Block const& other)
 {
+    Index = other.Index;
+    HasExponent = other.HasExponent;
+    HasPattern = other.HasPattern;
+    Pattern = other.Pattern;
 
+    Exponent = other.Exponent;
+    OverrideGlobalNb = other.OverrideGlobalNb;
+    NeededBits = other.NeededBits;
+    Length = other.Length;
+    AbsoluteSign = other.AbsoluteSign;
+    IsSignNegative = other.IsSignNegative;
+    BiggestNumber = other.BiggestNumber;
+    IsValid = other.IsValid;
+
+    Method = other.Method;
 }
