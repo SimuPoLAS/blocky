@@ -34,3 +34,6 @@
 # Build Directory
 [Bb]uild/*
 .vscode/*
+
+# Dolphin automatically produces .directory file
+.directory
