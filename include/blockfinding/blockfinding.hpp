@@ -37,20 +37,20 @@ private:
     );
     void update_replacing_calculations
     (
-        BlockyNumber& value,
+        shared_ptr<BlockyNumber> value,
         int32_t bitDiffDiff = 0
     );
 
 public:
 
-    vector<BlockyNumber> const& Values;
+    vector<shared_ptr<BlockyNumber>> const& Values;
     int32_t const ValueCount;
     BlockyMetadata const& Metadata;
     HeaderSizes const Headers;
 
     Blockfinding
     (
-        vector<BlockyNumber> const& values,
+        vector<shared_ptr<BlockyNumber>> const& values,
         BlockyMetadata const& metadata
     );
 

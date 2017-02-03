@@ -29,7 +29,7 @@ struct BlockReplacingCalculation
         IsValid = true;
     }
 
-    bool process_value(BlockyNumber value, int32_t index)
+    bool process_value(shared_ptr<BlockyNumber> value, int32_t index)
     {
         return VirtualBlock.Method->process_value
         (

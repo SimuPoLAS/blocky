@@ -13,7 +13,7 @@
 
 class CompressionMethod {
 protected:
-    vector<BlockyNumber> const& values;
+    vector<shared_ptr<BlockyNumber>> const& values;
     BlockyMetadata const& metadata;
     // length equals size of methods enum
     CompressionMethod** methods;
@@ -27,13 +27,13 @@ protected:
     void write_single_value_without_controlbit
     (
         BitWriter writer,
-        BlockyNumber value
+        shared_ptr<const BlockyNumber> value
     ) const;
 
 public:
     CompressionMethod
     (
-        vector<BlockyNumber> const& values,
+        vector<shared_ptr<BlockyNumber>> const& values,
         BlockyMetadata const& metadata,
         HeaderSizes const& headers,
         CompressionMethod** methods
@@ -46,7 +46,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        BlockyNumber const& value,
+        shared_ptr<const BlockyNumber> value,
         int32_t index,
         int32_t& bitDiff
     ) = 0;

@@ -10,7 +10,7 @@
 
 Blockfinding::Blockfinding
 (
-    vector<BlockyNumber> const& values,
+    vector<shared_ptr<BlockyNumber>> const& values,
     BlockyMetadata const& metadata
 )
     : Values(values)
@@ -143,7 +143,7 @@ void Blockfinding::transform_calcs_to_replace_cals_or_delete
 
 void Blockfinding::update_replacing_calculations
 (
-    BlockyNumber& value,
+    shared_ptr<BlockyNumber> value,
     int32_t bitDiffDiff
 )
 {
@@ -270,10 +270,10 @@ bool Blockfinding::process_next_value()
                 Block block
                 (
                     index,
-                    value.Exponent,
-                    value.NeededBitsNumber,
-                    value.IsNegative,
-                    value.Number,
+                    value->Exponent,
+                    value->NeededBitsNumber,
+                    value->IsNegative,
+                    value->Number,
                     initializedCompressionMethods,
                     Methods::PatternSame,
                     true
@@ -381,10 +381,10 @@ bool Blockfinding::process_next_value()
                 Block
                 (
                     index,
-                    value.Exponent,
+                    value->Exponent,
                     0,
                     false,
-                    value.Number,
+                    value->Number,
                     initializedCompressionMethods,
                     Methods::PatternSame,
                     true
@@ -401,7 +401,7 @@ bool Blockfinding::process_next_value()
             auto hasExp = false;
             for (auto runningCalculation : calculations) //Todo: pre calculate that (bool array?)
             {
-                if (runningCalculation.VirtualBlock.Exponent == value.Exponent)
+                if (runningCalculation.VirtualBlock.Exponent == value->Exponent)
                 {
                     hasExp = true;
                     break;
@@ -412,7 +412,7 @@ bool Blockfinding::process_next_value()
                 BlockCalculation calc;
 
                 // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression - You can't see **** if you do a ?:
-                if (value.Exponent == 0)
+                if (value->Exponent == 0)
                     calc = BlockCalculation
                     (
                         -Headers.StandardBlockNumbersNoExp,
@@ -420,9 +420,9 @@ bool Blockfinding::process_next_value()
                         (
                             index,
                             0,
-                            value.NeededBitsNumber,
-                            value.IsNegative,
-                            value.Number,
+                            value->NeededBitsNumber,
+                            value->IsNegative,
+                            value->Number,
                             initializedCompressionMethods,
                             Methods::NumbersNoExp,
                             false
@@ -435,10 +435,10 @@ bool Blockfinding::process_next_value()
                         Block
                         (
                             index,
-                            value.Exponent,
-                            value.NeededBitsNumber,
-                            value.IsNegative,
-                            value.Number,
+                            value->Exponent,
+                            value->NeededBitsNumber,
+                            value->IsNegative,
+                            value->Number,
                             initializedCompressionMethods,
                             Methods::FloatSimmilar,
                             false

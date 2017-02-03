@@ -7,6 +7,17 @@
 
 using namespace std;
 
+// TODO: decide whether this class should continue to inherit from
+// CompressionMethod, since it breaks some usage rules:
+// - Not having a real process_value()
+// - using and writing intern variables in write()
+// - only used in BlockyCompression in post_compression_optimisation()
+
+// NOTE: when removing this method from initializedCompressionMethods
+// in Blockfinding by making it not inherit from CompressionMethod
+// and using it only in BlockyCompression, we can make
+// the types const again => performance boost
+
 class PatternPingPongCompression
     : public CompressionMethod
 {
@@ -30,7 +41,7 @@ public:
 
     PatternPingPongCompression
     (
-        vector<BlockyNumber> const& values,
+        vector<shared_ptr<BlockyNumber>> const& values,
         BlockyMetadata const& metadata,
         HeaderSizes const& headers,
         CompressionMethod** methods
@@ -40,7 +51,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        BlockyNumber const& value,
+        shared_ptr<const BlockyNumber> value,
         int32_t index,
         int32_t& bitDiff
     ) override;

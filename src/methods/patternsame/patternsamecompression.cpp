@@ -7,7 +7,7 @@ using namespace std;
 bool PatternSameCompression::process_value
 (
     Block& block,
-    BlockyNumber const& value,
+    shared_ptr<const BlockyNumber> value,
     int32_t index,
     int32_t& bitDiff
 )
@@ -22,8 +22,8 @@ bool PatternSameCompression::process_value
         return true;
     }
 
-    auto patternDiff = value.Number - values[index - 1].Number != 0
-     || value.Exponent - values[index - 1].Exponent != 0;
+    auto patternDiff = value->Number - values[index - 1]->Number != 0
+     || value->Exponent - values[index - 1]->Exponent != 0;
 
     if (patternDiff)
     {
@@ -42,12 +42,12 @@ bool PatternSameCompression::process_value
         //bitDiff -= _singleValueBits * block.Length - block.Length * MaxNeededBitsExponent * 2;
 
         block.HasPattern = false;
-        block.BiggestNumber = max(firstValue.Number, value.Number);
+        block.BiggestNumber = max(firstValue->Number, value->Number);
 
-        if (firstValue.IsNegative == value.IsNegative)
+        if (firstValue->IsNegative == value->IsNegative)
         {
             block.AbsoluteSign = true;
-            block.IsSignNegative = value.IsNegative;
+            block.IsSignNegative = value->IsNegative;
             //bitDiff--; commented this out, as the isNegative is now in the default header!
         }
         else
@@ -58,7 +58,7 @@ bool PatternSameCompression::process_value
         bitDiff += block.difference_with_nb(metadata, nb);
         block.NeededBits = nb;
 
-        if (firstValue.Exponent == 0 && value.Exponent == 0)
+        if (firstValue->Exponent == 0 && value->Exponent == 0)
         {
             block.Length++;
             bitDiff += headers.StandardBlockPatternSame
@@ -68,12 +68,12 @@ bool PatternSameCompression::process_value
         }
         auto oldMethod = block.Method;
         block.Method = methods[(int)Methods::FloatSimmilar];
-        block.Exponent = firstValue.Exponent;
+        block.Exponent = firstValue->Exponent;
         block.HasExponent = true;
         bitDiff += headers.StandardBlockPatternSame
           - headers.StandardBlockFloatSimmilar;
 
-        if (firstValue.Exponent == value.Exponent)
+        if (firstValue->Exponent == value->Exponent)
         {
             block.Length++;
             return true;

@@ -9,10 +9,11 @@
 #include <block.hpp>
 #include <blockymetadata.hpp>
 #include <blockfinding/blockfinding.hpp>
+#include <reporter.hpp>
 
 using namespace std;
 
-class BlockyCompression
+class BlockyCompression : public Reporter
 {
 private:
     BitWriter writer;
@@ -20,15 +21,23 @@ private:
     int32_t totalPostCompressionOptimisationBlockValues;
 
 public:
-    vector<BlockyNumber> Values;
+    vector<shared_ptr<BlockyNumber>> Values;
     vector<Block> Blocks;
     BlockyMetadata Metadata;
 
+    // TODO: decide whether use normal ptr or shared_ptr for file
     BlockyCompression(FILE* file);
 
-    void report(BlockyNumber& number);
-    void report(BlockyNumber* numbers, size_t offset, size_t count);
-    void finish();
+    void report(shared_ptr<BlockyNumber> number) override;
+    void report
+    (
+        // TODO: decide whether to use normal pointers
+        // as parameter or shared_ptr
+        shared_ptr<BlockyNumber>* numbers,
+        size_t offset,
+        size_t count
+    ) override;
+    void finish() override;
     void post_compression_optimisation();
     void write();
 };

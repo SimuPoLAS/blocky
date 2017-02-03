@@ -8,32 +8,41 @@
 class PatternPredictor
 {
 private:
-    vector<BlockyNumber> const& values;
+    vector<shared_ptr<BlockyNumber>> const& values;
     int32_t limit;
 
 public:
     int32_t Index;
 
-    PatternPredictor(vector<BlockyNumber> const& values, int32_t index = 0)
+    PatternPredictor
+    (
+        vector<shared_ptr<BlockyNumber>> const& values,
+        int32_t index = 0
+    )
         : values(values)
         , limit(values.size() - 2)
         , Index(index) { }
 
-    bool predict_next(BlockyNumber const& current)
+    bool predict_next(shared_ptr<BlockyNumber> const& current)
     {
         Index++;
         if (Index >= limit)
             return false;
 
         auto next = values[Index];
-        if (next.Number == current.Number && next.Exponent == current.Exponent) //same pattern
+        if
+        (
+            next->Number == current->Number
+         && next->Exponent == current->Exponent
+        ) //same pattern
             return true;
 
         auto ahead = values[Index + 1];
         if
         (
-            next.Number + (next.Number - current.Number) == ahead.Number
-         && next.Exponent + (next.Exponent - current.Exponent) == ahead.Exponent
+            next->Number + (next->Number - current->Number) == ahead->Number
+         && next->Exponent + (next->Exponent - current->Exponent)
+         == ahead->Exponent
         ) // offset pattern
             return true;
 

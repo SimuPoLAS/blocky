@@ -8,7 +8,7 @@ using namespace std;
 bool FloatSimmilarCompression::process_value
 (
     Block& block,
-    BlockyNumber const& value,
+    shared_ptr<const BlockyNumber> value,
     int32_t index,
     int32_t& bitDiff
 )
@@ -16,33 +16,33 @@ bool FloatSimmilarCompression::process_value
     if (block.Length == 255)
         return false;
 
-    if (block.Exponent < value.Exponent)
+    if (block.Exponent < value->Exponent)
     {
-        auto expDiff = value.Exponent - block.Exponent;
+        auto expDiff = value->Exponent - block.Exponent;
 
         if (expDiff > 18)
             // long can not hold 10^19 or higher
             return false;
 
         auto multiplier = int64_t(pow(10, expDiff));
-        auto newNum = value.Number;
-        if (value.Number != 0)
+        auto newNum = value->Number;
+        if (value->Number != 0)
         {
-            if (metadata.LargestPossibleValue / value.Number < multiplier)
+            if (metadata.LargestPossibleValue / value->Number < multiplier)
                 // overflow check
                 return false;
-            newNum = value.Number * multiplier;
+            newNum = value->Number * multiplier;
         }
 
         auto newNb = uint8_t(floor(log2(abs(newNum))) + 1);
-        if (value.NeededBitsNumber > metadata.MaxNeededBitsNumber)
+        if (value->NeededBitsNumber > metadata.MaxNeededBitsNumber)
             return false;
 
         // Not needed because value is nether reference type
         // nor used later => just commenting this lines for now
-        //value.Exponent -= int16_t(expDiff);
-        //value.NeededBitsNumber = newNb;
-        //value.Number = newNum;
+        //value->Exponent -= int16_t(expDiff);
+        //value->NeededBitsNumber = newNb;
+        //value->Number = newNum;
 
         if (newNb > block.NeededBits)
         {
@@ -51,9 +51,9 @@ bool FloatSimmilarCompression::process_value
             block.NeededBits = nbNewNumber;
         }
     }
-    else if (block.Exponent > value.Exponent)
+    else if (block.Exponent > value->Exponent)
     {
-        auto expDiff = (block.Exponent - value.Exponent);
+        auto expDiff = (block.Exponent - value->Exponent);
 
         if (expDiff > 18)
             return false; // int64 can't hold 10^19 or higher
@@ -72,13 +72,13 @@ bool FloatSimmilarCompression::process_value
             return false; // overflow check
         auto newNum = block.BiggestNumber * multiplier;
 
-        block.BiggestNumber = value.Number > newNum ? value.Number : newNum;
-        block.Exponent = value.Exponent;
+        block.BiggestNumber = value->Number > newNum ? value->Number : newNum;
+        block.Exponent = value->Exponent;
 
         auto bigNumNb = max
         (
             uint8_t(floor(log2(abs(block.BiggestNumber))) + 1),
-            value.NeededBitsNumber
+            value->NeededBitsNumber
         );
         if (bigNumNb > metadata.MaxNeededBitsNumber)
             return false;
@@ -93,7 +93,7 @@ bool FloatSimmilarCompression::process_value
 
     if (block.AbsoluteSign)
     {
-        if (block.IsSignNegative != value.IsNegative)
+        if (block.IsSignNegative != value->IsNegative)
         {
             block.AbsoluteSign = false;
             bitDiff -= block.Length - 1;
@@ -102,12 +102,12 @@ bool FloatSimmilarCompression::process_value
             bitDiff++;
     }
 
-    if (value.Number > block.BiggestNumber)
+    if (value->Number > block.BiggestNumber)
     {
-        block.BiggestNumber = value.Number;
-        if (block.NeededBits < value.NeededBitsNumber)
+        block.BiggestNumber = value->Number;
+        if (block.NeededBits < value->NeededBitsNumber)
         {
-            auto nbNewBiggest = value.NeededBitsNumber;
+            auto nbNewBiggest = value->NeededBitsNumber;
             bitDiff += block.difference_with_nb(metadata, nbNewBiggest);
             block.NeededBits = nbNewBiggest;
         }
@@ -159,20 +159,20 @@ void FloatSimmilarCompression::write
         auto value = values[i];
 
         if (!block.AbsoluteSign)
-            writer.write_byte(value.IsNegative ? 1 : 0, 1);
+            writer.write_byte(value->IsNegative ? 1 : 0, 1);
 
-        if (value.Exponent > block.Exponent)
+        if (value->Exponent > block.Exponent)
             writer.write
             (
                 uint64_t
                 (
-                    pow(10, value.Exponent - block.Exponent)
-                  * value.Number
+                    pow(10, value->Exponent - block.Exponent)
+                  * value->Number
                 ),
                 metadata.MaxNeededBitsNumber
             );
         else
-            writer.write(uint64_t(value.Number), metadata.MaxNeededBitsNumber);
+            writer.write(uint64_t(value->Number), metadata.MaxNeededBitsNumber);
     }
     valueIndex += block.Length;
 }
