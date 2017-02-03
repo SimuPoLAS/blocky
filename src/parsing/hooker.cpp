@@ -79,6 +79,14 @@ void Hooker::handle_list_entry(string value)
 
 void Hooker::handle_list_entries(string* values, size_t size)
 {
+    for (size_t i = 0; i < size; i++)
+        reporter->report
+        (
+            shared_ptr<BlockyNumber>
+            (
+                new BlockyNumber(BlockyNumber::parse(values[i]))
+            )
+        );
 }
 
 void Hooker::leave_list()
