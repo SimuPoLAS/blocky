@@ -525,7 +525,7 @@ Token* Lexer::next_token()
     }
 }
 
-int Lexer::read(Token** buf, int size, int w)
+int Lexer::read(Token** buf, int count, int w)
 {
     int processed = 0;
     position = 0;
@@ -534,13 +534,13 @@ int Lexer::read(Token** buf, int size, int w)
     if (buf == nullptr)
         return -1;
 
-    for (size_t i = 0; i < size && length != 0; i++)
+    for (size_t i = 0; i < count && length != 0; i++)
     {
         auto tkn = next_token();
         if (tkn == nullptr)
             break;
         processed = position;
-        if (tkn->type == TokenType::END_OF_STREAM)
+        if (tkn->Type == TokenType::END_OF_STREAM)
             break;
         buf[i] = tkn;
     }

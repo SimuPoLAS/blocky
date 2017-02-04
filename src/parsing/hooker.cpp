@@ -58,7 +58,7 @@ void Hooker::enter_list(ListType type, int capacity)
     if (reporter == nullptr)
         // TODO: throw meaningful exception, not just zero
         throw 0;
-    start = PosProvider->position();
+    start = PosProvider->get_position();
 }
 
 void Hooker::handle_list_entry(string value)
@@ -98,7 +98,7 @@ void Hooker::leave_list()
     (
         shared_ptr<CompressedSection>
         (
-            new CompressedSection(start, PosProvider->position(), size)
+            new CompressedSection(start, PosProvider->get_position(), size)
         )
     );
     inList = false;

@@ -8,30 +8,30 @@ using namespace std;
 
 struct Token
 {
-    TokenType type;
-    string payload;
-    uint32_t position;
-    uint32_t column;
-    uint32_t length;
-    uint32_t line;
+    TokenType Type;
+    string Payload;
+    uint32_t Position;
+    uint32_t Column;
+    uint32_t Length;
+    uint32_t Line;
 
     Token()
-        : type(TokenType::NONE)
-        , payload("")
-        , position(0) { }
+        : Type(TokenType::NONE)
+        , Payload("")
+        , Position(0) { }
 
     Token(TokenType type)
-        : type(type)
-        , payload("")
-        , position(0) { }
+        : Type(type)
+        , Payload("")
+        , Position(0) { }
 
     Token(TokenType type, string payload, uint32_t position)
-        : type(type)
-        , payload(payload)
-        , position(position)
-        , column(0)
-        , length(0)
-        , line(0) { }
+        : Type(type)
+        , Payload(payload)
+        , Position(position)
+        , Column(0)
+        , Length(0)
+        , Line(0) { }
 
     Token
     (
@@ -42,18 +42,18 @@ struct Token
         uint32_t length,
         uint32_t line
     )
-        : type(type)
-        , payload(payload)
-        , position(position)
-        , column(column)
-        , length(length)
-        , line(line) { }
+        : Type(type)
+        , Payload(payload)
+        , Position(position)
+        , Column(column)
+        , Length(length)
+        , Line(line) { }
 
     string to_s()
     {
         string s;
         s += "Type: ";
-        switch (type) {
+        switch (Type) {
             case TokenType::BRACES_CLOSE:
                 s += "Braces Close";
                 break;
@@ -103,9 +103,9 @@ struct Token
                 s += "Idk";
         }
         s += '\n';
-        s += "Payload: " + payload;
+        s += "Payload: " + Payload;
         s += "\n";
-        s += "Position: " + to_string(position);
+        s += "Position: " + to_string(Position);
         return s;
     }
 };

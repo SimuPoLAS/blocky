@@ -18,12 +18,11 @@ private:
     // TODO: make bufferSize globaly available
     static const int bufferSize = 4096;
 
-    Token buffer[bufferSize];
+    Token (&buffer)[bufferSize];
     bool eos;
     int32_t length;
     int32_t position;
     int32_t size;
-    unique_ptr<Lexer> lexer;
     unique_ptr<Hooker> hooker;
 
     // base parser methods
@@ -33,19 +32,19 @@ private:
     bool needs(int32_t amount);
     void skip();
     void skip(int32_t amount);
-    void relocate();
+    // void relocate();
 
     // parser methods
     bool expect(TokenType type);
     bool expect(TokenType* types, size_t count);
-    bool expect_safe(tokenType* types, size_t count);
+    bool expect_safe(TokenType* types, size_t count);
 
     void parse_entry_or_object(Token me);
     void parse_object(Token me);
     void parse_code_stream_object(Token me);
     void parse_entry(Token me);
     void parse_directive();
-    void parse_value();
+    void parse_value(Token me);
     void parse_list(ListType type, int32_t amount);
     void parse_anonymous_list(int32_t number = -1);
     void parse_scalar();
@@ -55,9 +54,13 @@ private:
 public:
     bool SimpleAnonyomousLists;
 
-    Parser(FILE* file, char (&buffer)[bufferSize]);
+    Parser
+    (
+        FILE* file,
+        Token (&buffer)[bufferSize]
+    );
 
-    uint32_t position() override;
+    uint32_t get_position() override;
     void parse();
 };
 
