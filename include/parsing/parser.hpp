@@ -18,11 +18,12 @@ private:
     // TODO: make bufferSize globaly available
     static const int bufferSize = 4096;
 
-    Token (&buffer)[bufferSize];
+    shared_ptr<Token> (&buffer)[bufferSize];
     bool eos;
     int32_t length;
     int32_t position;
     int32_t size;
+    int32_t filePos;
     unique_ptr<Hooker> hooker;
 
     // base parser methods
@@ -36,15 +37,15 @@ private:
 
     // parser methods
     bool expect(TokenType type);
-    bool expect(TokenType* types, size_t count);
-    bool expect_safe(TokenType* types, size_t count);
+    bool expect(TokenType types[], size_t count);
+    bool expect_safe(TokenType types[], size_t count);
 
-    void parse_entry_or_object(Token me);
-    void parse_object(Token me);
-    void parse_code_stream_object(Token me);
-    void parse_entry(Token me);
+    void parse_entry_or_object(Token const& me);
+    void parse_object(Token const& me);
+    void parse_code_stream_object(Token const& me);
+    void parse_entry(Token const& me);
     void parse_directive();
-    void parse_value(Token me);
+    void parse_value(Token const& me);
     void parse_list(ListType type, int32_t amount);
     void parse_anonymous_list(int32_t number = -1);
     void parse_scalar();
@@ -57,11 +58,11 @@ public:
     Parser
     (
         FILE* file,
-        Token (&buffer)[bufferSize]
+        shared_ptr<Token> (&buffer)[bufferSize]
     );
 
     uint32_t get_position() override;
-    void parse();
+    void parse(int w);
 };
 
 #endif /* end of include guard: PARSER_HPP */

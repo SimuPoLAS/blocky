@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 
 #include <bitwriter.hpp>
 
@@ -25,7 +26,7 @@ void BitWriter::write(uint64_t data, uint8_t count)
         *buffer = 0;
         count -= (uint8_t)bitsLeft;
         data = data >> bitsLeft;
-        } while (count > 0);
+    } while (count > 0);
 }
 
 void BitWriter::write_byte(uint8_t data, uint8_t count)

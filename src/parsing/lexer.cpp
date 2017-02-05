@@ -74,14 +74,14 @@ void Lexer::clear()
     textLength = textPosition = 0;
 }
 
-Token* Lexer::create_token(TokenType type)
+shared_ptr<Token> Lexer::create_token(TokenType type)
 {
     return create_token(type, "");
 }
 
-Token* Lexer::create_token(TokenType type, string data)
+shared_ptr<Token> Lexer::create_token(TokenType type, string data)
 {
-    return new Token
+    return make_shared<Token>
     (
         type,
         data,
@@ -364,7 +364,7 @@ int32_t Lexer::eat_string()
     return -1; // return the amount of read chars
 }
 
-Token* Lexer::next_token()
+shared_ptr<Token> Lexer::next_token()
 {
     try
     {
@@ -525,16 +525,16 @@ Token* Lexer::next_token()
     }
 }
 
-int Lexer::read(Token** buf, int count, int w)
+int Lexer::read(shared_ptr<Token> buf[], int w, int& processed)
 {
-    int processed = 0;
     position = 0;
     length = w;
 
     if (buf == nullptr)
         return -1;
 
-    for (size_t i = 0; i < count && length != 0; i++)
+    size_t i = 0;
+    for (; i < bufferSize && length != 0; i++)
     {
         auto tkn = next_token();
         if (tkn == nullptr)
@@ -544,5 +544,5 @@ int Lexer::read(Token** buf, int count, int w)
             break;
         buf[i] = tkn;
     }
-    return processed;
+    return i;
 }

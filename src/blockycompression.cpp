@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 
 #include <blockycompression.hpp>
 #include <methods/patternpingpong/patternpingpongcompression.hpp>
@@ -41,10 +42,17 @@ void BlockyCompression::finish()
         floor(log2(abs(Metadata.MaxNeededBitsNumber))) + 1
     );
 
-    blockfinding = unique_ptr<Blockfinding>(new Blockfinding(Values, Metadata));
+    blockfinding = make_unique<Blockfinding>(Values, Metadata);
     Blocks = blockfinding->find_all_blocks();
 
+    for(auto v : Values)
+    {
+        std::cout << "Number: " << v->reconstructed() << '\n';
+    }
+
     post_compression_optimisation(); //Todo: make optional
+
+    std::cout << "here" << '\n';
 
     write();
 }

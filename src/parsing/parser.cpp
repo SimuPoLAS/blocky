@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 
 #include <parsing/parser.hpp>
 
@@ -7,7 +8,7 @@ using namespace std;
 Parser::Parser
 (
     FILE* file,
-    Token (&buffer)[bufferSize]
+    shared_ptr<Token> (&buffer)[bufferSize]
 )
     : buffer(buffer)
     , eos(file == NULL)
@@ -15,7 +16,7 @@ Parser::Parser
     , position(0)
     , size(bufferSize)
 {
-    hooker = unique_ptr<Hooker>(new Hooker(file));
+    hooker = make_unique<Hooker>(file, filePos);
 }
 
 // base parser methods
@@ -56,6 +57,7 @@ bool Parser::needs(int32_t amount)
 void Parser::skip()
 {
     position++;
+    filePos++;
     length--;
 }
 
@@ -71,22 +73,22 @@ void Parser::skip(int32_t amount)
 bool Parser::expect(TokenType type)
 {
     ensure(1);
-    return buffer[position].Type == type;
+    return buffer[position]->Type == type;
 }
 
-bool Parser::expect(TokenType* types, size_t count)
+bool Parser::expect(TokenType types[], size_t count)
 {
     if (count > 0xFFFF)
         // TODO: throw more meaningful exception
         throw 0;//new ArgumentOutOfRangeException(nameof(types));
     ensure(count);
     for (size_t i = 0; i < count; i++)
-        if (buffer[position + i].Type != types[i])
+        if (buffer[position + i]->Type != types[i])
             return false;
     return true;
 }
 
-bool Parser::expect_safe(TokenType* types, size_t count)
+bool Parser::expect_safe(TokenType types[], size_t count)
 {
     if (count > 0xFFFF)
         // TODO: throw meaningful exception
@@ -94,70 +96,94 @@ bool Parser::expect_safe(TokenType* types, size_t count)
     if (!needs(count))
         return false;
     for (size_t i = 0; i < count; i++)
-        if (buffer[position + i].Type != types[i])
+        if (buffer[position + i]->Type != types[i])
             return false;
     return true;
 }
 
-void Parser::parse()
+void Parser::parse(int w)
 {
-    while (needs(1))
+    length = w;
+    position = 0;
+    try
     {
-        auto tkn = buffer[position];
+        while (needs(1))
+        {
+            std::cout << "position: " << position << '\n';
 
-        if (tkn.Type == TokenType::KEYWORD || tkn.Type == TokenType::STRING)
-        {
-            skip(1);
-            parse_entry_or_object(tkn);
-            continue;
-        }
-        if
-        (
-            tkn.Type == TokenType::NUMBER
-         && needs(2)
-         && buffer[position + 1].Type == TokenType::PARENTHESE_OPEN
-        )
-        {
-            skip(2);
-            try
+            auto tkn = buffer[position];
+            std::cout << "tkn: " << tkn->to_s() << '\n';
+
+            if
+            (
+                tkn->Type == TokenType::KEYWORD
+             || tkn->Type == TokenType::STRING
+            )
             {
-                double a = stod(tkn.Payload);
-                parse_anonymous_list(int32_t(a));
+                skip(1);
+                parse_entry_or_object(*tkn);
+                continue;
             }
-            catch (invalid_argument const& ia)
+
+            if
+            (
+                tkn->Type == TokenType::NUMBER
+             && needs(2)
+             && buffer[position + 1]->Type == TokenType::PARENTHESE_OPEN
+            )
             {
+                skip(2);
+                try
+                {
+                    double a = stod(tkn->Payload);
+                    parse_anonymous_list(int32_t(a));
+                }
+                catch (invalid_argument const& ia)
+                {
+                    parse_anonymous_list();
+                }
+                continue;
+            }
+
+            if (tkn->Type == TokenType::PARENTHESE_OPEN)
+            {
+                skip(1);
                 parse_anonymous_list();
+                continue;
             }
-            continue;
-        }
-        if (tkn.Type == TokenType::PARENTHESE_OPEN)
-        {
-            skip(1);
-            parse_anonymous_list();
-            continue;
-        }
-        if (tkn.Type == TokenType::HASHTAG)
-        {
-            parse_directive();
-            continue;
-        }
-        if (tkn.Type == TokenType::SEMICOLON)
-        {
-            skip(1);
-            continue;
-        }
 
-        // TODO: throw meaningful exception
-        throw 0;//new ParserException();
+            if (tkn->Type == TokenType::HASHTAG)
+            {
+                parse_directive();
+                continue;
+            }
+
+            if (tkn->Type == TokenType::SEMICOLON)
+            {
+                skip(1);
+                continue;
+            }
+
+            // TODO: throw meaningful exception
+            throw 0;//new ParserException();
+        }
+    }
+    catch (int e)
+    {
+        if (e == 404)
+            std::cout << "buffer has to be reload" << '\n';
+        else
+            std::cout << "some error occured" << '\n';
     }
 }
 
-void Parser::parse_entry_or_object(Token me)
+void Parser::parse_entry_or_object(Token const& me)
 {
     if (!needs(1))
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
-    auto c = buffer[position];
+    auto c = *buffer[position];
+
     if (c.Type == TokenType::BRACES_OPEN)
     {
         skip(1);
@@ -169,10 +195,12 @@ void Parser::parse_entry_or_object(Token me)
         parse_code_stream_object(me);
     }
     else
+    {
         parse_entry(me);
+    }
 }
 
-void Parser::parse_object(Token me)
+void Parser::parse_object(Token const& me)
 {
     hooker->enter_dictionary(me.Payload);
     while (!(eos && length == 0))
@@ -181,26 +209,26 @@ void Parser::parse_object(Token me)
             // TODO: throw meaningful exception
             throw 0;//new ParserException();
         auto tkn = buffer[position];
-        if (tkn.Type == TokenType::KEYWORD || tkn.Type == TokenType::STRING)
+        if (tkn->Type == TokenType::KEYWORD || tkn->Type == TokenType::STRING)
         {
             skip(1);
-            parse_entry_or_object(tkn);
+            parse_entry_or_object(*tkn);
         }
         else if
         (
-            tkn.Type == TokenType::NUMBER
-         || tkn.Type == TokenType::PARENTHESE_OPEN
+            tkn->Type == TokenType::NUMBER
+         || tkn->Type == TokenType::PARENTHESE_OPEN
         )
             parse_anonymous_list();
-        else if (tkn.Type == TokenType::SEMICOLON)
+        else if (tkn->Type == TokenType::SEMICOLON)
             skip(1);
-        else if (tkn.Type == TokenType::BRACES_CLOSE)
+        else if (tkn->Type == TokenType::BRACES_CLOSE)
         {
             hooker->leave_dictionary();
             skip(1);
             return;
         }
-        else if (tkn.Type == TokenType::HASHTAG)
+        else if (tkn->Type == TokenType::HASHTAG)
             parse_directive();
         else
             // TODO: throw meaningful exception
@@ -210,12 +238,12 @@ void Parser::parse_object(Token me)
     throw 0;//new ParserException();
 }
 
-void Parser::parse_code_stream_object(Token me)
+void Parser::parse_code_stream_object(Token const& me)
 {
     if (!expect(TokenType::KEYWORD))
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
-    auto text = buffer[position].Payload;
+    auto text = buffer[position]->Payload;
     if (text != "codeStream")
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
@@ -231,28 +259,27 @@ void Parser::parse_code_stream_object(Token me)
             // TODO: throw meaningful exception
             throw 0;//new ParserException();
         auto tkn = buffer[position];
-        if (tkn.Type == TokenType::KEYWORD || tkn.Type == TokenType::STRING)
+        if (tkn->Type == TokenType::KEYWORD || tkn->Type == TokenType::STRING)
         {
             skip(1);
-            parse_entry_or_object(tkn);
+            parse_entry_or_object(*tkn);
         }
         else if
         (
-            tkn.Type == TokenType::NUMBER
-         || tkn.Type == TokenType::PARENTHESE_OPEN
+            tkn->Type == TokenType::NUMBER
+         || tkn->Type == TokenType::PARENTHESE_OPEN
         )
             parse_anonymous_list();
-        else if (tkn.Type == TokenType::SEMICOLON)
+        else if (tkn->Type == TokenType::SEMICOLON)
             skip(1);
-        else if (tkn.Type == TokenType::BRACES_CLOSE)
+        else if (tkn->Type == TokenType::BRACES_CLOSE)
         {
             hooker->leave_code_stream_dictionary();
             skip(1);
             return;
         }
-        else if (tkn.Type == TokenType::HASHTAG)
+        else if (tkn->Type == TokenType::HASHTAG)
             parse_directive();
-        else
             // TODO: throw meaningful exception
             throw 0;//new ParserException();
     }
@@ -260,7 +287,7 @@ void Parser::parse_code_stream_object(Token me)
     throw 0;//new ParserException();
 }
 
-void Parser::parse_entry(Token me)
+void Parser::parse_entry(Token const& me)
 {
     hooker->enter_entry(me.Payload);
     while (!(eos && length == 0))
@@ -269,13 +296,13 @@ void Parser::parse_entry(Token me)
             // TODO: throw meaningful exception
             throw 0;//new ParserException();
         auto tkn = buffer[position];
-        if (tkn.Type == TokenType::SEMICOLON)
+        if (tkn->Type == TokenType::SEMICOLON)
         {
             hooker->leave_entry();
             skip(1);
             return;
         }
-        parse_value(tkn);
+        parse_value(*tkn);
     }
     // TODO: throw meaningful exception
     throw 0;//new ParserException();
@@ -283,12 +310,12 @@ void Parser::parse_entry(Token me)
 
 void Parser::parse_directive()
 {
-    if (buffer[position].Type != TokenType::HASHTAG)
+    if (buffer[position]->Type != TokenType::HASHTAG)
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
     skip();
     expect(TokenType::STRING);
-    auto macro = buffer[position].Payload;
+    auto macro = buffer[position]->Payload;
     DirectiveType type;
 
     if (macro == "include")
@@ -305,16 +332,16 @@ void Parser::parse_directive()
     ensure(1);
     if
     (
-        buffer[position].Type != TokenType::KEYWORD
-     && buffer[position].Type != TokenType::STRING
+        buffer[position]->Type != TokenType::KEYWORD
+     && buffer[position]->Type != TokenType::STRING
     )
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
-    hooker->handle_macro(type, buffer[position].Payload);
+    hooker->handle_macro(type, buffer[position]->Payload);
     skip();
 }
 
-void Parser::parse_value(Token me)
+void Parser::parse_value(Token const& me)
 {
     switch (me.Type)
     {
@@ -331,7 +358,7 @@ void Parser::parse_value(Token me)
                 if(!expect(types, 3))
                     // TODO: throw meaningful exception
                     throw 0;//new ParserException();
-                auto ltype = buffer[position + 1].Payload;
+                auto ltype = buffer[position + 1]->Payload;
                 ListType type;
 
                 if (ltype == "scalar")
@@ -349,7 +376,7 @@ void Parser::parse_value(Token me)
                     // TODO: throw meaningful exception
                     throw 0;//new ParserException();
                 auto amount = -1;
-                auto c = buffer[position];
+                auto c = *buffer[position];
                 if (c.Type == TokenType::NUMBER)
                 {
                     amount = (int)stod(c.Payload);
@@ -370,7 +397,7 @@ void Parser::parse_value(Token me)
             if
             (
                 needs(2)
-             && buffer[position + 1].Type == TokenType::PARENTHESE_OPEN
+             && buffer[position + 1]->Type == TokenType::PARENTHESE_OPEN
             )
             {
                 skip(2);
@@ -412,7 +439,7 @@ void Parser::parse_value(Token me)
                 throw 0;//new ParserException();
             string values[7];
             for (size_t i = 0; i < 7; i++)
-                values[i] = buffer[position + i].Payload;
+                values[i] = buffer[position + i]->Payload;
             skip(8);
             hooker->handle_dimension(values, 7);
             return;
@@ -438,7 +465,7 @@ void Parser::parse_list(ListType type, int32_t amount)
         if (!needs(1))
             // TODO: throw meaningful exception
             throw 0;//new ParserException();
-        c = buffer[position];
+        c = *buffer[position];
         if (c.Type == TokenType::PARENTHESE_CLOSE)
         {
             d = true;
@@ -475,7 +502,7 @@ void Parser::parse_anonymous_list(int32_t number)
     if (!needs(1))
         // TODO: throw meaningful exception
         throw 0;//new ParserException();
-    auto c = buffer[position];
+    auto c = *buffer[position];
     if (SimpleAnonyomousLists)
     {
         if (c.Type == TokenType::NUMBER)
@@ -519,13 +546,13 @@ void Parser::parse_anonymous_list(int32_t number)
         }
     }
     hooker->enter_list(ListType::Anonymous, number);
-    for (; c.Type != TokenType::PARENTHESE_CLOSE; c = buffer[position])
+    for (; c.Type != TokenType::PARENTHESE_CLOSE; c = *buffer[position])
     {
         if
         (
             c.Type == TokenType::KEYWORD
          && needs(2)
-         && buffer[position + 1].Type == TokenType::BRACES_OPEN
+         && buffer[position + 1]->Type == TokenType::BRACES_OPEN
         )
         {
             skip(2);
@@ -546,7 +573,7 @@ void Parser::parse_scalar()
     if (!expect(TokenType::NUMBER))
         // TODO: throw meaningful exception
         throw 0;//new Exception("Not supported list type: " + type);
-    hooker->handle_list_entry(buffer[position].Payload);
+    hooker->handle_list_entry(buffer[position]->Payload);
     skip(1);
 }
 
@@ -565,7 +592,7 @@ void Parser::parse_vector()
         throw 0;//new Exception("Not supported list type: " + type);
     string values[3];
     for (auto i = 0; i < 3; i++)
-        values[i] = buffer[position + i + 1].Payload;
+        values[i] = buffer[position + i + 1]->Payload;
     hooker->handle_list_entries(values, 3);
     skip(5);
 }
@@ -591,12 +618,12 @@ void Parser::parse_tensor()
         throw 0;//new Exception("Not supported list type: " + type);
     string values[9];
     for (size_t i = 0; i < 9; i++)
-        values[i] = buffer[position + i + 1].Payload;
+        values[i] = buffer[position + i + 1]->Payload;
     hooker->handle_list_entries(values, 9);
     skip(11);
 }
 
 
-uint32_t Parser::get_position() { return buffer[position].Position; }
+uint32_t Parser::get_position() { return buffer[position]->Position; }
 
 // public

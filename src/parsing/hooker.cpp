@@ -1,7 +1,10 @@
+#include <iostream>
+
 #include <parsing/hooker.hpp>
 
-Hooker::Hooker(FILE* file)
-    : file(file) { }
+Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
+    : file(file)
+    , providedPosition(providedPosition) { }
 
 void Hooker::enter_dictionary(string name)
 {
@@ -58,7 +61,8 @@ void Hooker::enter_list(ListType type, int capacity)
     if (reporter == nullptr)
         // TODO: throw meaningful exception, not just zero
         throw 0;
-    start = PosProvider->get_position();
+    start = providedPosition;
+    std::cout << "here" << '\n';
 }
 
 void Hooker::handle_list_entry(string value)
@@ -68,6 +72,7 @@ void Hooker::handle_list_entry(string value)
     // to keep BlockyNumbers on stack when passing
     // They will be deallocated when leaving this function
     // Is also a big change because many function took a reference
+    std::cout << "reported" << '\n';
     reporter->report
     (
         shared_ptr<BlockyNumber>
@@ -93,12 +98,13 @@ void Hooker::leave_list()
 {
     if (!inList)
         return;
+    std::cout << "finish" << '\n';
     reporter->finish();
     CompessedDataSections.push_back
     (
         shared_ptr<CompressedSection>
         (
-            new CompressedSection(start, PosProvider->get_position(), size)
+            new CompressedSection(start, providedPosition, size)
         )
     );
     inList = false;

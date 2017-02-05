@@ -21,12 +21,12 @@ private:
     bool inList;
     uint32_t start;
     uint8_t size;
+    uint32_t const& providedPosition;
 
 public:
     vector<shared_ptr<CompressedSection>> CompessedDataSections;
-    shared_ptr<PositionProvider> PosProvider;
 
-    Hooker(FILE* file);
+    Hooker(FILE* file, uint32_t const& providedPosition);
 
     void enter_dictionary(string name);
     void leave_dictionary();

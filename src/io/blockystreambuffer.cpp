@@ -54,7 +54,8 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
     opened = true;
 
-    lexer = unique_ptr<Lexer>(new Lexer(buffer));
+    lexer = make_unique<Lexer>(buffer);
+    parser = make_unique<Parser>(file, tbuffer);
 
     return this;
 }
@@ -93,11 +94,12 @@ int BlockyStreamBuffer::flush_buffer()
 {
     std::cout << "flushing buffer" << '\n';
     int w = pptr() - pbase();
-
-    Token* tokens[4096];
+    int processed;
 
     std::cout << "lexer read" << '\n';
-    int processed = lexer->read(tokens, 4096, w);
+    int amount = lexer->read(tbuffer, w, processed);
+    std::cout << "amount: " << amount << '\n';
+    parser->parse(amount);
 
     // if (fwrite(pbase(), 1, w, file) == EOF)
     //     return EOF;

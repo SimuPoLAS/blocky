@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
+#include <iostream>
 
 #include <blockynumber.hpp>
 
@@ -89,6 +90,7 @@ BlockyNumber::operator int()
 
 BlockyNumber BlockyNumber::parse(string const& value)
 {
+    std::cout << "parsing..." << '\n';
     auto valueLength = uint16_t(value.length());
     auto commaIndex = valueLength;
     for (size_t i = 0; i < valueLength; i++)
@@ -99,11 +101,16 @@ BlockyNumber BlockyNumber::parse(string const& value)
             continue;
         }
         if (value[i] == 'e' || value[i] == 'E')
+        {
+            auto valueNoComma = value;
+            if (commaIndex != valueLength)
+                valueNoComma.replace(commaIndex, 1, string(""));
             return BlockyNumber
             (
-                int64_t(stoll(value.substr(0, i))),
+                int64_t(stoll(valueNoComma.substr(0, i))),
                 int16_t(-(i - 1) + commaIndex + stoll(value.substr(i + 1)))
             );
+        }
     }
 
     return BlockyNumber
