@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <math.h>
 
 #include <methods/patternsame/patternsamecompression.hpp>
 
