@@ -49,7 +49,7 @@ struct Token
         , Length(length)
         , Line(line) { }
 
-    string to_s()
+    string to_s() const
     {
         string s;
         s += "Type: ";

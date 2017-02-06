@@ -518,8 +518,8 @@ shared_ptr<Token> Lexer::next_token()
     }
     catch(int e)
     {
-        if (e == 404)
-            std::cout << "buffer must be reload" << '\n';
+        //if (e == 404)
+            //std::cout << "buffer must be reload" << '\n';
 
         return nullptr;
     }

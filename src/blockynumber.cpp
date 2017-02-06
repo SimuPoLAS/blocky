@@ -91,6 +91,7 @@ BlockyNumber::operator int()
 BlockyNumber BlockyNumber::parse(string const& value)
 {
     auto valueLength = uint16_t(value.length());
+    auto valueNoComma = value;
     auto commaIndex = valueLength;
     for (size_t i = 0; i < valueLength; i++)
     {
@@ -114,9 +115,12 @@ BlockyNumber BlockyNumber::parse(string const& value)
         }
     }
 
+    if (commaIndex != valueLength)
+        valueNoComma.replace(commaIndex, 1, string(""));
+
     return BlockyNumber
     (
-        int64_t(stoll(value)),
+        int64_t(stoll(valueNoComma)),
         int16_t(commaIndex == valueLength ? 0 : -(valueLength - 1) + commaIndex)
     );
 }

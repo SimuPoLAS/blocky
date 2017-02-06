@@ -109,10 +109,14 @@ void Parser::parse(int w)
     {
         while (needs(1))
         {
-            std::cout << "position: " << position << '\n';
-
             auto tkn = buffer[position];
-            std::cout << "tkn: " << tkn->to_s() << '\n';
+
+            if (hooker->is_in_list())
+            {
+                std::cout << "continuing list" << '\n';
+                parse_list_continue(hooker->get_type());
+                continue;
+            }
 
             if
             (
@@ -456,12 +460,57 @@ void Parser::parse_value(Token const& me)
 
 void Parser::parse_list(ListType type, int32_t amount)
 {
-    Token c;
     hooker->enter_list(type, amount);
+    parse_list_continue(type);
+    // Token c;
+    // auto done = false;
+    // auto d = false;
+    // do
+    // {
+    //     // HERE
+    //     if (!needs(1))
+    //         // TODO: throw meaningful exception
+    //         throw 0;//new ParserException();
+    //     c = *buffer[position];
+    //     if (c.Type == TokenType::PARENTHESE_CLOSE)
+    //     {
+    //         d = true;
+    //         hooker->leave_list();
+    //         skip(1);
+    //         done = true;
+    //         break;
+    //     }
+    //     switch (type)
+    //     {
+    //         case ListType::Scalar:
+    //             parse_scalar();
+    //             break;
+    //         case ListType::Vector:
+    //             parse_vector();
+    //             break;
+    //         case ListType::Tensor:
+    //             parse_tensor();
+    //             break;
+    //         default:
+    //             // TODO: throw meaningful exception
+    //             throw 0;//new Exception("Not supported list type: " + type);
+    //     }
+    // } while (!(eos && length == 0));
+    // if (!d)
+    //     hooker->leave_list();
+    // if (!done)
+    //     // TODO: throw meaningful exception
+    //     throw 0;//new ParserException();
+}
+
+void Parser::parse_list_continue(ListType type)
+{
+    Token c;
     auto done = false;
     auto d = false;
     do
     {
+        // HERE
         if (!needs(1))
             // TODO: throw meaningful exception
             throw 0;//new ParserException();

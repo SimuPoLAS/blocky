@@ -230,7 +230,6 @@ bool Blockfinding::process_next_value()
 
     if (isAppendingCalculationValid)
     {
-
         auto lastBitDiff = appendingCalculation.SavedBits;
         auto lastAppendingBlock = appendingCalculation.VirtualBlock;
 

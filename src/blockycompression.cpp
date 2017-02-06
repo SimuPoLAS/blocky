@@ -46,11 +46,11 @@ void BlockyCompression::finish()
     Blocks = blockfinding->find_all_blocks();
 
     std::cout << "blocks: " << Blocks.size() << std::endl;
-
-    for(auto v : Values)
-    {
-        std::cout << "Number: " << v->reconstructed() << '\n';
-    }
+    // for(auto value : Values)
+    // {
+    //     if (value->NeededBitsNumber > 200)
+    //         std::cout << "value: " << value->Number << "e" << value->Exponent << '\n';
+    // }
 
     post_compression_optimisation(); //Todo: make optional
 
