@@ -65,4 +65,26 @@ TEST_CASE("BlockyNumber parser test", "[BlockyNumber::parse]")
     number = BlockyNumber::parse("1e-10");
     REQUIRE(number.Number == 1);
     REQUIRE(number.Exponent == -10);
+    
+    // tests from alpha.water.small
+    number = BlockyNumber::parse("4.205420273e-50");
+    REQUIRE(number.Number == 4205420273);
+    REQUIRE(number.Exponent == -59);
+    number = BlockyNumber::parse("2.761019053e-51");
+    REQUIRE(number.Number == 2761019053);
+    REQUIRE(number.Exponent == -60);
+}
+
+TEST_CASE
+(
+    "BlockyNumber reconstructed test", 
+    "[BlockyNumber::reconstructed]"
+)
+{
+    // tests from alpha.water.small
+    auto number = BlockyNumber::parse("4.205420273e-50");
+    REQUIRE(number.reconstructed() == 4.205420273e-50);
+
+    number = BlockyNumber::parse("2.761019053e-51");
+    REQUIRE(number.reconstructed() == 2.761019053e-51);
 }
