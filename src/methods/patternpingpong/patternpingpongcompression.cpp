@@ -3,7 +3,7 @@
 bool PatternPingPongCompression::process_value
 (
     Block& block,
-    BlockyNumber const& value,
+    shared_ptr<const BlockyNumber> value,
     int32_t index,
     int32_t& bitDiff
 )

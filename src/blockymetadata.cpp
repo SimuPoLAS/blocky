@@ -26,28 +26,32 @@ BlockyMetadata BlockyMetadata::from_bit_stream(BitReader& reader)
     return metadata;
 }
 
-BlockyMetadata BlockyMetadata::from_data(BlockyNumber* values, size_t n)
+BlockyMetadata BlockyMetadata::from_data
+(
+    shared_ptr<BlockyNumber>* values,
+    size_t n
+)
 {
     if (n == 0)
         // TODO: Throw a specified for this case value (not just 0)
         throw 0;
     BlockyMetadata metadata;
-    metadata.IsNegative = values[0].IsNegative;
+    metadata.IsNegative = values[0]->IsNegative;
     metadata.IsAbsolute = true;
     metadata.ValueCount = n;
     for (size_t i = 0; i < n; i++)
     {
         auto number = values[i];
-        if (number.NeededBitsNumber > metadata.MaxNeededBitsNumber)
+        if (number->NeededBitsNumber > metadata.MaxNeededBitsNumber)
         {
-            metadata.MaxNeededBitsNumber = number.NeededBitsNumber;
-            metadata.LargestPossibleValue = pow(2, number.NeededBitsNumber);
+            metadata.MaxNeededBitsNumber = number->NeededBitsNumber;
+            metadata.LargestPossibleValue = pow(2, number->NeededBitsNumber);
         }
-        if (number.NeededBitsExponent > metadata.MaxNeededBitsExponent)
-            metadata.MaxNeededBitsExponent = number.NeededBitsExponent;
-        if (metadata.IsAbsolute && number.IsNegative != metadata.IsNegative)
+        if (number->NeededBitsExponent > metadata.MaxNeededBitsExponent)
+            metadata.MaxNeededBitsExponent = number->NeededBitsExponent;
+        if (metadata.IsAbsolute && number->IsNegative != metadata.IsNegative)
             metadata.IsAbsolute = false;
-        if (metadata.NoExponent && number.Exponent != 0)
+        if (metadata.NoExponent && number->Exponent != 0)
             metadata.NoExponent = false;
     }
     return metadata;

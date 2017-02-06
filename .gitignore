@@ -37,3 +37,6 @@
 
 # Dolphin automatically produces .directory file
 .directory
+
+# KDevelop Project files
+*.kdev4

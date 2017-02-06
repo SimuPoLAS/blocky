@@ -2,10 +2,13 @@
 #define BLOCKYMETADATA_HPP
 
 #include <vector>
+#include <memory>
 
 #include <bitreader.hpp>
 #include <bitwriter.hpp>
 #include <blockynumber.hpp>
+
+using namespace std;
 
 class BlockyMetadata
 {
@@ -24,7 +27,7 @@ public:
     void write(BitWriter& writer);
 
     static BlockyMetadata from_bit_stream(BitReader& reader);
-    static BlockyMetadata from_data(BlockyNumber* values, size_t n);
+    static BlockyMetadata from_data(shared_ptr<BlockyNumber>* values, size_t n);
 };
 
 #endif /* end of include guard: BLOCKYMETADATA_HPP */

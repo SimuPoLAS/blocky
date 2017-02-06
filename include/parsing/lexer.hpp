@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <parsing/token.hpp>
+#include <parsing/tokentype.hpp>
 
 using namespace std;
 
@@ -45,8 +46,9 @@ private:
     void record(uint32_t count);
     void append(char value);
     void clear();
-    Token* create_token(TokenType type);
-    Token* create_token(TokenType type, string data);
+    // TODO: use shared_ptr instead of normal pointers
+    shared_ptr<Token> create_token(TokenType type);
+    shared_ptr<Token> create_token(TokenType type, string data);
     void start_token();
     char eat();
     bool eat_until(char const*values, int size);
@@ -71,8 +73,8 @@ public:
     Lexer(char (&buffer)[bufferSize])
         : Lexer(buffer, true) {}
 
-    Token* next_token();
-    int read(Token* buf[], int size, int w);
+    shared_ptr<Token> next_token();
+    int read(shared_ptr<Token> buf[], int w, int& processed);
 };
 
 #endif /* end of include guard: LEXER_HPP */

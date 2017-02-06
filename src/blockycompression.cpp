@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 
 #include <blockycompression.hpp>
 #include <methods/patternpingpong/patternpingpongcompression.hpp>
@@ -6,14 +7,20 @@
 BlockyCompression::BlockyCompression(FILE* file)
     : writer(file) { }
 
-void BlockyCompression::report(BlockyNumber& number)
+void BlockyCompression::report(shared_ptr<BlockyNumber> number)
 {
+    // TODO: this number is coming from Hooker
+    // and the hooker just parses a string value
+    // and allocates the number on stack, so it will be removed
+    // when exiting this block
+    // this will probably result in a segmentation fault
+    // probably need to make a pointer out of it
     Values.push_back(number);
 }
 
 void BlockyCompression::report
 (
-    BlockyNumber* numbers,
+    shared_ptr<BlockyNumber>* numbers,
     size_t offset,
     size_t count
 )
@@ -35,10 +42,17 @@ void BlockyCompression::finish()
         floor(log2(abs(Metadata.MaxNeededBitsNumber))) + 1
     );
 
-    blockfinding = unique_ptr<Blockfinding>(new Blockfinding(Values, Metadata));
+    blockfinding = make_unique<Blockfinding>(Values, Metadata);
     Blocks = blockfinding->find_all_blocks();
 
+    for(auto v : Values)
+    {
+        std::cout << "Number: " << v->reconstructed() << '\n';
+    }
+
     post_compression_optimisation(); //Todo: make optional
+
+    std::cout << "here" << '\n';
 
     write();
 }
@@ -85,21 +99,21 @@ void BlockyCompression::post_compression_optimisation()
                 if
                 (
                     currentBlock.Length != lastppLength
-                 || initValue.Number
+                 || initValue->Number
                  == Values
                     [
                         recentBlock.Index
                       + recentBlockRealLength
                       - 1
-                    ].Number
-                 || initValue.Number
+                    ]->Number
+                 || initValue->Number
                  != Values
                     [
                         recentBlock.Index
                       + recentBlockRealLength
                       - 1
                       - lastppLength
-                    ].Number
+                    ]->Number
                 )
                     continue;
                 recentBlock.Length++;
@@ -155,27 +169,27 @@ void BlockyCompression::write()
             auto value = Values[i];
 
             //Todo: is the loop below really nessecary with the new changes?
-            while (value.NeededBitsNumber > Metadata.MaxNeededBitsNumber) //Todo: check how often this case appears. (This is a "bug" created by the blockfinding, which "corrects" the value to fit with the exp of a block that might get created ...
+            while (value->NeededBitsNumber > Metadata.MaxNeededBitsNumber) //Todo: check how often this case appears. (This is a "bug" created by the blockfinding, which "corrects" the value to fit with the exp of a block that might get created ...
             {
-                value.Number /= 10;
-                value.Exponent++;
-                value.NeededBitsNumber = int8_t
+                value->Number /= 10;
+                value->Exponent++;
+                value->NeededBitsNumber = int8_t
                 (
-                    floor(log2(abs(value.Number))) + 1
+                    floor(log2(abs(value->Number))) + 1
                 );
             }
 
             writer.write_byte(0, 1);
 
             if (!Metadata.IsAbsolute)
-                writer.write_byte(uint8_t(value.IsNegative ? 1 : 0), 1);
-            writer.write(uint64_t(value.Number), Metadata.MaxNeededBitsNumber);
+                writer.write_byte(uint8_t(value->IsNegative ? 1 : 0), 1);
+            writer.write(uint64_t(value->Number), Metadata.MaxNeededBitsNumber);
             if (hasExponent)
             {
-                writer.write_byte(uint8_t(value.Exponent < 0 ? 1 : 0), 1);
+                writer.write_byte(uint8_t(value->Exponent < 0 ? 1 : 0), 1);
                 writer.write
                 (
-                    uint64_t(abs(value.Exponent)),
+                    uint64_t(abs(value->Exponent)),
                     Metadata.MaxNeededBitsExponent
                 );
             }

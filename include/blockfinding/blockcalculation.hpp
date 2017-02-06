@@ -1,6 +1,8 @@
 #ifndef BLOCKCALCULATION_HPP
 #define BLOCKCALCULATION_HPP
 
+#include <memory>
+
 #include <blockfinding/blockreplacingcalculation.hpp>
 #include <block.hpp>
 #include <blockynumber.hpp>
@@ -16,7 +18,7 @@ struct BlockCalculation
         : SavedBits(savedBits)
         , VirtualBlock(virtualBlock) { }
 
-    bool process_value(BlockyNumber value, int32_t index)
+    bool process_value(shared_ptr<BlockyNumber> value, int32_t index)
     {
         return VirtualBlock.Method->process_value
         (

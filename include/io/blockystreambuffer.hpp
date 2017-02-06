@@ -6,6 +6,7 @@
 #include <string>
 
 #include <parsing/lexer.hpp>
+#include <parsing/parser.hpp>
 
 using namespace std;
 
@@ -16,11 +17,13 @@ private:
     static const int bufferSize = 4096;
 
     char buffer[bufferSize];
+    shared_ptr<Token> tbuffer[bufferSize];
     FILE* file;
     bool opened;
     int mode;
 
     unique_ptr<Lexer> lexer;
+    unique_ptr<Parser> parser;
 
     // uint32_t width;
     // uint32_t position;
