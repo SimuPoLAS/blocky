@@ -28,7 +28,7 @@ public:
 
     void virtual write
     (
-        BitWriter writer,
+        BitWriter& writer,
         Block block,
         int32_t& valueIndex
     ) override;

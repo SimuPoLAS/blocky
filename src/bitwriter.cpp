@@ -6,22 +6,25 @@
 BitWriter::~BitWriter()
 {
     flush();
-    delete buffer;
 }
 
 void BitWriter::write(uint64_t data, uint8_t count)
 {
+    std::cout << "BITWRITER" << '\n';
+    std::cout << "data: " << data << '\n';
+    std::cout << "count: " << to_string(count) << '\n';
     do
     {
         auto bitsLeft = 8 - offset;
         if (bitsLeft > count)
         {
-            *buffer |= (uint8_t)((data & uint64_t(pow(2, count) - 1)) << offset);
+            *buffer |= uint8_t((data & uint64_t(pow(2, count) - 1)) << offset);
             offset += count;
             return;
         }
-        *buffer |= (uint8_t)((data & uint64_t(pow(2, bitsLeft) - 1)) << offset);
-        fwrite(buffer, 1, 1, file);
+        *buffer |= uint8_t((data & uint64_t(pow(2, bitsLeft) - 1)) << offset);
+        std::cout << "bitwriter is writing!~" << '\n';
+        fwrite(buffer.get(), 1, 1, file);
         offset = 0;
         *buffer = 0;
         count -= (uint8_t)bitsLeft;
@@ -38,7 +41,7 @@ void BitWriter::flush()
 {
     if (*buffer == 0 && offset == 0)
         return;
-    fwrite(buffer, 1, 1, file);
+    fwrite(buffer.get(), 1, 1, file);
     *buffer = 0;
     offset = 0;
 }

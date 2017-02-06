@@ -97,7 +97,7 @@ bool PatternSameCompression::process_value
 
 void PatternSameCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )

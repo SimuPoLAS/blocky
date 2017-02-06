@@ -89,7 +89,7 @@ bool PatternOffsetCompression::process_value
 
 void PatternOffsetCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )

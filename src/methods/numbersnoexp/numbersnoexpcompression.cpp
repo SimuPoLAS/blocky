@@ -44,7 +44,7 @@ bool NummbersNoExpCompression::process_value
 
 void NummbersNoExpCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )

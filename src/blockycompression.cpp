@@ -45,6 +45,8 @@ void BlockyCompression::finish()
     blockfinding = make_unique<Blockfinding>(Values, Metadata);
     Blocks = blockfinding->find_all_blocks();
 
+    std::cout << "blocks: " << Blocks.size() << std::endl;
+
     for(auto v : Values)
     {
         std::cout << "Number: " << v->reconstructed() << '\n';
@@ -52,7 +54,7 @@ void BlockyCompression::finish()
 
     post_compression_optimisation(); //Todo: make optional
 
-    std::cout << "here" << '\n';
+    std::cout << "start writing" << '\n';
 
     write();
 }
@@ -70,12 +72,14 @@ void BlockyCompression::post_compression_optimisation()
 
     if (Blocks.size() == 0)
         return;
+
     auto ppp = (PatternPingPongCompression*)blockfinding->initialized_method
     (
         Methods::PatternPingPong
     );
     auto recentBlock = Blocks[0];
     uint8_t lastppLength = 0;
+
     for (size_t i = 1; i < Blocks.size(); i++)
     {
         auto currentBlock = Blocks[i];
@@ -159,8 +163,11 @@ void BlockyCompression::write()
 
     auto hasExponent = !Metadata.NoExponent;
 
+    std::cout << "hi" << std::endl;
     // Writing global header
     Metadata.write(writer);
+    writer.write_byte(0, 1); // dont use huffman
+    std::cout << "meta" << std::endl;
 
     for (auto i = 0; i < valueCount;)
     {

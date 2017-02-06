@@ -14,7 +14,7 @@ bool PatternPingPongCompression::process_value
 
 void PatternPingPongCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )

@@ -123,7 +123,7 @@ bool FloatSimmilarCompression::process_value
 
 void FloatSimmilarCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )

@@ -2,17 +2,24 @@
 #define BITWRITER_HPP
 
 #include <fstream>
+#include <iostream>
+#include <memory>
+
+using namespace std;
 
 class BitWriter {
 private:
     FILE* file;
     // TODO: try use it as reference and notas pointer
-    uint8_t* buffer;
+    std::unique_ptr<uint8_t> buffer; 
     uint8_t offset;
 
 public:
     BitWriter(FILE* file)
-        : file(file) { }
+        : file(file)
+    {
+        buffer = make_unique<uint8_t>();
+    }
 
     ~BitWriter();
 

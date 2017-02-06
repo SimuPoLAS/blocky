@@ -2,7 +2,7 @@
 
 void CompressionMethod::write_default_blockheader
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block
 ) const
 {
@@ -33,7 +33,7 @@ void CompressionMethod::write_default_blockheader
 
 void CompressionMethod::write_single_value_without_controlbit
 (
-    BitWriter writer,
+    BitWriter& writer,
     shared_ptr<const BlockyNumber> value
 ) const
 {
