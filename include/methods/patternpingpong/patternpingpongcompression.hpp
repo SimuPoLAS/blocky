@@ -51,7 +51,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        shared_ptr<const BlockyNumber> value,
+        const BlockyNumber& value,
         int32_t index,
         int32_t& bitDiff
     ) override;

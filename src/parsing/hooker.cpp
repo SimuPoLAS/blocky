@@ -73,25 +73,13 @@ void Hooker::handle_list_entry(string value)
     // to keep BlockyNumbers on stack when passing
     // They will be deallocated when leaving this function
     // Is also a big change because many function took a reference
-    reporter->report
-    (
-        shared_ptr<BlockyNumber>
-        (
-            new BlockyNumber(BlockyNumber::parse(value))
-        )
-    );
+    reporter->report(BlockyNumber::parse(value));
 }
 
 void Hooker::handle_list_entries(string* values, size_t size)
 {
     for (size_t i = 0; i < size; i++)
-        reporter->report
-        (
-            shared_ptr<BlockyNumber>
-            (
-                new BlockyNumber(BlockyNumber::parse(values[i]))
-            )
-        );
+        reporter->report(BlockyNumber::parse(values[i]));
 }
 
 void Hooker::leave_list()

@@ -37,7 +37,7 @@ private:
     );
     void update_replacing_calculations
     (
-        shared_ptr<BlockyNumber> value,
+        const BlockyNumber& value,
         int32_t bitDiffDiff = 0
     );
 

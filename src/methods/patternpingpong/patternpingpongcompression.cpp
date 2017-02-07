@@ -3,7 +3,7 @@
 bool PatternPingPongCompression::process_value
 (
     Block& block,
-    shared_ptr<const BlockyNumber> value,
+    const BlockyNumber& value,
     int32_t index,
     int32_t& bitDiff
 )
@@ -41,12 +41,12 @@ void PatternPingPongCompression::write
     write_single_value_without_controlbit
     (
         writer,
-        values[block.Index]
+        *values[block.Index]
     );
     write_single_value_without_controlbit
     (
         writer,
-        values[block.Index + meta.Length]
+        *values[block.Index + meta.Length]
     );
 
     writer.write_byte(meta.Length, 8);

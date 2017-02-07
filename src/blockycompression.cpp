@@ -7,7 +7,7 @@
 BlockyCompression::BlockyCompression(FILE* file)
     : writer(file) { }
 
-void BlockyCompression::report(shared_ptr<BlockyNumber> number)
+void BlockyCompression::report(BlockyNumber number)
 {
     // TODO: this number is coming from Hooker
     // and the hooker just parses a string value
@@ -15,12 +15,12 @@ void BlockyCompression::report(shared_ptr<BlockyNumber> number)
     // when exiting this block
     // this will probably result in a segmentation fault
     // probably need to make a pointer out of it
-    Values.push_back(number);
+    Values.push_back(make_shared<BlockyNumber>(number));
 }
 
 void BlockyCompression::report
 (
-    shared_ptr<BlockyNumber>* numbers,
+    BlockyNumber* numbers,
     size_t offset,
     size_t count
 )

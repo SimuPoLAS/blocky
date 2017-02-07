@@ -6,12 +6,12 @@
 class Reporter
 {
 public:
-    void virtual report(shared_ptr<BlockyNumber> number) = 0;
+    void virtual report(BlockyNumber number) = 0;
     void virtual report
     (
         // TODO: decide whether to use normal pointers
         // as parameter or shared_ptr
-        shared_ptr<BlockyNumber>* numbers,
+        BlockyNumber* numbers,
         size_t offset,
         size_t count
     ) = 0;

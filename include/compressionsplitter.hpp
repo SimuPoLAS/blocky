@@ -22,12 +22,12 @@ public:
         size_t size
     );
 
-    void report(shared_ptr<BlockyNumber> number) override;
+    void report(BlockyNumber number) override;
     void report
     (
         // TODO: decide whether to use normal pointers
         // as parameter or shared_ptr
-        shared_ptr<BlockyNumber>* numbers,
+        BlockyNumber* numbers,
         size_t offset,
         size_t count
     ) override;

@@ -27,7 +27,7 @@ protected:
     void write_single_value_without_controlbit
     (
         BitWriter& writer,
-        shared_ptr<const BlockyNumber> value
+        const BlockyNumber& value
     ) const;
 
 public:
@@ -46,7 +46,7 @@ public:
     bool virtual process_value
     (
         Block& block,
-        shared_ptr<const BlockyNumber> value,
+        const BlockyNumber& value,
         int32_t index,
         int32_t& bitDiff
     ) = 0;
