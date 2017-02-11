@@ -13,8 +13,6 @@ using namespace std;
 class BlockyMetadata
 {
 public:
-    BlockyMetadata() { }
-
     int32_t ValueCount;
     uint8_t MaxNeededBitsNumber;
     uint8_t MaxNeededBitsNeededBitsNumber;
@@ -23,6 +21,12 @@ public:
     bool IsNegative;
     bool NoExponent;
     uint64_t LargestPossibleValue;
+
+    BlockyMetadata()
+        : ValueCount(0)
+        , MaxNeededBitsNumber(0)
+        , MaxNeededBitsNeededBitsNumber(0)
+        , MaxNeededBitsExponent(0) { }
 
     void write(BitWriter& writer);
 

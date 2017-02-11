@@ -62,5 +62,8 @@ BlockyMetadata BlockyMetadata::from_data
         if (metadata.NoExponent && number->Exponent != 0)
             metadata.NoExponent = false;
     }
+
+    std::cout << "from_data: MaxNeededBitsNumber: " << to_string(metadata.MaxNeededBitsNumber) << '\n';
+
     return metadata;
 }

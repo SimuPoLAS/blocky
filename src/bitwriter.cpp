@@ -10,9 +10,6 @@ BitWriter::~BitWriter()
 
 void BitWriter::write(uint64_t data, uint8_t count)
 {
-    std::cout << "BITWRITER" << '\n';
-    std::cout << "data: " << data << '\n';
-    std::cout << "count: " << to_string(count) << '\n';
     do
     {
         auto bitsLeft = 8 - offset;
@@ -23,7 +20,6 @@ void BitWriter::write(uint64_t data, uint8_t count)
             return;
         }
         buffer |= uint8_t((data & uint64_t(pow(2, bitsLeft) - 1)) << offset);
-        std::cout << "bitwriter is writing!~" << '\n';
         fwrite(&buffer, 1, 1, file);
         offset = 0;
         buffer = 0;

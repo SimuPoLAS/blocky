@@ -163,7 +163,6 @@ void BlockyCompression::write()
 
     auto hasExponent = !Metadata.NoExponent;
 
-    std::cout << "hi" << std::endl;
     // Writing global header
     Metadata.write(writer);
     writer.write_byte(0, 1); // dont use huffman
