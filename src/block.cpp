@@ -89,4 +89,6 @@ Block& Block::operator=(Block const& other)
     IsValid = other.IsValid;
 
     Method = other.Method;
+
+	return *this;
 }

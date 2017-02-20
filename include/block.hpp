@@ -24,7 +24,7 @@ struct Block
     uint8_t Length;
     bool AbsoluteSign;
     bool IsSignNegative;
-    uint64_t BiggestNumber;
+    int64_t BiggestNumber;
     bool IsValid;
 
     CompressionMethod* Method;
