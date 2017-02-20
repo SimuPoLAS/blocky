@@ -3,7 +3,12 @@
 #include <parsing/hooker.hpp>
 
 Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
-    : file(file)
+    : algorithm()
+	, file(file)
+	, inList(false)
+	, type(ListType::Anonymous)
+	, start(0)
+	, size(0)
     , providedPosition(providedPosition) { }
 
 void Hooker::enter_dictionary(string name)

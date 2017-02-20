@@ -16,33 +16,33 @@ bool FloatSimmilarCompression::process_value
     if (block.Length == 255)
         return false;
 
-    if (block.Exponent < value.Exponent)
+	BlockyNumber val(value.Number, value.Exponent);
+
+    if (block.Exponent < val.Exponent)
     {
-        auto expDiff = value.Exponent - block.Exponent;
+        auto expDiff = val.Exponent - block.Exponent;
 
         if (expDiff > 18)
             // long can not hold 10^19 or higher
             return false;
 
         auto multiplier = int64_t(pow(10, expDiff));
-        auto newNum = value.Number;
-        if (value.Number != 0)
+        auto newNum = val.Number;
+        if (val.Number != 0)
         {
-            if (metadata.LargestPossibleValue / value.Number < multiplier)
+            if (metadata.LargestPossibleValue / val.Number < multiplier)
                 // overflow check
                 return false;
-            newNum = value.Number * multiplier;
+            newNum = val.Number * multiplier;
         }
 
         auto newNb = uint8_t(floor(log2(abs(newNum))) + 1);
-        if (value.NeededBitsNumber > metadata.MaxNeededBitsNumber)
+        if (val.NeededBitsNumber > metadata.MaxNeededBitsNumber)
             return false;
 
-        // Not needed because value is nether reference type
-        // nor used later => just commenting this lines for now
-        //value.Exponent -= int16_t(expDiff);
-        //value.NeededBitsNumber = newNb;
-        //value.Number = newNum;
+        val.Exponent -= int16_t(expDiff);
+        val.NeededBitsNumber = newNb;
+        val.Number = newNum;
 
         if (newNb > block.NeededBits)
         {
@@ -51,9 +51,9 @@ bool FloatSimmilarCompression::process_value
             block.NeededBits = nbNewNumber;
         }
     }
-    else if (block.Exponent > value.Exponent)
+    else if (block.Exponent > val.Exponent)
     {
-        auto expDiff = (block.Exponent - value.Exponent);
+        auto expDiff = (block.Exponent - val.Exponent);
 
         if (expDiff > 18)
             return false; // int64 can't hold 10^19 or higher
@@ -72,13 +72,13 @@ bool FloatSimmilarCompression::process_value
             return false; // overflow check
         auto newNum = block.BiggestNumber * multiplier;
 
-        block.BiggestNumber = value.Number > newNum ? value.Number : newNum;
-        block.Exponent = value.Exponent;
+        block.BiggestNumber = val.Number > newNum ? val.Number : newNum;
+        block.Exponent = val.Exponent;
 
         auto bigNumNb = max
         (
             uint8_t(floor(log2(abs(block.BiggestNumber))) + 1),
-            value.NeededBitsNumber
+			val.NeededBitsNumber
         );
         if (bigNumNb > metadata.MaxNeededBitsNumber)
             return false;
@@ -93,7 +93,7 @@ bool FloatSimmilarCompression::process_value
 
     if (block.AbsoluteSign)
     {
-        if (block.IsSignNegative != value.IsNegative)
+        if (block.IsSignNegative != val.IsNegative)
         {
             block.AbsoluteSign = false;
             bitDiff -= block.Length - 1;
@@ -102,12 +102,12 @@ bool FloatSimmilarCompression::process_value
             bitDiff++;
     }
 
-    if (value.Number > block.BiggestNumber)
+    if (val.Number > block.BiggestNumber)
     {
-        block.BiggestNumber = value.Number;
-        if (block.NeededBits < value.NeededBitsNumber)
+        block.BiggestNumber = val.Number;
+        if (block.NeededBits < val.NeededBitsNumber)
         {
-            auto nbNewBiggest = value.NeededBitsNumber;
+            auto nbNewBiggest = val.NeededBitsNumber;
             bitDiff += block.difference_with_nb(metadata, nbNewBiggest);
             block.NeededBits = nbNewBiggest;
         }

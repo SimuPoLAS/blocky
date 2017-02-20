@@ -16,7 +16,9 @@ private:
 
 public:
     BitWriter(FILE* file)
-        : file(file) { }
+        : file(file)
+		, buffer(0)
+		, offset(0) { }
 
     ~BitWriter();
 

@@ -15,6 +15,8 @@ Parser::Parser
     , length(0)
     , position(0)
     , size(bufferSize)
+	, filePos(0)
+	, hooker(nullptr)
 {
     hooker = make_unique<Hooker>(file, filePos);
 }

@@ -12,7 +12,12 @@ struct BlockReplacingCalculation
     SavingGrade OldConcurrentSavingGrade;
     bool IsValid;
 
-    BlockReplacingCalculation() { }
+    BlockReplacingCalculation()
+		: SavedBits(0) 
+		, VirtualBlock()
+		, OldConcurrentBlock()
+		, OldConcurrentSavingGrade(SavingGrade::Exp)
+		, IsValid(false) { }
 
     void initialize
     (

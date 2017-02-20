@@ -12,7 +12,9 @@ struct BlockCalculation
     int32_t SavedBits;
     Block VirtualBlock;
 
-    BlockCalculation() { }
+    BlockCalculation()
+		: SavedBits(0)
+		, VirtualBlock() { }
 
     BlockCalculation(int32_t savedBits, Block virtualBlock)
         : SavedBits(savedBits)

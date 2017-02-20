@@ -13,11 +13,19 @@ Blockfinding::Blockfinding
     vector<shared_ptr<BlockyNumber>> const& values,
     BlockyMetadata const& metadata
 )
-    : Values(values)
+    : blocks()
+	, index(0)
+	, appendingCalculation()
+	, appendingCalculationSavingGrade(0)
+	, lastStableBlock()
+	, isAppendingCalculationValid(false)
+	, calculations()
+	, patternPredictor(values)
+	, hasRunningPatternCalculation(false)
+	, Values(values)
     , ValueCount(values.size())
     , Metadata(metadata)
     , Headers(metadata)
-    , patternPredictor(values)
 {
     initializedCompressionMethods[(int)Methods::PatternSame] =
         new PatternSameCompression
@@ -305,7 +313,7 @@ bool Blockfinding::process_next_value()
     auto isLastBlockUp2Date =
         lastStableBlock.Index + lastStableBlock.Length - 1 == index;
 
-    for (size_t j = 0; j < calculations.size(); j++)
+    for (int32_t j = 0; j < calculations.size(); j++)
     {
         auto calc = calculations[j];
 
