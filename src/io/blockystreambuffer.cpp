@@ -19,8 +19,6 @@ BlockyStreamBuffer::~BlockyStreamBuffer()
 
 BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 {
-    std::cout << "Buffer will be opened" << '\n';
-
     if (is_open())
         return 0;
 
@@ -62,8 +60,6 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
 BlockyStreamBuffer* BlockyStreamBuffer::close()
 {
-    std::cout << "buffer will be closed" << '\n';
-
     if (is_open())
     {
         sync();
@@ -76,7 +72,6 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
-    std::cout << "underflow" << '\n';
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
@@ -92,13 +87,10 @@ int BlockyStreamBuffer::underflow()
 
 int BlockyStreamBuffer::flush_buffer()
 {
-    std::cout << "flushing buffer" << '\n';
     int w = pptr() - pbase();
     int processed;
 
-    std::cout << "lexer read" << '\n';
     int amount = lexer->read(tbuffer, w, processed);
-    std::cout << "amount: " << amount << '\n';
     parser->parse(amount);
 
     // if (fwrite(pbase(), 1, w, file) == EOF)
@@ -113,7 +105,6 @@ int BlockyStreamBuffer::flush_buffer()
 
 int BlockyStreamBuffer::overflow(int c)
 {
-    std::cout << "overflow" << '\n';
     if (!(mode & std::ios::out) || !opened)
         return EOF;
 
@@ -131,7 +122,6 @@ int BlockyStreamBuffer::overflow(int c)
 
 int BlockyStreamBuffer::sync()
 {
-    std::cout << "sync" << '\n';
     if (pptr() && pptr() > pbase())
     {
         if (flush_buffer() == EOF)

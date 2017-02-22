@@ -47,6 +47,7 @@ private:
     void parse_directive();
     void parse_value(Token const& me);
     void parse_list(ListType type, int32_t amount);
+    void parse_list_continue(ListType type);
     void parse_anonymous_list(int32_t number = -1);
     void parse_scalar();
     void parse_vector();

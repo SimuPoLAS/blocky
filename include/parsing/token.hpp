@@ -18,12 +18,18 @@ struct Token
     Token()
         : Type(TokenType::NONE)
         , Payload("")
-        , Position(0) { }
+        , Position(0)
+		, Column(0)
+		, Length(0) 
+		, Line(0) { }
 
     Token(TokenType type)
         : Type(type)
         , Payload("")
-        , Position(0) { }
+        , Position(0)
+		, Column(0)
+		, Length(0)
+		, Line(0) { }
 
     Token(TokenType type, string payload, uint32_t position)
         : Type(type)
@@ -49,7 +55,7 @@ struct Token
         , Length(length)
         , Line(line) { }
 
-    string to_s()
+    string to_s() const
     {
         string s;
         s += "Type: ";

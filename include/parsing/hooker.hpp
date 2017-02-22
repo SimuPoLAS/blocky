@@ -19,6 +19,7 @@ private:
     FILE* file;
     shared_ptr<Reporter> reporter;
     bool inList;
+    ListType type;
     uint32_t start;
     uint8_t size;
     uint32_t const& providedPosition;
@@ -27,6 +28,9 @@ public:
     vector<shared_ptr<CompressedSection>> CompessedDataSections;
 
     Hooker(FILE* file, uint32_t const& providedPosition);
+
+    bool is_in_list() const { return inList; }
+    ListType get_type() const { return type; } 
 
     void enter_dictionary(string name);
     void leave_dictionary();

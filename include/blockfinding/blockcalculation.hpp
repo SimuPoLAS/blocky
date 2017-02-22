@@ -12,13 +12,15 @@ struct BlockCalculation
     int32_t SavedBits;
     Block VirtualBlock;
 
-    BlockCalculation() { }
+    BlockCalculation()
+		: SavedBits(0)
+		, VirtualBlock() { }
 
     BlockCalculation(int32_t savedBits, Block virtualBlock)
         : SavedBits(savedBits)
         , VirtualBlock(virtualBlock) { }
 
-    bool process_value(shared_ptr<BlockyNumber> value, int32_t index)
+    bool process_value(const BlockyNumber& value, int32_t index)
     {
         return VirtualBlock.Method->process_value
         (

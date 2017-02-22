@@ -13,11 +13,19 @@ Blockfinding::Blockfinding
     vector<shared_ptr<BlockyNumber>> const& values,
     BlockyMetadata const& metadata
 )
-    : Values(values)
+    : blocks()
+	, index(0)
+	, appendingCalculation()
+	, appendingCalculationSavingGrade(0)
+	, lastStableBlock()
+	, isAppendingCalculationValid(false)
+	, calculations()
+	, patternPredictor(values)
+	, hasRunningPatternCalculation(false)
+	, Values(values)
     , ValueCount(values.size())
     , Metadata(metadata)
     , Headers(metadata)
-    , patternPredictor(values)
 {
     initializedCompressionMethods[(int)Methods::PatternSame] =
         new PatternSameCompression
@@ -143,7 +151,7 @@ void Blockfinding::transform_calcs_to_replace_cals_or_delete
 
 void Blockfinding::update_replacing_calculations
 (
-    shared_ptr<BlockyNumber> value,
+    const BlockyNumber& value,
     int32_t bitDiffDiff
 )
 {
@@ -223,14 +231,13 @@ void Blockfinding::update_replacing_calculations
 
 bool Blockfinding::process_next_value()
 {
-    auto value = Values[index];
+    auto value = *Values[index];
     auto patternPred = patternPredictor.predict_next(value);
 
     // adding value to last block and updating replacing calculations
 
     if (isAppendingCalculationValid)
     {
-
         auto lastBitDiff = appendingCalculation.SavedBits;
         auto lastAppendingBlock = appendingCalculation.VirtualBlock;
 
@@ -270,10 +277,10 @@ bool Blockfinding::process_next_value()
                 Block block
                 (
                     index,
-                    value->Exponent,
-                    value->NeededBitsNumber,
-                    value->IsNegative,
-                    value->Number,
+                    value.Exponent,
+                    value.NeededBitsNumber,
+                    value.IsNegative,
+                    value.Number,
                     initializedCompressionMethods,
                     Methods::PatternSame,
                     true
@@ -306,7 +313,7 @@ bool Blockfinding::process_next_value()
     auto isLastBlockUp2Date =
         lastStableBlock.Index + lastStableBlock.Length - 1 == index;
 
-    for (size_t j = 0; j < calculations.size(); j++)
+    for (int32_t j = 0; j < calculations.size(); j++)
     {
         auto calc = calculations[j];
 
@@ -381,10 +388,10 @@ bool Blockfinding::process_next_value()
                 Block
                 (
                     index,
-                    value->Exponent,
+                    value.Exponent,
                     0,
                     false,
-                    value->Number,
+                    value.Number,
                     initializedCompressionMethods,
                     Methods::PatternSame,
                     true
@@ -401,7 +408,7 @@ bool Blockfinding::process_next_value()
             auto hasExp = false;
             for (auto runningCalculation : calculations) //Todo: pre calculate that (bool array?)
             {
-                if (runningCalculation.VirtualBlock.Exponent == value->Exponent)
+                if (runningCalculation.VirtualBlock.Exponent == value.Exponent)
                 {
                     hasExp = true;
                     break;
@@ -412,7 +419,7 @@ bool Blockfinding::process_next_value()
                 BlockCalculation calc;
 
                 // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression - You can't see **** if you do a ?:
-                if (value->Exponent == 0)
+                if (value.Exponent == 0)
                     calc = BlockCalculation
                     (
                         -Headers.StandardBlockNumbersNoExp,
@@ -420,9 +427,9 @@ bool Blockfinding::process_next_value()
                         (
                             index,
                             0,
-                            value->NeededBitsNumber,
-                            value->IsNegative,
-                            value->Number,
+                            value.NeededBitsNumber,
+                            value.IsNegative,
+                            value.Number,
                             initializedCompressionMethods,
                             Methods::NumbersNoExp,
                             false
@@ -435,10 +442,10 @@ bool Blockfinding::process_next_value()
                         Block
                         (
                             index,
-                            value->Exponent,
-                            value->NeededBitsNumber,
-                            value->IsNegative,
-                            value->Number,
+                            value.Exponent,
+                            value.NeededBitsNumber,
+                            value.IsNegative,
+                            value.Number,
                             initializedCompressionMethods,
                             Methods::FloatSimmilar,
                             false

@@ -21,13 +21,13 @@ protected:
 
     void write_default_blockheader
     (
-        BitWriter writer,
+        BitWriter& writer,
         Block block
     ) const;
     void write_single_value_without_controlbit
     (
-        BitWriter writer,
-        shared_ptr<const BlockyNumber> value
+        BitWriter& writer,
+        const BlockyNumber& value
     ) const;
 
 public:
@@ -46,14 +46,14 @@ public:
     bool virtual process_value
     (
         Block& block,
-        shared_ptr<const BlockyNumber> value,
+        const BlockyNumber& value,
         int32_t index,
         int32_t& bitDiff
     ) = 0;
 
     void virtual write
     (
-        BitWriter writer,
+        BitWriter& writer,
         Block block,
         int32_t& valueIndex
     ) = 0;

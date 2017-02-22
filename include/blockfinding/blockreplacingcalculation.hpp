@@ -12,7 +12,12 @@ struct BlockReplacingCalculation
     SavingGrade OldConcurrentSavingGrade;
     bool IsValid;
 
-    BlockReplacingCalculation() { }
+    BlockReplacingCalculation()
+		: SavedBits(0) 
+		, VirtualBlock()
+		, OldConcurrentBlock()
+		, OldConcurrentSavingGrade(SavingGrade::Exp)
+		, IsValid(false) { }
 
     void initialize
     (
@@ -29,7 +34,7 @@ struct BlockReplacingCalculation
         IsValid = true;
     }
 
-    bool process_value(shared_ptr<BlockyNumber> value, int32_t index)
+    bool process_value(const BlockyNumber& value, int32_t index)
     {
         return VirtualBlock.Method->process_value
         (

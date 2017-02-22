@@ -7,7 +7,7 @@
 BlockyCompression::BlockyCompression(FILE* file)
     : writer(file) { }
 
-void BlockyCompression::report(shared_ptr<BlockyNumber> number)
+void BlockyCompression::report(BlockyNumber number)
 {
     // TODO: this number is coming from Hooker
     // and the hooker just parses a string value
@@ -15,12 +15,12 @@ void BlockyCompression::report(shared_ptr<BlockyNumber> number)
     // when exiting this block
     // this will probably result in a segmentation fault
     // probably need to make a pointer out of it
-    Values.push_back(number);
+    Values.push_back(make_shared<BlockyNumber>(number));
 }
 
 void BlockyCompression::report
 (
-    shared_ptr<BlockyNumber>* numbers,
+    BlockyNumber* numbers,
     size_t offset,
     size_t count
 )
@@ -45,14 +45,16 @@ void BlockyCompression::finish()
     blockfinding = make_unique<Blockfinding>(Values, Metadata);
     Blocks = blockfinding->find_all_blocks();
 
-    for(auto v : Values)
-    {
-        std::cout << "Number: " << v->reconstructed() << '\n';
-    }
+    std::cout << "blocks: " << Blocks.size() << std::endl;
+    // for(auto value : Values)
+    // {
+    //     if (value->NeededBitsNumber > 200)
+    //         std::cout << "value: " << value->Number << "e" << value->Exponent << '\n';
+    // }
 
     post_compression_optimisation(); //Todo: make optional
 
-    std::cout << "here" << '\n';
+    std::cout << "start writing" << '\n';
 
     write();
 }
@@ -70,12 +72,14 @@ void BlockyCompression::post_compression_optimisation()
 
     if (Blocks.size() == 0)
         return;
+
     auto ppp = (PatternPingPongCompression*)blockfinding->initialized_method
     (
         Methods::PatternPingPong
     );
     auto recentBlock = Blocks[0];
     uint8_t lastppLength = 0;
+
     for (size_t i = 1; i < Blocks.size(); i++)
     {
         auto currentBlock = Blocks[i];
@@ -161,6 +165,8 @@ void BlockyCompression::write()
 
     // Writing global header
     Metadata.write(writer);
+    writer.write_byte(0, 1); // dont use huffman
+    std::cout << "meta" << std::endl;
 
     for (auto i = 0; i < valueCount;)
     {

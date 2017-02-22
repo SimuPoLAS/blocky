@@ -3,7 +3,12 @@
 #include <parsing/hooker.hpp>
 
 Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
-    : file(file)
+    : algorithm()
+	, file(file)
+	, inList(false)
+	, type(ListType::Anonymous)
+	, start(0)
+	, size(0)
     , providedPosition(providedPosition) { }
 
 void Hooker::enter_dictionary(string name)
@@ -50,11 +55,13 @@ void Hooker::leave_entry()
 
 void Hooker::enter_list(ListType type, int capacity)
 {
+    std::cout << "entered list" << '\n';
     if (type == ListType::Anonymous)
         return;
     if (inList)
         // TODO: throw meaningful exception, not just zero
         throw 0;
+    this->type = type;
     inList = true;
     reporter = algorithm.compress(file, (int)type, capacity);
     size = uint8_t(type);
@@ -62,7 +69,6 @@ void Hooker::enter_list(ListType type, int capacity)
         // TODO: throw meaningful exception, not just zero
         throw 0;
     start = providedPosition;
-    std::cout << "here" << '\n';
 }
 
 void Hooker::handle_list_entry(string value)
@@ -72,33 +78,20 @@ void Hooker::handle_list_entry(string value)
     // to keep BlockyNumbers on stack when passing
     // They will be deallocated when leaving this function
     // Is also a big change because many function took a reference
-    std::cout << "reported" << '\n';
-    reporter->report
-    (
-        shared_ptr<BlockyNumber>
-        (
-            new BlockyNumber(BlockyNumber::parse(value))
-        )
-    );
+    reporter->report(BlockyNumber::parse(value));
 }
 
 void Hooker::handle_list_entries(string* values, size_t size)
 {
     for (size_t i = 0; i < size; i++)
-        reporter->report
-        (
-            shared_ptr<BlockyNumber>
-            (
-                new BlockyNumber(BlockyNumber::parse(values[i]))
-            )
-        );
+        reporter->report(BlockyNumber::parse(values[i]));
 }
 
 void Hooker::leave_list()
 {
     if (!inList)
         return;
-    std::cout << "finish" << '\n';
+    std::cout << "finished list" << '\n';
     reporter->finish();
     CompessedDataSections.push_back
     (

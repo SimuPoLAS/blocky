@@ -4,6 +4,8 @@
 
 BitReader::BitReader(FILE* file)
     : file(file)
+	, buffer(0)
+	, offset(0)
 {
     auto c = getc(file);
     if (c == EOF)

@@ -1,9 +1,17 @@
 #include <math.h>
+#include <iostream>
+#include <string>
 
 #include <blockymetadata.hpp>
 
 void BlockyMetadata::write(BitWriter& writer)
 {
+    std::cout << "ValueCount: " << ValueCount << '\n';
+    std::cout << "IsAbsolute: " << IsAbsolute << '\n';
+    std::cout << "IsNegative: " << IsNegative << '\n';
+    std::cout << "MaxNeededBitsNumber: " << to_string(MaxNeededBitsNumber) << '\n';
+    std::cout << "MaxNeededBitsExponent: " << to_string(MaxNeededBitsExponent) << '\n';
+
     writer.write(uint64_t(ValueCount), 31);
     writer.write_byte(IsAbsolute ? uint8_t(1) : uint8_t(0), 1);
     if (IsAbsolute)
@@ -54,5 +62,8 @@ BlockyMetadata BlockyMetadata::from_data
         if (metadata.NoExponent && number->Exponent != 0)
             metadata.NoExponent = false;
     }
+
+    std::cout << "from_data: MaxNeededBitsNumber: " << to_string(metadata.MaxNeededBitsNumber) << '\n';
+
     return metadata;
 }

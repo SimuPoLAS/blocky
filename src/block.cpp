@@ -15,14 +15,15 @@ Block::Block
     , HasExponent(exponent != 0)
     , HasPattern(hasPattern)
     , Pattern(PatternType::Same)
-    , Method(methods[(int32_t)method])
-    , Exponent(exponent)
-    , NeededBits(nb)
-    , AbsoluteSign(true)
-    , IsSignNegative(isSignNegative)
-    , BiggestNumber(biggestNumber)
-    , OverrideGlobalNb(false)
-    , Length(0) { }
+	, Exponent(exponent)
+	, OverrideGlobalNb(false)
+	, NeededBits(nb)
+	, Length(0)
+	, AbsoluteSign(true)
+	, IsSignNegative(isSignNegative)
+	, BiggestNumber(biggestNumber)
+	, IsValid(true)
+	, Method(methods[(int32_t)method]) { }
 
 bool Block::is_valid()
 {
@@ -89,4 +90,6 @@ Block& Block::operator=(Block const& other)
     IsValid = other.IsValid;
 
     Method = other.Method;
+
+	return *this;
 }

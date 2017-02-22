@@ -5,14 +5,20 @@
 #include <parsing/lexer.hpp>
 
 Lexer::Lexer(char (&buffer)[bufferSize], bool recordPosition)
-    : length(0)
+	: buffer(buffer)
+    , length(0)
     , position(0)
     , size(bufferSize)
+	, recordPosition(recordPosition)
+	, textBuffer(NULL)
     , textPosition(0)
     , textLength(0)
     , textSize(64)
-    , recordPosition(recordPosition)
-    , buffer(buffer)
+	, currentPosition(0)
+	, tokenLine(0)
+	, tokenColumn(0)
+	, tokenPosition(0)
+	, symbolOnly(false)
 {
     eos = false;
     textBuffer = new char[textSize];
@@ -518,8 +524,8 @@ shared_ptr<Token> Lexer::next_token()
     }
     catch(int e)
     {
-        if (e == 404)
-            std::cout << "buffer must be reload" << '\n';
+        //if (e == 404)
+            //std::cout << "buffer must be reload" << '\n';
 
         return nullptr;
     }

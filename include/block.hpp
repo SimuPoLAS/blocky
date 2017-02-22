@@ -6,10 +6,10 @@
 
 class CompressionMethod;
 
-static const int PATTERNTYPE_COUNT = 5;
-enum struct PatternType { Same, Offset, Pingpong, Reserved, Count };
-static const int SAVINGGRADE_COUNT = 4;
-enum struct SavingGrade { Exp, NoExp, Pattern, Count };
+static const int PATTERNTYPE_COUNT = 4;
+enum struct PatternType { Same, Offset, Pingpong, Reserved };
+static const int SAVINGGRADE_COUNT = 3;
+enum struct SavingGrade { Exp, NoExp, Pattern };
 
 struct Block
 {
@@ -24,13 +24,25 @@ struct Block
     uint8_t Length;
     bool AbsoluteSign;
     bool IsSignNegative;
-    uint64_t BiggestNumber;
+    int64_t BiggestNumber;
     bool IsValid;
 
     CompressionMethod* Method;
 
-    Block()
-        : Index(0) { }
+	Block()
+		: Index(0)
+		, HasExponent(false)
+		, HasPattern(false)
+		, Pattern(PatternType::Same)
+		, Exponent(0)
+		, OverrideGlobalNb(false)
+		, NeededBits(0)
+		, Length(0)
+		, AbsoluteSign(false)
+		, IsSignNegative(false)
+		, BiggestNumber(0)
+		, IsValid(false)
+		, Method(NULL) { }
 
     Block
     (

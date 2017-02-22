@@ -2,7 +2,7 @@
 
 void CompressionMethod::write_default_blockheader
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block
 ) const
 {
@@ -33,18 +33,18 @@ void CompressionMethod::write_default_blockheader
 
 void CompressionMethod::write_single_value_without_controlbit
 (
-    BitWriter writer,
-    shared_ptr<const BlockyNumber> value
+    BitWriter& writer,
+    const BlockyNumber& value
 ) const
 {
     if (!metadata.IsAbsolute)
-        writer.write_byte(value->IsNegative ? 1 : 0, 1);
-    writer.write(uint64_t(abs(value->Number)), metadata.MaxNeededBitsNumber);
+        writer.write_byte(value.IsNegative ? 1 : 0, 1);
+    writer.write(uint64_t(abs(value.Number)), metadata.MaxNeededBitsNumber);
     // Bug: potentually writing exponent even though NoExp is set to true
-    writer.write_byte(value->Exponent < 0 ? 1 : 0, 1);
+    writer.write_byte(value.Exponent < 0 ? 1 : 0, 1);
     writer.write
     (
-        uint16_t(abs(value->Exponent)),
+        uint16_t(abs(value.Exponent)),
         metadata.MaxNeededBitsExponent
     );
 }

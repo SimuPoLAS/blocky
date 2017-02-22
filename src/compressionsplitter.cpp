@@ -8,7 +8,7 @@ CompressionSplitter::CompressionSplitter
     : compressions(compressions)
     , count(size) { }
 
-void CompressionSplitter::report(shared_ptr<BlockyNumber> number)
+void CompressionSplitter::report(BlockyNumber number)
 {
     compressions.get()[numberIndex]->report(number);
     numberIndex = (numberIndex + 1) % count;
@@ -18,7 +18,7 @@ void CompressionSplitter::report
 (
     // TODO: decide whether to use normal pointers
     // as parameter or shared_ptr
-    shared_ptr<BlockyNumber>* numbers,
+    BlockyNumber* numbers,
     size_t offset,
     size_t count
 )

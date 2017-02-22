@@ -8,7 +8,7 @@ using namespace std;
 bool PatternOffsetCompression::process_value
 (
     Block& block,
-    shared_ptr<const BlockyNumber> value,
+    const BlockyNumber& value,
     int32_t index,
     int32_t& bitDiff
 )
@@ -16,24 +16,24 @@ bool PatternOffsetCompression::process_value
     if (block.Length == 255)
         return false;
 
-    auto firstValue = values[block.Index];
-    auto secondValue = values[block.Index + 1];
-    auto lastValue = values[index - 1];
+    auto firstValue = *values[block.Index];
+    auto secondValue = *values[block.Index + 1];
+    auto lastValue = *values[index - 1];
 
     if
     (
         (
-            firstValue->Number - secondValue->Number
-         != lastValue->Number - value->Number
+            firstValue.Number - secondValue.Number
+         != lastValue.Number - value.Number
         )
         ||
         (
-            firstValue->Exponent - secondValue->Exponent
-         != lastValue->Exponent - value->Exponent
+            firstValue.Exponent - secondValue.Exponent
+         != lastValue.Exponent - value.Exponent
         )
     )
     {
-        if (firstValue->Exponent == 0 && secondValue->Exponent == 0)
+        if (firstValue.Exponent == 0 && secondValue.Exponent == 0)
         {
             bitDiff += headers.StandardBlockPatternOffset
               - headers.StandardBlockNumbersNoExp;
@@ -41,14 +41,14 @@ bool PatternOffsetCompression::process_value
         }
         else if
         (
-            firstValue->Exponent == secondValue->Exponent
-         && secondValue->Exponent == value->Exponent
+            firstValue.Exponent == secondValue.Exponent
+         && secondValue.Exponent == value.Exponent
         )
         {
             bitDiff += headers.StandardBlockPatternOffset
               - headers.StandardBlockFloatSimmilar;
             block.Method = methods[(int)Methods::FloatSimmilar];
-            block.Exponent = firstValue->Exponent;
+            block.Exponent = firstValue.Exponent;
         }
         else
             return false; //todo: maybe the floatsimmilar algorithm could adjust that ...
@@ -56,18 +56,18 @@ bool PatternOffsetCompression::process_value
         block.HasPattern = false;
         block.BiggestNumber = max
         (
-            value->Number,
-            max(firstValue->Number, lastValue->Number)
+            value.Number,
+            max(firstValue.Number, lastValue.Number)
         );
 
         if
         (
-            firstValue->IsNegative == lastValue->IsNegative
-         && lastValue->IsNegative == value->IsNegative
+            firstValue.IsNegative == lastValue.IsNegative
+         && lastValue.IsNegative == value.IsNegative
         )
         {
             block.AbsoluteSign = true;
-            block.IsSignNegative = value->IsNegative;
+            block.IsSignNegative = value.IsNegative;
             //bitDiff--; commented this out, as the isNegative is now in the default header!
         }
         else
@@ -89,15 +89,15 @@ bool PatternOffsetCompression::process_value
 
 void PatternOffsetCompression::write
 (
-    BitWriter writer,
+    BitWriter& writer,
     Block block,
     int32_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);
 
-    write_single_value_without_controlbit(writer, values[block.Index]);
-    write_single_value_without_controlbit(writer, values[block.Index + 1]);
+    write_single_value_without_controlbit(writer, *values[block.Index]);
+    write_single_value_without_controlbit(writer, *values[block.Index + 1]);
 
     valueIndex += block.Length;
 }

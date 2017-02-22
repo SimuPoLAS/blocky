@@ -23,26 +23,26 @@ public:
         , limit(values.size() - 2)
         , Index(index) { }
 
-    bool predict_next(shared_ptr<BlockyNumber> const& current)
+    bool predict_next(const BlockyNumber& current)
     {
         Index++;
         if (Index >= limit)
             return false;
 
-        auto next = values[Index];
+        auto next = *values[Index];
         if
         (
-            next->Number == current->Number
-         && next->Exponent == current->Exponent
+            next.Number == current.Number
+         && next.Exponent == current.Exponent
         ) //same pattern
             return true;
 
-        auto ahead = values[Index + 1];
+        auto ahead = *values[Index + 1];
         if
         (
-            next->Number + (next->Number - current->Number) == ahead->Number
-         && next->Exponent + (next->Exponent - current->Exponent)
-         == ahead->Exponent
+            next.Number + (next.Number - current.Number) == ahead.Number
+         && next.Exponent + (next.Exponent - current.Exponent)
+         == ahead.Exponent
         ) // offset pattern
             return true;
 
