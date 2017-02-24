@@ -15,10 +15,14 @@ private:
     uint8_t offset;
 
 public:
+	// TODO: decide whether we keep position or not
+	uint64_t Position;
+
     BitWriter(FILE* file)
         : file(file)
 		, buffer(0)
-		, offset(0) { }
+		, offset(0)
+		, Position(0) { }
 
     ~BitWriter();
 
