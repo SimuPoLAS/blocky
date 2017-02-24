@@ -16,7 +16,7 @@ bool FloatSimmilarCompression::process_value
     if (block.Length == 255)
         return false;
 
-	BlockyNumber val(value.Number, value.Exponent);
+	BlockyNumber val(value.IsNegative ? -value.Number : value.Number, value.Exponent);
 
     if (block.Exponent < val.Exponent)
     {

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <iostream>
+#include <vector>
 
 #include <blockycompression.hpp>
 #include <methods/patternpingpong/patternpingpongcompression.hpp>
