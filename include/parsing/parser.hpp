@@ -11,6 +11,14 @@
 
 using namespace std;
 
+enum struct ParserResult
+{
+	SUCCESS = 0,
+	END_OF_BUFFER = 1,
+	UNEXPECTED_TOKEN = -1,
+	UNEXPECTED_EOF = -2
+};
+
 class Parser
     : public PositionProvider
 {
@@ -28,30 +36,29 @@ private:
 
     // base parser methods
     // TODO: decide whether to use int32_t or size_t for amount
-    void ensure(int32_t amount);
+    ParserResult ensure(int32_t amount);
     void fill();
-    bool needs(int32_t amount);
+    ParserResult needs(int32_t amount);
     void skip();
     void skip(int32_t amount);
     // void relocate();
 
     // parser methods
-    bool expect(TokenType type);
-    bool expect(TokenType types[], size_t count);
-    bool expect_safe(TokenType types[], size_t count);
+    ParserResult expect(TokenType type);
+    ParserResult expect(TokenType types[], size_t count);
 
-    void parse_entry_or_object(Token const& me);
-    void parse_object(Token const& me);
-    void parse_code_stream_object(Token const& me);
-    void parse_entry(Token const& me);
-    void parse_directive();
-    void parse_value(Token const& me);
-    void parse_list(ListType type, int32_t amount);
-    void parse_list_continue(ListType type);
-    void parse_anonymous_list(int32_t number = -1);
-    void parse_scalar();
-    void parse_vector();
-    void parse_tensor();
+    ParserResult parse_entry_or_object(Token const& me);
+	ParserResult parse_object(Token const& me);
+	ParserResult parse_code_stream_object(Token const& me);
+	ParserResult parse_entry(Token const& me);
+	ParserResult parse_directive();
+	ParserResult parse_value(Token const& me);
+	ParserResult parse_list(ListType type, int32_t amount);
+	ParserResult parse_list_continue(ListType type);
+	ParserResult parse_anonymous_list(int32_t number = -1);
+	ParserResult parse_scalar();
+	ParserResult parse_vector();
+	ParserResult parse_tensor();
 
 public:
     bool SimpleAnonyomousLists;
