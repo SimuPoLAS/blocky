@@ -57,6 +57,7 @@ void Parser::skip()
 void Parser::skip(int32_t amount)
 {
 	position += amount;
+	filePos += amount;
 	length -= amount;
 }
 
@@ -91,7 +92,7 @@ void Parser::parse(int w)
 
 	auto result = ParserResult::SUCCESS;
 	auto needsres = ParserResult::SUCCESS;
-	while ((needsres = needs(1)) != ParserResult::SUCCESS)
+	while ((needsres = needs(1)) == ParserResult::SUCCESS)
 	{
 		if (result != ParserResult::SUCCESS)
 			break;
@@ -101,15 +102,17 @@ void Parser::parse(int w)
 		if (hooker->is_in_list())
 		{
 			std::cout << "continuing list" << '\n';
-			parse_list_continue(hooker->get_type());
+			result = parse_list_continue(hooker->get_type());
+			if (result != ParserResult::SUCCESS)
+				break;
 			continue;
 		}
 
 		if
-			(
-				tkn->Type == TokenType::KEYWORD
-				|| tkn->Type == TokenType::STRING
-				)
+		(
+			tkn->Type == TokenType::KEYWORD
+		 || tkn->Type == TokenType::STRING
+		)
 		{
 			skip(1);
 			result = parse_entry_or_object(*tkn);
@@ -121,35 +124,41 @@ void Parser::parse(int w)
 		result = needs(2);
 
 		if
-			(
-				tkn->Type == TokenType::NUMBER
-				&& result != ParserResult::SUCCESS
-				&& buffer[position + 1]->Type == TokenType::PARENTHESE_OPEN
-				)
+		(
+			tkn->Type == TokenType::NUMBER
+		 && result != ParserResult::SUCCESS
+		 && buffer[position + 1]->Type == TokenType::PARENTHESE_OPEN
+		)
 		{
 			skip(2);
 			try
 			{
 				double a = stod(tkn->Payload);
-				parse_anonymous_list(int32_t(a));
+				result = parse_anonymous_list(int32_t(a));
 			}
 			catch (invalid_argument const& ia)
 			{
-				parse_anonymous_list();
+				result = parse_anonymous_list();
 			}
+			if (result != ParserResult::SUCCESS)
+				break;
 			continue;
 		}
 
 		if (tkn->Type == TokenType::PARENTHESE_OPEN)
 		{
 			skip(1);
-			parse_anonymous_list();
+			result = parse_anonymous_list();
+			if (result != ParserResult::SUCCESS)
+				break;
 			continue;
 		}
 
 		if (tkn->Type == TokenType::HASHTAG)
 		{
-			parse_directive();
+			result = parse_directive();
+			if (result != ParserResult::SUCCESS)
+				break;
 			continue;
 		}
 
@@ -160,6 +169,7 @@ void Parser::parse(int w)
 		}
 
 		result = ParserResult::UNEXPECTED_TOKEN;
+		break;
 	}
 
 	if ((int)needsres < 0)
@@ -203,7 +213,7 @@ ParserResult Parser::parse_entry_or_object(Token const& me)
 
 ParserResult Parser::parse_object(Token const& me)
 {
-	ParserResult result;
+	ParserResult result = ParserResult::SUCCESS;
 	hooker->enter_dictionary(me.Payload);
 	while (!(eos && length == 0))
 	{
@@ -318,7 +328,7 @@ ParserResult Parser::parse_code_stream_object(Token const& me)
 
 ParserResult Parser::parse_entry(Token const& me)
 {
-	ParserResult result;
+	ParserResult result = ParserResult::SUCCESS;
 	hooker->enter_entry(me.Payload);
 	while (!(eos && length == 0))
 	{
@@ -382,7 +392,7 @@ ParserResult Parser::parse_directive()
 
 ParserResult Parser::parse_value(Token const& me)
 {
-	ParserResult result;
+	ParserResult result = ParserResult::SUCCESS;
 
 	switch (me.Type)
 	{
@@ -598,6 +608,7 @@ ParserResult Parser::parse_list_continue(ListType type)
 	}
 	if (!done)
 		return ParserResult::UNEXPECTED_TOKEN;
+	return ParserResult::SUCCESS;
 }
 
 ParserResult Parser::parse_anonymous_list(int32_t number)

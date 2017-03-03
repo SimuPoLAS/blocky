@@ -11,7 +11,7 @@
 
 using namespace std;
 
-enum struct ParserResult
+enum class ParserResult
 {
 	SUCCESS = 0,
 	END_OF_BUFFER = 1,

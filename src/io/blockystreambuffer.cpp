@@ -93,9 +93,6 @@ int BlockyStreamBuffer::flush_buffer()
     int amount = lexer->read(tbuffer, w, processed);
     parser->parse(amount);
 
-    // if (fwrite(pbase(), 1, w, file) == EOF)
-    //     return EOF;
-
     // copy rest to beginning of buffer
     memcpy(buffer, buffer + processed, (bufferSize - processed));
     pbump(-processed);

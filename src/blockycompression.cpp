@@ -46,16 +46,7 @@ void BlockyCompression::finish()
     blockfinding = make_unique<Blockfinding>(Values, Metadata);
     Blocks = blockfinding->find_all_blocks();
 
-    std::cout << "blocks: " << Blocks.size() << std::endl;
-    // for(auto value : Values)
-    // {
-    //     if (value->NeededBitsNumber > 200)
-    //         std::cout << "value: " << value->Number << "e" << value->Exponent << '\n';
-    // }
-
-    post_compression_optimisation(); //Todo: make optional
-
-    std::cout << "start writing" << '\n';
+    post_compression_optimisation();
 
     write();
 }
@@ -220,5 +211,6 @@ void BlockyCompression::write()
         }
     }
 
+	std::cout << "done" << std::endl;
     writer.flush(); // This is nessecary. Will write the last buffered byte may only be partially complete!
 }
