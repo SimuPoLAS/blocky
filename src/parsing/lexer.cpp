@@ -40,7 +40,7 @@ void Lexer::record(char c)
         currentColumn = 1;
         return;
     }
-    if (c == '\t')
+    if (c == '    ')
     {
         currentColumn += tabSize;
         return;
@@ -58,7 +58,7 @@ void Lexer::record(uint32_t count)
             currentColumn = 1;
             continue;
         }
-        if (buffer[position + i] == '\t')
+        if (buffer[position + i] == '    ')
         {
             currentColumn += tabSize;
             continue;
@@ -349,7 +349,7 @@ int32_t Lexer::eat_string()
                         append('\r');
                         break;
                     case 't':
-                        append('\t');
+                        append('    ');
                         break;
                     default:
                         throw 0;

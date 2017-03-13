@@ -13,10 +13,10 @@ using namespace std;
 
 enum class ParserResult
 {
-	SUCCESS = 0,
-	END_OF_BUFFER = 1,
-	UNEXPECTED_TOKEN = -1,
-	UNEXPECTED_EOF = -2
+    SUCCESS = 0,
+    END_OF_BUFFER = 1,
+    UNEXPECTED_TOKEN = -1,
+    UNEXPECTED_EOF = -2
 };
 
 class Parser
@@ -48,17 +48,17 @@ private:
     ParserResult expect(TokenType types[], size_t count);
 
     ParserResult parse_entry_or_object(Token const& me);
-	ParserResult parse_object(Token const& me);
-	ParserResult parse_code_stream_object(Token const& me);
-	ParserResult parse_entry(Token const& me);
-	ParserResult parse_directive();
-	ParserResult parse_value(Token const& me);
-	ParserResult parse_list(ListType type, int32_t amount);
-	ParserResult parse_list_continue(ListType type);
-	ParserResult parse_anonymous_list(int32_t number = -1);
-	ParserResult parse_scalar();
-	ParserResult parse_vector();
-	ParserResult parse_tensor();
+    ParserResult parse_object(Token const& me);
+    ParserResult parse_code_stream_object(Token const& me);
+    ParserResult parse_entry(Token const& me);
+    ParserResult parse_directive();
+    ParserResult parse_value(Token const& me);
+    ParserResult parse_list(ListType type, int32_t amount);
+    ParserResult parse_list_continue(ListType type);
+    ParserResult parse_anonymous_list(int32_t number = -1);
+    ParserResult parse_scalar();
+    ParserResult parse_vector();
+    ParserResult parse_tensor();
 
 public:
     bool SimpleAnonyomousLists;
