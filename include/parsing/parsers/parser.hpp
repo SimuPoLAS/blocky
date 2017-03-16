@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <parsing/tokentype.hpp>
+#include <parsing/token.hpp>
 #include <parsing/parsers/data.hpp>
 
 /*
@@ -44,7 +44,7 @@ public:
     */
     virtual bool try_parse
     (
-        const TokenType* buffer,
+        const Token* buffer,
         int offset,
         int count
     ) = 0;
@@ -59,9 +59,9 @@ public:
     */
     virtual int parse_constant
     (
-        const TokenType* buffer,
-        int offset,
-        int count
+        const Token* buffer,
+        int& offset,
+        int& count
     ) = 0;
 
     /*
@@ -74,9 +74,9 @@ public:
     */
     virtual int parse_variable
     (
-        const TokenType* buffer,
-        int offset,
-        int count
+        const Token* buffer,
+        int& offset,
+        int& count
     ) { return 0; }
 };
 

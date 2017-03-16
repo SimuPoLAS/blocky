@@ -11,8 +11,8 @@ class Parser;
 class Data
 {
 private:
-    std::stringstream meta_data;
-    std::vector<BlockyNumber> numbers;
+    std::string meta_data;
+    std::vector<std::unique_ptr<BlockyNumber>> numbers;
     Parser* current_parser = NULL;
 
 public:
