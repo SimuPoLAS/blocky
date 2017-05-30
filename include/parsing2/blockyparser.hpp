@@ -1,7 +1,7 @@
 #ifndef BLOCKY_PARSER_HPP
 #define BLOCKY_PARSER_HPP
 
-#include <parsing/parsers/parser.hpp>
+#include <parsing2/parser.hpp>
 
 class BlockyParser
     : public Parser
@@ -24,7 +24,7 @@ public:
     */
     virtual bool try_parse
     (
-        const Token* buffer,
+        const char* buffer,
         int offset,
         int count
     ) override;
@@ -35,9 +35,9 @@ public:
     */
     virtual int parse_constant
     (
-        const Token* buffer,
-        int& offset,
-        int& count
+        const char* buffer,
+        int offset,
+        int count
     ) override;
 
 };

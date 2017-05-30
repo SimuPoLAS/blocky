@@ -4,8 +4,7 @@
 
 #include <vector>
 
-#include <parsing/token.hpp>
-#include <parsing/parsers/data.hpp>
+#include <parsing2/data.hpp>
 
 /*
     This class is responsible for parsing records
@@ -44,7 +43,7 @@ public:
     */
     virtual bool try_parse
     (
-        const Token* buffer,
+        const char* buffer,
         int offset,
         int count
     ) = 0;
@@ -56,12 +55,14 @@ public:
         * it MUST called only once at the beginning of the record
 
         It MUST be called before parse_variable()
+
+        It returns the size it has parsed
     */
     virtual int parse_constant
     (
-        const Token* buffer,
-        int& offset,
-        int& count
+        const char* buffer,
+        int offset,
+        int count
     ) = 0;
 
     /*
@@ -71,12 +72,14 @@ public:
         * it MUST called every time the buffer is refilled
 
         It MUST be called after parse_constant()
+
+        It returns the size it has parsed
     */
     virtual int parse_variable
     (
-        const Token* buffer,
-        int& offset,
-        int& count
+        const char* buffer,
+        int offset,
+        int count
     ) { return 0; }
 };
 

@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include <parsing/parsers/parser.hpp>
-#include <parsing/parsers/blockyparser.hpp>
+#include <parsing2/parser.hpp>
+#include <parsing2/blockyparser.hpp>
 
 class ListParser
     : public Parser
@@ -28,7 +28,7 @@ public:
     */
     virtual bool try_parse
     (
-        const Token* buffer,
+        const char* buffer,
         int offset,
         int count
     ) override;
@@ -40,7 +40,7 @@ public:
     */
     virtual int parse_constant
     (
-        const Token* buffer,
+        const char* buffer,
         int& offset,
         int& count
     ) override;
@@ -50,7 +50,7 @@ public:
     */
     virtual int parse_variable
     (
-        const Token* buffer,
+        const char* buffer,
         int& offset,
         int& count
     ) override;
