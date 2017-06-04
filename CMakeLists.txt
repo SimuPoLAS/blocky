@@ -36,4 +36,4 @@ file(COPY resources DESTINATION .)
 
 include_directories(include)
 add_executable(blocky ${blocky_SOURCES_HEADERS})
-add_executable(blocky_test ${blocky_TEST} ${blocky_TESTING_SOURCES})
+#add_executable(blocky_test ${blocky_TEST} ${blocky_TESTING_SOURCES})

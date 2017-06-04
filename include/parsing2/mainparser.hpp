@@ -1,20 +1,26 @@
 #ifndef MAINPARSER_HPP
 #define MAINPARSER_HPP
 
-#include <parsing/parsers/parser.hpp>
+#include <parsing2/parser.hpp>
+#include <parsing2/listparser.hpp>
+#include <parsing2/charparser.hpp>
+#include <parsing/hooker.hpp>
 
 class MainParser
 {
 private:
-    Data data;
-    std::vector<Parser> parsers;
+    int total_parsed;
+    Hooker hooker;
+    std::vector<std::shared_ptr<Parser>> parsers;
+
+    std::shared_ptr<Parser> curr_parser = nullptr;
 
 public:
-    Parser();
+    MainParser(FILE* file);
 
-    parse
+    int parse
     (
-        const TokenType* buffer,
+        const char* buffer,
         int offset,
         int count
     );

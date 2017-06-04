@@ -6,17 +6,13 @@
 class BlockyParser
     : public Parser
 {
-private:
-    int c;
-
 public:
-    BlockyParser(Data& data, int c);
-
-    int count() { return c; }
+    BlockyParser(Hooker& hooker)
+        : Parser(hooker) { }
 
     /*
         The data in buffer MUST look like this in order to be parsed:
-        NUMBER * count
+        \d+\.?\d*\s
 
         This means that number MUST be as many times available as counts content
 
@@ -27,18 +23,18 @@ public:
         const char* buffer,
         int offset,
         int count
-    ) override;
+    );
 
     /*
         One major set is made:
-        * the numbers (quantity determined my count) will be added to data
+        * the number will be added to hooker
     */
     virtual int parse_constant
     (
         const char* buffer,
         int offset,
         int count
-    ) override;
+    );
 
 };
 

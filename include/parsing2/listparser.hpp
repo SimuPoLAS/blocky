@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include <parsing/listtype.hpp>
 #include <parsing2/parser.hpp>
 #include <parsing2/blockyparser.hpp>
 
@@ -16,7 +17,15 @@ private:
     */
     std::unique_ptr<BlockyParser> blockyParser;
 
+    /*
+
+    */
+    bool end = true;
+
 public:
+    ListParser(Hooker& hooker)
+        : Parser(hooker) { }
+
     /*
         The data in buffer MUST look like this in order to be parsed:
         KEYWORD {List}
@@ -31,7 +40,7 @@ public:
         const char* buffer,
         int offset,
         int count
-    ) override;
+    );
 
     /*
         Two major sets are made:
@@ -41,9 +50,9 @@ public:
     virtual int parse_constant
     (
         const char* buffer,
-        int& offset,
-        int& count
-    ) override;
+        int offset,
+        int count
+    );
 
     /*
         Parses the variable part of the record by using the list_element_parser
@@ -51,9 +60,9 @@ public:
     virtual int parse_variable
     (
         const char* buffer,
-        int& offset,
-        int& count
-    ) override;
+        int offset,
+        int count
+    );
 };
 
 #endif /* end of include guard: LIST_PARSER_HPP */

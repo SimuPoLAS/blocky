@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <parsing2/data.hpp>
+#include <parsing/hooker.hpp>
 
 /*
     This class is responsible for parsing records
@@ -29,11 +29,11 @@ protected:
     /*
 
     */
-    Data& data;
+    Hooker& hooker;
 
 public:
-    Parser(Data& data)
-        : data(data) { }
+    Parser(Hooker& hooker)
+        : hooker(hooker) { }
 
     /*
         This method decides whether the provided buffer can be parsed or not
@@ -73,14 +73,18 @@ public:
 
         It MUST be called after parse_constant()
 
-        It returns the size it has parsed
+        If it was declared, then
+        * It returns the size it has parsed
+        * or an error (below 0)
+        If not then
+        * it returns a not implemented error (-404)
     */
     virtual int parse_variable
     (
         const char* buffer,
         int offset,
         int count
-    ) { return 0; }
+    ) { return -404; } // TODO: throw meaningful errors
 };
 
 #endif /* end of include guard: PARSER_HPP_ */

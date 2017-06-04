@@ -52,8 +52,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
     opened = true;
 
-    lexer = make_unique<Lexer>(buffer);
-    parser = make_unique<Parser>(file, tbuffer);
+    parser = make_unique<MainParser>(file);
 
     return this;
 }
@@ -88,10 +87,8 @@ int BlockyStreamBuffer::underflow()
 int BlockyStreamBuffer::flush_buffer()
 {
     int w = pptr() - pbase();
-    int processed;
 
-    int amount = lexer->read(tbuffer, w, processed);
-    parser->parse(amount);
+    int processed = parser->parse(buffer, 0, w);
 
     // copy rest to beginning of buffer
     memcpy(buffer, buffer + processed, (bufferSize - processed));
