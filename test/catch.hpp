@@ -3919,7 +3919,7 @@ namespace Tbc {
         :   initialIndent( std::string::npos ),
             indent( 0 ),
             width( consoleWidth-1 ),
-            tabChar( '\t' )
+            tabChar( '    ' )
         {}
 
         TextAttributes& setInitialIndent( std::size_t _value )  { initialIndent = _value; return *this; }
@@ -5154,7 +5154,7 @@ namespace Tbc {
         Text( std::string const& _str, TextAttributes const& _attr = TextAttributes() )
         : attr( _attr )
         {
-            const std::string wrappableBeforeChars = "[({<\t";
+            const std::string wrappableBeforeChars = "[({<    ";
             const std::string wrappableAfterChars = "])}>-,./|\\";
             const std::string wrappableInsteadOfChars = " \n\r";
             std::string indent = _attr.initialIndent != std::string::npos
@@ -6898,8 +6898,8 @@ namespace Catch {
 
                 ss  << Colour( Colour::Red )
                     << "error: TEST_CASE( \"" << it->name << "\" ) already defined.\n"
-                    << "\tFirst seen at " << prev.first->getTestCaseInfo().lineInfo << '\n'
-                    << "\tRedefined at " << it->getTestCaseInfo().lineInfo << std::endl;
+                    << "    First seen at " << prev.first->getTestCaseInfo().lineInfo << '\n'
+                    << "    Redefined at " << it->getTestCaseInfo().lineInfo << std::endl;
 
                 throw std::runtime_error(ss.str());
             }
@@ -8242,7 +8242,7 @@ namespace Catch {
         return lc;
     }
     std::string trim( std::string const& str ) {
-        static char const* whitespaceChars = "\n\r\t ";
+        static char const* whitespaceChars = "\n\r     ";
         std::string::size_type start = str.find_first_not_of( whitespaceChars );
         std::string::size_type end = str.find_last_not_of( whitespaceChars );
 
@@ -8422,7 +8422,7 @@ namespace Catch {
             std::ifstream in("/proc/self/status");
             for( std::string line; std::getline(in, line); ) {
                 static const int PREFIX_LEN = 11;
-                if( line.compare(0, PREFIX_LEN, "TracerPid:\t") == 0 ) {
+                if( line.compare(0, PREFIX_LEN, "TracerPid:    ") == 0 ) {
                     // We're traced if the PID is not 0 and no other PID starts
                     // with 0 digit, so it's enough to check for just a single
                     // character.
@@ -8521,7 +8521,7 @@ std::string toString( std::string const& value ) {
             std::string subs;
             switch( s[i] ) {
             case '\n': subs = "\\n"; break;
-            case '\t': subs = "\\t"; break;
+            case '    ': subs = "\    "; break;
             default: break;
             }
             if( !subs.empty() ) {
@@ -8613,8 +8613,8 @@ std::string toString( char value ) {
         return "'\\f'";
     if ( value == '\n' )
         return "'\\n'";
-    if ( value == '\t' )
-        return "'\\t'";
+    if ( value == '    ' )
+        return "'\    '";
     if ( '\0' <= value && value < ' ' )
         return toString( static_cast<unsigned int>( value ) );
     char chstr[] = "' '";
@@ -8860,8 +8860,8 @@ namespace Catch {
         if( !m_registry.insert( std::make_pair( alias, TagAlias( tag, lineInfo ) ) ).second ) {
             std::ostringstream oss;
             oss << "error: tag alias, \"" << alias << "\" already registered.\n"
-                << "\tFirst seen at " << find(alias)->lineInfo << '\n'
-                << "\tRedefined at " << lineInfo;
+                << "    First seen at " << find(alias)->lineInfo << '\n'
+                << "    Redefined at " << lineInfo;
             throw std::domain_error( oss.str().c_str() );
         }
     }

@@ -5,8 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include <parsing/lexer.hpp>
-#include <parsing/parser.hpp>
+#include <parsing2/mainparser.hpp>
 
 using namespace std;
 
@@ -14,16 +13,15 @@ class BlockyStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 4096;
+    static const int bufferSize = 100;
 
     char buffer[bufferSize];
-    shared_ptr<Token> tbuffer[bufferSize];
+
     FILE* file;
     bool opened;
     int mode;
 
-    unique_ptr<Lexer> lexer;
-    unique_ptr<Parser> parser;
+    unique_ptr<MainParser> parser;
 
     // uint32_t width;
     // uint32_t position;

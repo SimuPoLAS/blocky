@@ -30,7 +30,7 @@ public:
     Hooker(FILE* file, uint32_t const& providedPosition);
 
     bool is_in_list() const { return inList; }
-    ListType get_type() const { return type; } 
+    ListType get_type() const { return type; }
 
     void enter_dictionary(string name);
     void leave_dictionary();
