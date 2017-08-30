@@ -9,14 +9,30 @@ bool BlockyParser::try_parse
     int count
 )
 {
-    // REGEX: \d+\.?\d*\s
+    // REGEX: [+-]\d+\.?\d*[eE]*[+-]*\d*\s
     int checked = 0;
 
     if (count < 1)
         return false;
 
     std::string number;
-    while (isdigit(buffer[offset + checked]))
+
+	if (buffer[offset + checked] == '+')
+	{
+		number += '+';
+		checked++;
+	}
+
+	if (buffer[offset + checked] == '-')
+	{
+		number += '-';
+		checked++;
+	}
+
+	if (!isdigit(buffer[offset + checked]))
+		return false;
+    
+	while(isdigit(buffer[offset + checked]))
     {
         number += buffer[offset + checked];
         checked++;
@@ -25,7 +41,7 @@ bool BlockyParser::try_parse
             return false;
     }
 
-    if (buffer[checked] != '.')
+    if (buffer[offset + checked] != '.')
         if (!isspace(buffer[offset + checked]))
             return false;
 
@@ -37,7 +53,14 @@ bool BlockyParser::try_parse
         if (count < checked + 1)
             return false;
 
-        while (isdigit(buffer[offset + checked]))
+        while
+		(
+			isdigit(buffer[offset + checked]) 
+		 || buffer[offset + checked] == 'e'
+		 || buffer[offset + checked] == 'E'
+		 || buffer[offset + checked] == '+'
+		 || buffer[offset + checked] == '-'
+		)
         {
             number += buffer[offset + checked];
             checked++;
@@ -71,8 +94,6 @@ int BlockyParser::parse_constant
         // TODO: return unexpected end of buffer
         return -1;
 
-    parsed += 1;
-
     while
     (
         count > parsed
@@ -88,6 +109,9 @@ int BlockyParser::parse_constant
     std::cout << "number: " << number << '\n';
 
     hooker.handle_list_entry(number);
+
+	while (count > parsed && isspace(buffer[offset + parsed]))
+		parsed++;
 
     return parsed;
 }

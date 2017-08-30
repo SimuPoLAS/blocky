@@ -9,10 +9,10 @@ bool ListParser::try_parse
     int count
 )
 {
-    // REGEX: List<\w+>\s[\d\s]*\(
+    // REGEX: List<\w+>\s[\d\s]*\(\s
     int checked = 0;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //         ^
 
     // validating for at least 4 char space
@@ -30,7 +30,7 @@ bool ListParser::try_parse
     // 4 chars were validated
     checked += 4;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //             ^
 
     // validating for at least 1 char space
@@ -45,7 +45,7 @@ bool ListParser::try_parse
     // 1 char was validated
     checked += 1;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //              ^
 
     // declaring a length for the keyword between the chevrons
@@ -65,14 +65,8 @@ bool ListParser::try_parse
         return false;
 
     // validating, if at the and of the keyword, there is a chenvrons close
-    if (buffer[offset + checked + length + 1] != '>')
+    if (buffer[offset + checked + length] != '>')
         return false;
-
-    // length chars were validated
-    checked += length;
-
-    // STATUS: List<\w+>\s[\d\s]*\(
-    //                  ^
 
     // saving the List Type in a string
     std::string ltype
@@ -80,6 +74,12 @@ bool ListParser::try_parse
         buffer + offset + checked,
         buffer + offset + checked + length
     );
+
+	// length chars were validated
+	checked += length + 1;
+
+	// STATUS: List<\w+>\s[\d\s]*\(\s
+	//                  ^
 
     // validating, if List Type is supported
     if (ltype != "scalar" && ltype != "vector" && ltype != "tensor")
@@ -98,16 +98,16 @@ bool ListParser::try_parse
     if (count < checked)
         return false;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //                    ^
 
     // now there may be a number (with whitespaces after it)
-    if (isdigit(buffer[count + checked]))
+    if (isdigit(buffer[offset + checked]))
     {
         length = 1;
         while
         (
-            count < checked + length
+            count > checked + length
          && isdigit(buffer[offset + checked + length])
         )
             length++;
@@ -123,7 +123,7 @@ bool ListParser::try_parse
         while
         (
             count > checked
-        && isspace(buffer[offset + checked])
+         && isspace(buffer[offset + checked])
         )
             checked++;
 
@@ -133,21 +133,23 @@ bool ListParser::try_parse
             return false;
     }
 
-    // STATUS: List<\w+>\s[\d\s]*\(
-    //                          ^
+    // STATUS: List<\w+>\s[\d\s]*\(\s
+    //                            ^
 
-    // validating for at least checked + 1 char space
-    // to check for the brackets open "("
-    if (count < checked + 1)
-        return false;
-
-    if (buffer[offset + checked + 1] != '(')
+    if (buffer[offset + checked] != '(')
         return false;
 
     checked++;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
-    //                            ^
+    // STATUS: List<\w+>\s[\d\s]*\(\s
+    //                             ^
+
+    while
+	(
+		count > checked
+		&& isspace(buffer[offset + checked])
+	)
+		checked++;
 
     // from this point on, we are sure that this is a list
     return true;
@@ -162,7 +164,7 @@ int ListParser::parse_constant
 {
     int parsed = 0;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //         ^
 
     // validate a count of at least five
@@ -173,7 +175,7 @@ int ListParser::parse_constant
 
     parsed += 5;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //              ^
 
     // getting the list type
@@ -209,7 +211,7 @@ int ListParser::parse_constant
 
     parsed += length;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //                 ^
 
     if (count < parsed + 1)
@@ -218,7 +220,7 @@ int ListParser::parse_constant
 
     parsed++;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //                  ^
 
     while
@@ -232,17 +234,17 @@ int ListParser::parse_constant
         // TODO: return unexpected end of buffer
         return -1;
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //                    ^
 
     int amount = (int)type;
-    if (isdigit(buffer[count + parsed]))
+    if (isdigit(buffer[offset + parsed]))
     {
         // numbers
         length = 1;
         while
         (
-            count < parsed + length
+            count > parsed + length
         && isdigit(buffer[offset + parsed + length])
         )
             length++;
@@ -278,7 +280,7 @@ int ListParser::parse_constant
             return -1;
     }
 
-    // STATUS: List<\w+>\s[\d\s]*\(
+    // STATUS: List<\w+>\s[\d\s]*\(\s
     //                          ^
 
     hooker.enter_list(type, amount);
@@ -286,6 +288,17 @@ int ListParser::parse_constant
     blockyParser = std::make_unique<BlockyParser>(hooker);
 
     end = false;
+
+	// parse (
+	parsed++;
+
+	// parse whitespaces
+	while
+	(
+		count > parsed
+		&& isspace(buffer[offset + parsed])
+	)
+		parsed++;
 
     return parsed;
 }
@@ -300,23 +313,23 @@ int ListParser::parse_variable
     if (end)
         return 0;
 
-    if (count <= 0)
-        // TODO: return expected end of buffer result
-        return 1;
+	// return 0 if there is nothing to parse
+	if (count == 0)
+		return 0;
 
     int result = 1;
     int parsed = 0;
     while (result > 0)
     {
         // trying to parse the variable record
-        if (blockyParser->try_parse(buffer, offset, count))
+        if (blockyParser->try_parse(buffer, offset + parsed, count - parsed))
         {
             // if it is parsable, then parse
             result = blockyParser->parse_constant
             (
                 buffer,
-                offset,
-                count
+                offset + parsed,
+                count - parsed
             );
 
             // if an error happened, forward it
@@ -335,6 +348,7 @@ int ListParser::parse_variable
         if (buffer[offset + parsed] == ')')
         {
             // set the end of parsing
+			hooker.leave_list();
             end = true;
             return parsed;
         }
