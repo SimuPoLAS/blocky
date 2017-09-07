@@ -71,6 +71,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
+	// TODO: blocky inputstream magic
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
