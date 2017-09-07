@@ -1,11 +1,11 @@
 #include <cmath>
 #include <algorithm>
 
-#include "methods/floatsimmilar/floatsimmilarcompression.hpp"
+#include "methods/floatsimilar/floatsimilarcompression.hpp"
 
 using namespace std;
 
-bool FloatSimmilarCompression::process_value
+bool FloatSimilarCompression::process_value
 (
     Block& block,
     const BlockyNumber& value,
@@ -121,11 +121,11 @@ bool FloatSimmilarCompression::process_value
     return true;
 }
 
-void FloatSimmilarCompression::write
+void FloatSimilarCompression::write
 (
     BitWriter& writer,
     Block block,
-    int32_t& valueIndex
+    size_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);
@@ -135,7 +135,7 @@ void FloatSimmilarCompression::write
         writer.write_byte(1, 1);
         writer.write
         (
-            metadata.MaxNeededBitsNumber,
+			metadata.MaxNeededBitsNumber,
             metadata.MaxNeededBitsNeededBitsNumber
         );
     }

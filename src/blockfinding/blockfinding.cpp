@@ -2,7 +2,7 @@
 
 #include <blockfinding/blockfinding.hpp>
 
-#include <methods/floatsimmilar/floatsimmilarcompression.hpp>
+#include <methods/floatsimilar/floatsimilarcompression.hpp>
 #include <methods/numbersnoexp/numbersnoexpcompression.hpp>
 #include <methods/patternoffset/patternoffsetcompression.hpp>
 #include <methods/patternpingpong/patternpingpongcompression.hpp>
@@ -35,8 +35,8 @@ Blockfinding::Blockfinding
             Headers,
             initializedCompressionMethods
         );
-    initializedCompressionMethods[(int)Methods::FloatSimmilar] =
-        new FloatSimmilarCompression
+    initializedCompressionMethods[(int)Methods::FloatSimilar] =
+        new FloatSimilarCompression
         (
             values,
             metadata,
@@ -44,7 +44,7 @@ Blockfinding::Blockfinding
             initializedCompressionMethods
         );
     initializedCompressionMethods[(int)Methods::NumbersNoExp] =
-        new NummbersNoExpCompression
+        new NumbersNoExpCompression
         (
             values,
             metadata,
@@ -313,7 +313,7 @@ bool Blockfinding::process_next_value()
     auto isLastBlockUp2Date =
         lastStableBlock.Index + lastStableBlock.Length - 1 == index;
 
-    for (int32_t j = 0; j < calculations.size(); j++)
+    for (size_t j = 0; j < calculations.size(); j++)
     {
         auto calc = calculations[j];
 
@@ -447,7 +447,7 @@ bool Blockfinding::process_next_value()
                             value.IsNegative,
                             value.Number,
                             initializedCompressionMethods,
-                            Methods::FloatSimmilar,
+                            Methods::FloatSimilar,
                             false
                         )
                     );

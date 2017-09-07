@@ -68,7 +68,7 @@ bool PatternSameCompression::process_value
             return true;
         }
         auto oldMethod = block.Method;
-        block.Method = methods[(int)Methods::FloatSimmilar];
+        block.Method = methods[(int)Methods::FloatSimilar];
         block.Exponent = firstValue.Exponent;
         block.HasExponent = true;
         bitDiff += headers.StandardBlockPatternSame
@@ -99,7 +99,7 @@ void PatternSameCompression::write
 (
     BitWriter& writer,
     Block block,
-    int32_t& valueIndex
+    size_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);

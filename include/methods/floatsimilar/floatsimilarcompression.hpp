@@ -1,15 +1,15 @@
-#ifndef FLOATSIMMILARCOMPRESSION_HPP
-#define FLOATSIMMILARCOMPRESSION_HPP
+#ifndef FLOATSIMILARCOMPRESSION_HPP
+#define FLOATSIMILARCOMPRESSION_HPP
 
 #include <methods/compressionmethod.hpp>
 
-class FloatSimmilarCompression
+class FloatSimilarCompression
     : public CompressionMethod
 {
 private:
 
 public:
-    FloatSimmilarCompression
+    FloatSimilarCompression
     (
         vector<shared_ptr<BlockyNumber>> const& values,
         BlockyMetadata const& metadata,
@@ -30,7 +30,7 @@ public:
     (
         BitWriter& writer,
         Block block,
-        int32_t& valueIndex
+        size_t& valueIndex
     ) override;
 };
 

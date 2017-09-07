@@ -12,7 +12,7 @@ using namespace std;
 class BlockyAlgorithm
 {
 public:
-    shared_ptr<Reporter> compress(FILE* file, int width, int elements)
+    shared_ptr<Reporter> compress(FILE* file, size_t width, int elements)
     {
         if (width == 1)
             return shared_ptr<Reporter>(new BlockyCompression(file));

@@ -1,6 +1,6 @@
 #include <methods/numbersnoexp/numbersnoexpcompression.hpp>
 
-bool NummbersNoExpCompression::process_value
+bool NumbersNoExpCompression::process_value
 (
     Block& block,
     const BlockyNumber& value,
@@ -42,11 +42,11 @@ bool NummbersNoExpCompression::process_value
 }
 
 
-void NummbersNoExpCompression::write
+void NumbersNoExpCompression::write
 (
     BitWriter& writer,
     Block block,
-    int32_t& valueIndex
+    size_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);

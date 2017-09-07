@@ -55,7 +55,7 @@ public:
     (
         BitWriter& writer,
         Block block,
-        int32_t& valueIndex
+        size_t& valueIndex
     ) = 0;
 };
 

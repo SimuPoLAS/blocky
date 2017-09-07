@@ -47,7 +47,7 @@ bool PatternOffsetCompression::process_value
         {
             bitDiff += headers.StandardBlockPatternOffset
               - headers.StandardBlockFloatSimmilar;
-            block.Method = methods[(int)Methods::FloatSimmilar];
+            block.Method = methods[(int)Methods::FloatSimilar];
             block.Exponent = firstValue.Exponent;
         }
         else
@@ -91,7 +91,7 @@ void PatternOffsetCompression::write
 (
     BitWriter& writer,
     Block block,
-    int32_t& valueIndex
+    size_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);

@@ -6,7 +6,7 @@ static const int METHODS_COUNT = 5;
 enum struct Methods
 {
     PatternSame,
-    FloatSimmilar,
+    FloatSimilar,
     NumbersNoExp,
     PatternOffset,
     PatternPingPong

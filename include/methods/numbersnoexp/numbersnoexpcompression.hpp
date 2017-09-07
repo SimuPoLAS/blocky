@@ -1,16 +1,16 @@
-#ifndef NUMMBERSNOEXPCOMPRESSION_HPP
-#define NUMMBERSNOEXPCOMPRESSION_HPP
+#ifndef NUMBERSNOEXPCOMPRESSION_HPP
+#define NUMBERSNOEXPCOMPRESSION_HPP
 
 #include <methods/compressionmethod.hpp>
 
-class NummbersNoExpCompression
+class NumbersNoExpCompression
     : public CompressionMethod
 {
 private:
     /* data */
 
 public:
-    NummbersNoExpCompression
+    NumbersNoExpCompression
     (
         vector<shared_ptr<BlockyNumber>> const& values,
         BlockyMetadata const& metadata,
@@ -31,7 +31,7 @@ public:
     (
         BitWriter& writer,
         Block block,
-        int32_t& valueIndex
+        size_t& valueIndex
     ) override;
 };
 

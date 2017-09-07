@@ -133,6 +133,8 @@ void Parser::parse(int w)
 			skip(2);
 			try
 			{
+				// TODO: check whether string can be parsed 
+				// to double with an invalid argument exception
 				double a = stod(tkn->Payload);
 				result = parse_anonymous_list(int32_t(a));
 			}
@@ -461,6 +463,8 @@ ParserResult Parser::parse_value(Token const& me)
 			skip(2);
 			try
 			{
+				// TODO: check whether string can be parsed 
+				// to double with an invalid argument exception
 				double a = stod(me.Payload);
 				result = parse_anonymous_list(int32_t(a));
 				if (result != ParserResult::SUCCESS)
