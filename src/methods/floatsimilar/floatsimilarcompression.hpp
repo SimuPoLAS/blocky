@@ -34,4 +34,4 @@ public:
     ) override;
 };
 
-#endif /* end of include guard: FLOATSIMMILARCOMPRESSION_HPP */
+#endif /* end of include guard: FLOATSIMILARCOMPRESSION_HPP */
