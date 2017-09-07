@@ -3,9 +3,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 project(blocky)
 
-file(GLOB_RECURSE blocky_SOURCES_HEADERS "src/*.cpp" "include/*.hpp")
+file(GLOB_RECURSE blocky_SOURCES_HEADERS "src/*.cpp")
 file(GLOB_RECURSE blocky_SOURCES "src/*.cpp")
-file(GLOB_RECURSE blocky_HEADERS "include/*.hpp")
+file(GLOB_RECURSE blocky_HEADERS "src/*.hpp")
 file(GLOB_RECURSE blocky_TEST "test/test.cpp")
 
 if (MSVC)
@@ -26,7 +26,7 @@ if (MSVC)
 	endmacro()
 
 	GroupSources(src)
-	GroupSources(include)
+	#GroupSources(include)
 endif(MSVC)
 
 set(blocky_TESTING_SOURCES ${blocky_SOURCES})
@@ -34,6 +34,6 @@ list(REMOVE_ITEM blocky_TESTING_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 
 file(COPY resources DESTINATION .)
 
-include_directories(include)
+include_directories(src)
 add_executable(blocky ${blocky_SOURCES_HEADERS})
 #add_executable(blocky_test ${blocky_TEST} ${blocky_TESTING_SOURCES})
