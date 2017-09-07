@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
 	{
 		filein << bin;
 	}
+	*/
 
     return 0;
-	*/
 }
