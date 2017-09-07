@@ -20,7 +20,7 @@ public:
 
     BlockyStreamBuffer* rdbuf()
     {
-        std::cout << "rdbuf" << '\n';
+        std::cout << "rdbuf (out)" << '\n';
         return BlockyStreamBase::rdbuf();
     }
     void open(const char* name, int open_mode = std::ios::out)
