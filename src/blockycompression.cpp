@@ -146,11 +146,11 @@ void BlockyCompression::post_compression_optimisation()
 
 void BlockyCompression::write()
 {
-    auto currentBlockIndex = 0;
+    size_t currentBlockIndex = 0;
 
     auto valueCount = Values.size();
-    auto blockCount = Blocks.size();
-    auto nextStop = blockCount == 0
+    size_t blockCount = Blocks.size();
+    size_t nextStop = blockCount == 0
       ? valueCount : Blocks[currentBlockIndex].Index;
 
     auto hasExponent = !Metadata.NoExponent;
@@ -160,7 +160,7 @@ void BlockyCompression::write()
     writer.write_byte(0, 1); // dont use huffman
     std::cout << "meta" << std::endl;
 
-    for (auto i = 0; i < valueCount;)
+    for (size_t i = 0; i < valueCount;)
     {
         for (; nextStop > i; i++) // writing values until the next block is here
         {

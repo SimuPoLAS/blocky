@@ -16,7 +16,7 @@ void PatternPingPongCompression::write
 (
     BitWriter& writer,
     Block block,
-    int32_t& valueIndex
+    size_t& valueIndex
 )
 {
     write_default_blockheader(writer, block);
