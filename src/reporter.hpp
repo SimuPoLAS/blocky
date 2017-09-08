@@ -1,7 +1,7 @@
 #ifndef REPORTER_HPP
 #define REPORTER_HPP
 
-#include <blockynumber.hpp>
+#include "blockynumber.hpp"
 
 class Reporter
 {

@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <bitreader.hpp>
+#include "bitreader.hpp"
 
 BitReader::BitReader(FILE* file)
     : file(file)

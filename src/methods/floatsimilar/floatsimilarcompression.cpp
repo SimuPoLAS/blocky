@@ -1,7 +1,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "methods/floatsimilar/floatsimilarcompression.hpp"
+#include "floatsimilarcompression.hpp"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #ifndef NUMBERSNOEXPCOMPRESSION_HPP
 #define NUMBERSNOEXPCOMPRESSION_HPP
 
-#include <methods/compressionmethod.hpp>
+#include "../compressionmethod.hpp"
 
 class NumbersNoExpCompression
     : public CompressionMethod

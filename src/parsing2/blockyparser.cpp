@@ -1,6 +1,6 @@
 #include <cctype>
 
-#include <parsing2/blockyparser.hpp>
+#include "blockyparser.hpp"
 
 bool BlockyParser::try_parse
 (

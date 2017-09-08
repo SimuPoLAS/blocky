@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include <reporter.hpp>
-#include <blockycompression.hpp>
-#include <compressionsplitter.hpp>
+#include "reporter.hpp"
+#include "blockycompression.hpp"
+#include "compressionsplitter.hpp"
 
 using namespace std;
 

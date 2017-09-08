@@ -1,4 +1,4 @@
-#include <methods/compressionmethod.hpp>
+#include "compressionmethod.hpp"
 
 void CompressionMethod::write_default_blockheader
 (

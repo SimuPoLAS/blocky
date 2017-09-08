@@ -1,7 +1,7 @@
 #ifndef PATTERNSAMECOMPRESSION_HPP
 #define PATTERNSAMECOMPRESSION_HPP
 
-#include <methods/compressionmethod.hpp>
+#include "../compressionmethod.hpp"
 
 class PatternSameCompression
     : public CompressionMethod

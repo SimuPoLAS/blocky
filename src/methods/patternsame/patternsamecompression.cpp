@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <math.h>
 
-#include <methods/patternsame/patternsamecompression.hpp>
+#include "patternsamecompression.hpp"
 
 using namespace std;
 

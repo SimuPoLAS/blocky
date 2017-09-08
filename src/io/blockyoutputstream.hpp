@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <io/blockystreambase.hpp>
+#include "blockystreambase.hpp"
 
 class BlockyOutputStream
     : public std::ostream

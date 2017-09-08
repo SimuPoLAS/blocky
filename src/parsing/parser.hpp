@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 
-#include <parsing/token.hpp>
-#include <parsing/lexer.hpp>
-#include <parsing/hooker.hpp>
-#include <parsing/positionprovider.hpp>
+#include "token.hpp"
+#include "lexer.hpp"
+#include "hooker.hpp"
+#include "positionprovider.hpp"
 
 using namespace std;
 

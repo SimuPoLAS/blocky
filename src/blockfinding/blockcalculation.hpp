@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include <blockfinding/blockreplacingcalculation.hpp>
-#include <block.hpp>
-#include <blockynumber.hpp>
+#include "blockreplacingcalculation.hpp"
+#include "../block.hpp"
+#include "../blockynumber.hpp"
 
 struct BlockCalculation
 {

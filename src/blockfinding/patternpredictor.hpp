@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <blockynumber.hpp>
+#include "../blockynumber.hpp"
 
 class PatternPredictor
 {

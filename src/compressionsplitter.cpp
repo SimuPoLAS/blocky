@@ -1,4 +1,4 @@
-#include <compressionsplitter.hpp>
+#include "compressionsplitter.hpp"
 
 CompressionSplitter::CompressionSplitter
 (

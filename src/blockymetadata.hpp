@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 
-#include <bitreader.hpp>
-#include <bitwriter.hpp>
-#include <blockynumber.hpp>
+#include "bitreader.hpp"
+#include "bitwriter.hpp"
+#include "blockynumber.hpp"
 
 using namespace std;
 

@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include <parsing/listtype.hpp>
-#include <parsing2/parser.hpp>
-#include <parsing2/blockyparser.hpp>
+#include "../parsing/listtype.hpp"
+#include "parser.hpp"
+#include "blockyparser.hpp"
 
 class ListParser
     : public Parser

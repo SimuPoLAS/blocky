@@ -2,8 +2,8 @@
 #include <iostream>
 #include <vector>
 
-#include <blockycompression.hpp>
-#include <methods/patternpingpong/patternpingpongcompression.hpp>
+#include "blockycompression.hpp"
+#include "methods/patternpingpong/patternpingpongcompression.hpp"
 
 BlockyCompression::BlockyCompression(FILE* file)
     : writer(file) { }

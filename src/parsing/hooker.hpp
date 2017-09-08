@@ -3,13 +3,13 @@
 
 #include <memory>
 
-#include <parsing/positionprovider.hpp>
-#include <parsing/listtype.hpp>
-#include <parsing/directivetype.hpp>
-#include <reporter.hpp>
-#include <blockyalgorithm.hpp>
-#include <blockynumber.hpp>
-#include <compressedsection.hpp>
+#include "positionprovider.hpp"
+#include "listtype.hpp"
+#include "directivetype.hpp"
+#include "../reporter.hpp"
+#include "../blockyalgorithm.hpp"
+#include "../blockynumber.hpp"
+#include "../compressedsection.hpp"
 
 using namespace std;
 

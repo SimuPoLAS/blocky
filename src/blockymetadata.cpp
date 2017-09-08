@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-#include <blockymetadata.hpp>
+#include "blockymetadata.hpp"
 
 void BlockyMetadata::write(BitWriter& writer)
 {

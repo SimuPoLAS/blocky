@@ -1,7 +1,7 @@
 #include <math.h>
 #include <iostream>
 
-#include <bitwriter.hpp>
+#include "bitwriter.hpp"
 
 BitWriter::~BitWriter()
 {

@@ -1,8 +1,8 @@
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 
-#include <blockymetadata.hpp>
-#include <methods/methods.hpp>
+#include "blockymetadata.hpp"
+#include "methods/methods.hpp"
 
 class CompressionMethod;
 

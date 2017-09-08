@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <methods/compressionmethod.hpp>
+#include "../compressionmethod.hpp"
 
 using namespace std;
 
