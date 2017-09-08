@@ -2,7 +2,7 @@
 #define TOKEN_HPP
 
 #include <string>
-#include <parsing/tokentype.hpp>
+#include "tokentype.hpp"
 
 using namespace std;
 

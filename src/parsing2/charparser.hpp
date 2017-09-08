@@ -1,7 +1,7 @@
 #ifndef CHAR_PARSER_HPP
 #define CHAR_PARSER_HPP
 
-#include <parsing2/parser.hpp>
+#include "parser.hpp"
 
 class CharParser
     : public Parser

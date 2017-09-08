@@ -1,4 +1,4 @@
-#include <methods/patternpingpong/patternpingpongcompression.hpp>
+#include "patternpingpongcompression.hpp"
 
 bool PatternPingPongCompression::process_value
 (

@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <math.h>
 
-#include <methods/patternoffset/patternoffsetcompression.hpp>
+#include "patternoffsetcompression.hpp"
 
 using namespace std;
 

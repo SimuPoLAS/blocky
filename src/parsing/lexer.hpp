@@ -5,8 +5,8 @@
 #include <string>
 #include <memory>
 
-#include <parsing/token.hpp>
-#include <parsing/tokentype.hpp>
+#include "token.hpp"
+#include "tokentype.hpp"
 
 using namespace std;
 

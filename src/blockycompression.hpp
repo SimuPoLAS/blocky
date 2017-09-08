@@ -4,12 +4,12 @@
 #include <vector>
 #include <memory>
 
-#include <bitwriter.hpp>
-#include <blockynumber.hpp>
-#include <block.hpp>
-#include <blockymetadata.hpp>
-#include <blockfinding/blockfinding.hpp>
-#include <reporter.hpp>
+#include "bitwriter.hpp"
+#include "blockynumber.hpp"
+#include "block.hpp"
+#include "blockymetadata.hpp"
+#include "blockfinding/blockfinding.hpp"
+#include "reporter.hpp"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <parsing/hooker.hpp>
+#include "hooker.hpp"
 
 Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
     : algorithm()

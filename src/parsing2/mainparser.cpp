@@ -1,4 +1,4 @@
-#include <parsing2/mainparser.hpp>
+#include "mainparser.hpp"
 
 MainParser::MainParser(FILE* file)
     : total_parsed(0)

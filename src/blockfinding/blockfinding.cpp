@@ -1,12 +1,12 @@
 #include <vector>
 
-#include <blockfinding/blockfinding.hpp>
+#include "blockfinding.hpp"
 
-#include <methods/floatsimilar/floatsimilarcompression.hpp>
-#include <methods/numbersnoexp/numbersnoexpcompression.hpp>
-#include <methods/patternoffset/patternoffsetcompression.hpp>
-#include <methods/patternpingpong/patternpingpongcompression.hpp>
-#include <methods/patternsame/patternsamecompression.hpp>
+#include "../methods/floatsimilar/floatsimilarcompression.hpp"
+#include "../methods/numbersnoexp/numbersnoexpcompression.hpp"
+#include "../methods/patternoffset/patternoffsetcompression.hpp"
+#include "../methods/patternpingpong/patternpingpongcompression.hpp"
+#include "../methods/patternsame/patternsamecompression.hpp"
 
 Blockfinding::Blockfinding
 (

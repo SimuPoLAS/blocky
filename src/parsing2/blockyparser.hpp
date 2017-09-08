@@ -1,7 +1,7 @@
 #ifndef BLOCKY_PARSER_HPP
 #define BLOCKY_PARSER_HPP
 
-#include <parsing2/parser.hpp>
+#include "parser.hpp"
 
 class BlockyParser
     : public Parser

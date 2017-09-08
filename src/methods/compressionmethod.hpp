@@ -3,13 +3,13 @@
 
 #include <vector>
 
-#include <blockfinding/headersizes.hpp>
-#include <blockynumber.hpp>
-#include <bitwriter.hpp>
-#include <blockymetadata.hpp>
-#include <methods/methods.hpp>
+#include "../blockfinding/headersizes.hpp"
+#include "../blockynumber.hpp"
+#include "../bitwriter.hpp"
+#include "../blockymetadata.hpp"
+#include "methods.hpp"
 
-#include <block.hpp>
+#include "../block.hpp"
 
 class CompressionMethod {
 protected:

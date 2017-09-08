@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <parsing/hooker.hpp>
+#include "../parsing/hooker.hpp"
 
 /*
     This class is responsible for parsing records

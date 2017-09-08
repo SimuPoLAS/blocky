@@ -1,7 +1,7 @@
 #ifndef FLOATSIMILARCOMPRESSION_HPP
 #define FLOATSIMILARCOMPRESSION_HPP
 
-#include <methods/compressionmethod.hpp>
+#include "../compressionmethod.hpp"
 
 class FloatSimilarCompression
     : public CompressionMethod

@@ -1,8 +1,8 @@
 #ifndef BLOCKREPLACINGCALCULATION_HPP
 #define BLOCKREPLACINGCALCULATION_HPP
 
-#include <block.hpp>
-#include <methods/compressionmethod.hpp>
+#include "../block.hpp"
+#include "../methods/compressionmethod.hpp"
 
 struct BlockReplacingCalculation
 {

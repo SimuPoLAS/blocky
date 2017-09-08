@@ -1,10 +1,10 @@
 #ifndef MAINPARSER_HPP
 #define MAINPARSER_HPP
 
-#include <parsing2/parser.hpp>
-#include <parsing2/listparser.hpp>
-#include <parsing2/charparser.hpp>
-#include <parsing/hooker.hpp>
+#include "parser.hpp"
+#include "listparser.hpp"
+#include "charparser.hpp"
+#include "../parsing/hooker.hpp"
 
 class MainParser
 {

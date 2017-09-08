@@ -1,7 +1,7 @@
 #ifndef HEADERSIZES_HPP
 #define HEADERSIZES_HPP
 
-#include <blockymetadata.hpp>
+#include "../blockymetadata.hpp"
 
 struct HeaderSizes
 {

@@ -1,14 +1,14 @@
 #ifndef DECOMPRESSIONMETHOD_HPP
 #define DECOMPRESSIONMETHOD_HPP
 
-#include <blockfinding/headersizes.hpp>
-#include <blockynumber.hpp>
-#include <bitwriter.hpp>
-#include <bitreader.hpp>
-#include <blockymetadata.hpp>
-#include <methods/methods.hpp>
+#include "../blockfinding/headersizes.hpp"
+#include "../blockynumber.hpp"
+#include "../bitwriter.hpp"
+#include "../bitreader.hpp"
+#include "../blockymetadata.hpp"
+#include "methods.hpp"
 
-#include <block.hpp>
+#include "../block.hpp"
 
 class DecompressionMethod {
 protected:

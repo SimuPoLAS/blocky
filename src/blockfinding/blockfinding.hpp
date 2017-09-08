@@ -3,14 +3,14 @@
 
 #include <vector>
 
-#include <blockfinding/headersizes.hpp>
-#include <blockfinding/blockcalculation.hpp>
-#include <blockfinding/blockreplacingcalculation.hpp>
-#include <blockfinding/patternpredictor.hpp>
-#include <methods/compressionmethod.hpp>
-#include <methods/methods.hpp>
-#include <blockynumber.hpp>
-#include <block.hpp>
+#include "headersizes.hpp"
+#include "blockcalculation.hpp"
+#include "blockreplacingcalculation.hpp"
+#include "patternpredictor.hpp"
+#include "../methods/compressionmethod.hpp"
+#include "../methods/methods.hpp"
+#include "../blockynumber.hpp"
+#include "../block.hpp"
 
 class Blockfinding {
 private:

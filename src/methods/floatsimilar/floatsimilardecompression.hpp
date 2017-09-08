@@ -1,7 +1,7 @@
 #ifndef FLOATSIMILARDECOMPRESSION_HPP
 #define FLOATSIMILARDECOMPRESSION_HPP
 
-#include <methods/decompressionmethod.hpp>
+#include "../decompressionmethod.hpp"
 
 class FloatSimilarDecompression
 	: public DecompressionMethod

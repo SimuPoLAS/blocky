@@ -1,4 +1,4 @@
-#include <methods/numbersnoexp/numbersnoexpcompression.hpp>
+#include "numbersnoexpcompression.hpp"
 
 bool NumbersNoExpCompression::process_value
 (

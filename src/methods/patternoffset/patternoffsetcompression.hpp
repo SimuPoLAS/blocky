@@ -1,7 +1,7 @@
 #ifndef PATTERNOFFSETCOMPRESSION_HPP
 #define PATTERNOFFSETCOMPRESSION_HPP
 
-#include <methods/compressionmethod.hpp>
+#include "../compressionmethod.hpp"
 
 class PatternOffsetCompression
     : public CompressionMethod
