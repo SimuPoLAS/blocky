@@ -24,7 +24,7 @@ int FloatSimilarDecompression::read
 		auto value = BlockyNumber(number, exp);
 		// TODO: how the heck does one use write
 		// AAAAAAAAA ?
-		std::cout << "[floatsimilardecompression]" << "\n" << value.to_s << "\n";
+		std::cout << "[floatsimilardecompression]" << "\n" << value.to_s() << "\n";
 		writer.write(value, value.NeededBitsNumber + value.NeededBitsExponent);
 	}
 

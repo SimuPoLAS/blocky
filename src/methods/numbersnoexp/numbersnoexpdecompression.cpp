@@ -23,7 +23,7 @@ int NumbersNoExpDecompression::read
 		// when it's a number with no exp
 		BlockyNumber value = BlockyNumber(number, 0);
 		// AAAAAAAAA
-		std::cout << "[numbersnoexpdecompression]" << "\n" << value.to_s << "\n";
+		std::cout << "[numbersnoexpdecompression]" << "\n" << value.to_s() << "\n";
 		writer.write(value, value.NeededBitsNumber);
 	}
 

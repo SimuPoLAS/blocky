@@ -16,7 +16,7 @@ int PatternPingPongDecompression::read
 	for (size_t i = 0; i < total; i++)
 	{
 		BlockyNumber& value = i % (pp_length * 2) >= pp_length ? value2 : value1;
-		std::cout << "[patterndingdongdecompression]" << "\n" << value.to_s << "\n";
+		std::cout << "[patterndingdongdecompression]" << "\n" << value.to_s() << "\n";
 		writer.write(value, value.NeededBitsNumber);
 	}
 	return 0;

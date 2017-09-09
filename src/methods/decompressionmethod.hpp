@@ -10,7 +10,8 @@
 
 #include "../block.hpp"
 
-class DecompressionMethod {
+class DecompressionMethod
+{
 protected:
 	BlockyMetadata const& metadata;
 	CompressionMethod** methods;
