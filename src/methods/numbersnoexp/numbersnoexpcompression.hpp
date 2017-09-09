@@ -35,4 +35,4 @@ public:
     ) override;
 };
 
-#endif /* end of include guard: NUMMBERSNOEXPCOMPRESSION_HPP */
+#endif /* end of include guard: NUMBERSNOEXPCOMPRESSION_HPP */
