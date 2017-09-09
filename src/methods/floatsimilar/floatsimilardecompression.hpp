@@ -9,6 +9,12 @@ class FloatSimilarDecompression
 private:
 
 public:
+	FloatSimilarDecompression
+	(
+		BlockyMetadata const& metadata
+	)
+		: DecompressionMethod(metadata) { }
+
 	int read
 	(
 		BitReader& reader,

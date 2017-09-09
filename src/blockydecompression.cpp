@@ -6,21 +6,23 @@
 #include "methods/patternpingpong/patternpingpongdecompression.hpp"
 #include "methods/patternsame/patternsamedecompression.hpp"
 
-DecompressionMethod BlockyDecompression::get_method_for_block
+std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 (
 	Block block
 )
 {
-	if (!block.HasPattern) return block.HasExponent ? methods[(int)Methods::FloatSimilar] : methods[(int)Methods::NumbersNoExp];
+	if (!block.HasPattern) return block.HasExponent 
+		? std::unique_ptr<DecompressionMethod>(methods[(int)Methods::FloatSimilar]) 
+			: std::unique_ptr<DecompressionMethod>(methods[(int)Methods::NumbersNoExp]);
 
 	switch (block.Pattern)
 	{
 	case PatternType::Same:
-		return methods[(int)Methods::PatternSame];
+		return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternSame]);
 	case PatternType::Offset:
-		return methods[(int)Methods::PatternOffset];
+		return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternOffset]);
 	case PatternType::Pingpong:
-		return methods[(int)Methods::PatternPingPong];
+		return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternPingPong]);
 	case PatternType::Reserved:
 		// TODO: throw meaningful exception instead of not implemented error code
 		std::cout << "invalid pattern type" << "\n";
@@ -41,7 +43,7 @@ void BlockyDecompression::decompress()
 		{
 			Block block = DecompressionMethod::read_default_block_header(reader, metadata);
 			auto method = get_method_for_block(block);
-			value_count += method.read(reader, writer, block);
+			value_count += method->read(reader, writer, block);
 		}
 		else
 		{

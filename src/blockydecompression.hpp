@@ -2,6 +2,7 @@
 #define BLOCKYDECOMPRESSION_HPP
 
 #include <vector>
+#include <memory>
 
 #include "bitreader.hpp"
 #include "bitwriter.hpp"
@@ -15,15 +16,12 @@
 class BlockyDecompression
 {
 private:
-	BitReader reader;
-	BitWriter writer;
+	BitReader& reader;
+	BitWriter& writer;
 	BlockyMetadata metadata;
-	std::vector<DecompressionMethod> methods;
+	DecompressionMethod** methods;
 
-	// TODO: make a constructor
-
-	// TODO: get this crap to work
-	DecompressionMethod get_method_for_block(Block block);
+	std::unique_ptr<DecompressionMethod> get_method_for_block(Block block);
 public:
 	void decompress();
 	void write(BlockyNumber value);
