@@ -31,13 +31,13 @@ public:
 
 	static Block read_default_block_header
 	(
-		BitReader const& reader,
+		BitReader& reader,
 		BlockyMetadata const& metadata
 	);
 
 	static BlockyNumber read_single_value_without_control_bit
 	(
-		BitReader const& reader,
+		BitReader& reader,
 		BlockyMetadata const& metadata
 	);
 };
