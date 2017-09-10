@@ -8,7 +8,7 @@ class PatternOffsetDecompression
 {
 private:
 
-private:
+public:
 	PatternOffsetDecompression
 	(
 		BlockyMetadata const& metadata

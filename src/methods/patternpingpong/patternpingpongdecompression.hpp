@@ -8,7 +8,7 @@ class PatternPingPongDecompression
 {
 private:
 
-private:
+public:
 	PatternPingPongDecompression
 	(
 		BlockyMetadata const& metadata

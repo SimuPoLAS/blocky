@@ -6,6 +6,8 @@
 
 using namespace std;;
 
+BlockyNumber::BlockyNumber() {}
+
 BlockyNumber::BlockyNumber(int64_t number, int16_t exponent)
 {
     IsNegative = number < 0;

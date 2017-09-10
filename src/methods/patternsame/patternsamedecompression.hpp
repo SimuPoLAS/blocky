@@ -8,7 +8,7 @@ class PatternSameDecompression
 {
 private:
 
-private:
+public:
 	PatternSameDecompression
 	(
 		BlockyMetadata const& metadata

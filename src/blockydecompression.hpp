@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "bitreader.hpp"
-#include "bitwriter.hpp"
+#include "reporter.hpp"
 #include "blockymetadata.hpp"
 #include "block.hpp"
 #include "blockynumber.hpp"
@@ -16,13 +16,19 @@
 class BlockyDecompression
 {
 private:
-	BitReader& reader;
+	size_t index = 0;
+	BitReader reader;
 	BitWriter& writer;
 	BlockyMetadata metadata;
-	DecompressionMethod** methods;
+	DecompressionMethod* methods[METHODS_COUNT];
 
 	std::unique_ptr<DecompressionMethod> get_method_for_block(Block block);
 public:
+	BlockyNumber* values;
+
+	BlockyDecompression(FILE* reader);
+
+	void initialize(int value_count);
 	void decompress();
 	void write(BlockyNumber value);
 };

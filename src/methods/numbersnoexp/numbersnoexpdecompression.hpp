@@ -8,7 +8,7 @@ class NumbersNoExpDecompression
 {
 private:
 
-private:
+public:
 	NumbersNoExpDecompression
 	(
 		BlockyMetadata const& metadata

@@ -14,17 +14,13 @@ int main(int argc, char const *argv[])
     while(file >> b)
         bky << b;
 
-	/* 
 	BlockyInputStream bkyin("resources/alpha.water.bky");
 	ofstream filein("resources/alpha.water.bky.original");
 	std::noskipws(filein);
 
 	uint8_t bin;
 	while (bkyin >> bin)
-	{
 		filein << bin;
-	}
-	*/
 
     return 0;
 }

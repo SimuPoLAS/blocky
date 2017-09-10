@@ -6,6 +6,22 @@
 #include "methods/patternpingpong/patternpingpongdecompression.hpp"
 #include "methods/patternsame/patternsamedecompression.hpp"
 
+BlockyDecompression::BlockyDecompression(FILE* file)
+{
+	reader = BitReader(file);
+	metadata = BlockyMetadata::from_bit_stream(reader);
+
+	methods[(int)Methods::PatternSame] = new PatternOffsetDecompression(metadata);
+	methods[(int)Methods::PatternPingPong] = new PatternPingPongDecompression(metadata);
+	methods[(int)Methods::FloatSimilar] = new FloatSimilarDecompression(metadata);
+	methods[(int)Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata);
+	methods[(int)Methods::PatternOffset] = new PatternOffsetDecompression(metadata);
+
+	if (reader.read_byte(1) > 0) // use huffman (xd)
+		// TODO: meaningful exception (ecksdee)
+		exit(-501);
+}
+
 std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 (
 	Block block
@@ -34,6 +50,11 @@ std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 	}
 }
 
+void BlockyDecompression::initialize(int value_count)
+{
+	values = new BlockyNumber[value_count];
+}
+
 void BlockyDecompression::decompress()
 {
 	size_t value_count = 0;
@@ -48,17 +69,14 @@ void BlockyDecompression::decompress()
 		else
 		{
 			BlockyNumber value = DecompressionMethod::read_single_value_without_control_bit(reader, metadata);
-			writer.write(value, value.NeededBitsNumber);
+			writer.write(value, value);
 			value_count++;
 		}
 	}
 }
 
-void BlockyDecompression::write
-(
-	BlockyNumber value
-)
+void BlockyDecompression::write(BlockyNumber value)
 {
 	std::cout << "[blockydecompression] write called" << "\n";
-	writer.write(value, value.NeededBitsNumber);
+	values[index++] = value;
 }
