@@ -13,20 +13,26 @@
 class DecompressionMethod
 {
 protected:
+	std::vector<BlockyNumber>& values;
+	size_t& index;
 	BlockyMetadata const& metadata;
-	CompressionMethod** methods;
 
 	DecompressionMethod
 	(
-		BlockyMetadata const& metadata
+		BlockyMetadata const& metadata,
+		std::vector<BlockyNumber>& values,
+		size_t& index
 	)
-		: metadata(metadata) { }
+		: metadata(metadata)
+		, values(values)
+		, index(index) { }
+
+	void write(BlockyNumber value);
 
 public:
 	virtual int read
 	(
 		BitReader& reader,
-		BitWriter& writer,
 		Block block
 	) = 0;
 

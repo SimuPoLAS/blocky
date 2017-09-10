@@ -2,8 +2,7 @@
 
 int PatternSameDecompression::read
 (
-	BitReader & reader, 
-	BitWriter & writer, 
+	BitReader & reader,
 	Block block
 )
 {
@@ -11,7 +10,7 @@ int PatternSameDecompression::read
 	for (size_t i = 0; i < block.Length; i++)
 	{
 		std::cout << "[patternsamedecompression]" << "\n" << value.to_s() << "\n";
-		writer.write(value, value.NeededBitsNumber);
+		write(value);
 	}
 	return 0;
 }

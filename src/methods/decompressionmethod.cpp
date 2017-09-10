@@ -1,5 +1,11 @@
 #include "decompressionmethod.hpp"
 
+void DecompressionMethod::write(BlockyNumber value)
+{
+	std::cout << "[decompressionmethod] write called" << "\n";
+	values[index++] = value;
+}
+
 // Exclusive IsBlock
 Block DecompressionMethod::read_default_block_header
 (

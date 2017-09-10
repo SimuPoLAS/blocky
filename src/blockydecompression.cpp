@@ -52,7 +52,7 @@ std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 
 void BlockyDecompression::initialize(int value_count)
 {
-	values = new BlockyNumber[value_count];
+	values.resize(value_count);
 }
 
 void BlockyDecompression::decompress()
@@ -64,12 +64,12 @@ void BlockyDecompression::decompress()
 		{
 			Block block = DecompressionMethod::read_default_block_header(reader, metadata);
 			auto method = get_method_for_block(block);
-			value_count += method->read(reader, writer, block);
+			value_count += method->read(reader, block);
 		}
 		else
 		{
 			BlockyNumber value = DecompressionMethod::read_single_value_without_control_bit(reader, metadata);
-			writer.write(value, value);
+			write(value);
 			value_count++;
 		}
 	}

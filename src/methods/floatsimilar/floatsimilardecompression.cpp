@@ -3,7 +3,6 @@
 int FloatSimilarDecompression::read
 (
 	BitReader & reader,
-	BitWriter & writer,
 	Block block
 )
 {
@@ -25,7 +24,7 @@ int FloatSimilarDecompression::read
 		// TODO: how the heck does one use write
 		// AAAAAAAAA ?
 		std::cout << "[floatsimilardecompression]" << "\n" << value.to_s() << "\n";
-		writer.write(value, value.NeededBitsNumber + value.NeededBitsExponent);
+		write(value);
 	}
 
 	return block.Length;

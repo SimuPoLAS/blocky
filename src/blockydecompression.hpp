@@ -17,16 +17,15 @@ class BlockyDecompression
 {
 private:
 	size_t index = 0;
-	BitReader reader;
-	BitWriter& writer;
+	BitReader& reader;
 	BlockyMetadata metadata;
 	DecompressionMethod* methods[METHODS_COUNT];
 
 	std::unique_ptr<DecompressionMethod> get_method_for_block(Block block);
 public:
-	BlockyNumber* values;
+	std::vector<BlockyNumber> values;
 
-	BlockyDecompression(FILE* reader);
+	BlockyDecompression(FILE* file);
 
 	void initialize(int value_count);
 	void decompress();

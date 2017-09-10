@@ -11,14 +11,15 @@ private:
 public:
 	PatternOffsetDecompression
 	(
-		BlockyMetadata const& metadata
+		BlockyMetadata const& metadata,
+		std::vector<BlockyNumber>& values,
+		size_t& index
 	)
-		: DecompressionMethod(metadata) { }
+		: DecompressionMethod(metadata, values, index) { }
 
 	int read
 	(
 		BitReader& reader,
-		BitWriter& writer,
 		Block block
 	) override;
 };

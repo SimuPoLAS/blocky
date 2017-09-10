@@ -11,14 +11,15 @@ private:
 public:
 	NumbersNoExpDecompression
 	(
-		BlockyMetadata const& metadata
-	) 
-		: DecompressionMethod(metadata) { }
+		BlockyMetadata const& metadata,
+		std::vector<BlockyNumber>& values,
+		size_t& index
+	)
+		: DecompressionMethod(metadata, values, index) { }
 
 	int read
 	(
 		BitReader& reader,
-		BitWriter& writer,
 		Block block
 	) override;
 };
