@@ -7,15 +7,15 @@
 #include "methods/patternsame/patternsamedecompression.hpp"
 
 BlockyDecompression::BlockyDecompression(FILE* file)
+	: reader(BitReader(file))
 {
-	reader = BitReader(file);
 	metadata = BlockyMetadata::from_bit_stream(reader);
 
-	methods[(int)Methods::PatternSame] = new PatternOffsetDecompression(metadata);
-	methods[(int)Methods::PatternPingPong] = new PatternPingPongDecompression(metadata);
-	methods[(int)Methods::FloatSimilar] = new FloatSimilarDecompression(metadata);
-	methods[(int)Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata);
-	methods[(int)Methods::PatternOffset] = new PatternOffsetDecompression(metadata);
+	methods[(int)Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
+	methods[(int)Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, values, index);
+	methods[(int)Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, values, index);
+	methods[(int)Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, values, index);
+	methods[(int)Methods::PatternOffset] = new PatternOffsetDecompression(metadata, values, index);
 
 	if (reader.read_byte(1) > 0) // use huffman (xd)
 		// TODO: meaningful exception (ecksdee)

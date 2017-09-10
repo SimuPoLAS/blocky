@@ -5,19 +5,17 @@
 #include <memory>
 
 #include "bitreader.hpp"
-#include "reporter.hpp"
 #include "blockymetadata.hpp"
 #include "block.hpp"
 #include "blockynumber.hpp"
 #include "methods/methods.hpp"
 #include "methods/decompressionmethod.hpp"
-#include "reporter.hpp"
 
 class BlockyDecompression
 {
 private:
 	size_t index = 0;
-	BitReader& reader;
+	BitReader reader;
 	BlockyMetadata metadata;
 	DecompressionMethod* methods[METHODS_COUNT];
 
