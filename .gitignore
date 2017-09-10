@@ -43,3 +43,6 @@
 
 # vim swp files
 *.swp
+
+# Windows debugging directory
+Win32/*

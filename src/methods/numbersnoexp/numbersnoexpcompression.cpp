@@ -1,4 +1,4 @@
-#include <methods/numbersnoexp/numbersnoexpcompression.hpp>
+#include "numbersnoexpcompression.hpp"
 
 bool NumbersNoExpCompression::process_value
 (
@@ -9,14 +9,14 @@ bool NumbersNoExpCompression::process_value
 )
 {
     if (value.Exponent != 0)
-        return false; //Todo: maybe not impossible?
+        return false; // TODO: maybe not impossible?
 
     if (block.AbsoluteSign)
     {
         if (block.IsSignNegative != value.IsNegative) // Check if the new value works with the current "absolute sign" block header
         {
             block.AbsoluteSign = false;
-            bitDiff -= block.Length - 1; // We loose 1 bit per value, because we need to write down the sign now ... but we save 1 because less block header stuffs
+            bitDiff -= block.Length - 1; // We lose 1 bit per value, because we need to write down the sign now ... but we save 1 because less block header stuffs
         }
         else
             bitDiff++;

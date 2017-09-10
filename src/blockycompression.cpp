@@ -2,8 +2,8 @@
 #include <iostream>
 #include <vector>
 
-#include <blockycompression.hpp>
-#include <methods/patternpingpong/patternpingpongcompression.hpp>
+#include "blockycompression.hpp"
+#include "methods/patternpingpong/patternpingpongcompression.hpp"
 
 BlockyCompression::BlockyCompression(FILE* file)
     : writer(file) { }
@@ -166,8 +166,8 @@ void BlockyCompression::write()
         {
             auto value = Values[i];
 
-            //Todo: is the loop below really nessecary with the new changes?
-            while (value->NeededBitsNumber > Metadata.MaxNeededBitsNumber) //Todo: check how often this case appears. (This is a "bug" created by the blockfinding, which "corrects" the value to fit with the exp of a block that might get created ...
+            // TODO: is the loop below really nessecary with the new changes?
+            while (value->NeededBitsNumber > Metadata.MaxNeededBitsNumber) // TODO: check how often this case appears. (This is a "bug" created by the blockfinding, which "corrects" the value to fit with the exp of a block that might get created ...
             {
                 value->Number /= 10;
                 value->Exponent++;
@@ -211,6 +211,6 @@ void BlockyCompression::write()
         }
     }
 
-	std::cout << "done" << std::endl;
+	std::cout << "blockycompression done" << std::endl;
     writer.flush(); // This is nessecary. Will write the last buffered byte may only be partially complete!
 }

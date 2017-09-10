@@ -1,4 +1,4 @@
-#include <parsing2/mainparser.hpp>
+#include "mainparser.hpp"
 
 MainParser::MainParser(FILE* file)
     : total_parsed(0)
@@ -29,9 +29,9 @@ int MainParser::parse
     if(curr_parser != nullptr)
     {
         // indicates, whether this is a fresh reload
-        // important for parse variable, since you can determin,
+        // important for parse variable, since you can determine,
         // if parse variable is finished
-        // when parse variable is returning 0 at a fresh reload, then its finished
+        // (the parse variable returns 0 at a fresh reload when it is finished)
         bool fresh = true;
 
         result = 1;
@@ -73,10 +73,10 @@ int MainParser::parse
     }
 
     // while someone has parsed, continue to loop
-    // if noone has parsed, than we need a reload
+    // if noone has parsed, then we need a reload
     while (someone_parsed)
     {
-        // noone parsed in this round
+        // no one parsed in this iteration
         someone_parsed = false;
         for (auto parser : parsers)
         {
@@ -91,7 +91,7 @@ int MainParser::parse
                     count - parsed
                 );
 
-                // check, if error happened
+                // check for errors (constant parsing)
                 if (result < 0)
                 {
                     std::cerr << "error happened while parsing constant" << '\n';
@@ -101,7 +101,7 @@ int MainParser::parse
 
                 someone_parsed = true;
 
-                // if no error happened
+                // if there were no errors
                 // add up to parsed
                 total_parsed += result;
                 parsed += result;
@@ -119,7 +119,7 @@ int MainParser::parse
                     // if not, just continue
                     continue;
 
-                // check, if error happened
+                // check for errors (variable parsing)
                 if (result < 0)
                 {
                     std::cerr << "error happened while parsing variable" << '\n';
@@ -127,24 +127,24 @@ int MainParser::parse
                     exit(result);
                 }
 
-                // if it got here, then parse_variable is working
-                // there is a sure return after this section of code
+                // if the code reached here, parse_variable is working
+                // and there is a sure return after this section of code
                 // will continue after this session to ensure,
                 // that the variable part is completely parsed
 
+				// first, set the global parser to this parser
+				curr_parser = parser;
+
                 // if result is 0, then buffer should be reloaded
-                // => quiting
+                // => quit and refill buffer
                 if (result == 0)
                     return parsed;
-
-                // frist, set the global parser to this parser
-                curr_parser = parser;
 
                 // add up to parsed
                 total_parsed += result;
                 parsed += result;
 
-                // parser, while parse_variable returns 0
+                // parse, as long as parse_variable returns 0
                 while (result != 0)
                 {
                     result = parser->parse_variable
@@ -166,7 +166,8 @@ int MainParser::parse
                     parsed += result;
                 }
 
-                // result is 0, so quiting
+                // result is 0
+				// => quit and refill buffer
                 return parsed;
             }
         }

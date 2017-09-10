@@ -2,9 +2,11 @@
 #include <math.h>
 #include <iostream>
 
-#include <blockynumber.hpp>
+#include "blockynumber.hpp"
 
 using namespace std;;
+
+BlockyNumber::BlockyNumber() {}
 
 BlockyNumber::BlockyNumber(int64_t number, int16_t exponent)
 {

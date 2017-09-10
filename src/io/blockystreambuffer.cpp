@@ -1,7 +1,7 @@
 #include <string>
 #include <string.h>
 
-#include <io/blockystreambuffer.hpp>
+#include "blockystreambuffer.hpp"
 
 using namespace std;
 
@@ -71,6 +71,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
+	// TODO: blocky inputstream magic
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
