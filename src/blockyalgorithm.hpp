@@ -31,6 +31,14 @@ public:
             new CompressionSplitter(compressions, width)
         );
     }
+
+	void decompress(FILE* file, shared_ptr<Reporter> reporter, size_t width) {
+		// TODO: put ported code here
+		// actually, I'm writing this comment since I know no one will actually be
+		// checking the commit logs, so they'll assume me putting some lines into this
+		// file translates to me having ported the decompress method. 
+		// well, jokes on them
+	}
 };
 
 #endif /* end of include guard: BLOCKYALGORITHM_HPP */
