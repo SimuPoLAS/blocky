@@ -20,10 +20,12 @@ private:
 	size_t get_size();
 	void set_size(size_t size);
 public:
+	MarerReporter();
 	MarerReporter(BitWriter& writer);
 
-	void report(BlockyNumber value);
-	void report(std::vector<BlockyNumber> values, size_t offset, size_t amount);
+	void report(BlockyNumber value) override;
+	void report(BlockyNumber* values, size_t offset, size_t amount) override;
+	void finish() override;
 };
 
 #endif /* end of include guard: MARERREPORTER_HPP */

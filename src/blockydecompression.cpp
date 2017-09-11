@@ -22,6 +22,14 @@ BlockyDecompression::BlockyDecompression(FILE* file)
 		exit(-501);
 }
 
+/*
+BlockyDecompression::BlockyDecompression(FILE * file, MarerReporter reporter)
+	: reader(BitReader(file)), reporter(reporter)
+{
+	
+}
+*/
+
 std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 (
 	Block block
@@ -79,4 +87,9 @@ void BlockyDecompression::write(BlockyNumber value)
 {
 	std::cout << "[blockydecompression] write called" << "\n";
 	values[index++] = value;
+}
+
+void BlockyDecompression::report(BlockyNumber value)
+{
+	// reporter.report(value);
 }

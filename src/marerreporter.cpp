@@ -43,8 +43,13 @@ void MarerReporter::report(BlockyNumber value)
 	}
 }
 
-void MarerReporter::report(std::vector<BlockyNumber> values, size_t offset, size_t amount)
+void MarerReporter::report(BlockyNumber* values, size_t offset, size_t amount)
 {
 	for (size_t i = offset; i < offset + amount; i++)
 		report(values[i]);
+}
+
+void MarerReporter::finish()
+{
+	// do nothing and be useless, just like in ofc :)
 }
