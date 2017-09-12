@@ -18,7 +18,7 @@ public:
 
         *count: the variable that determines the length of one unit in numbers
     */
-    virtual bool try_parse
+    virtual int try_parse
     (
         const char* buffer,
         int offset,

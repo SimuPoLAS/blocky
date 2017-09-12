@@ -10,7 +10,7 @@ public:
     CharParser(Hooker& hooker)
         : Parser(hooker) { }
 
-    virtual bool try_parse
+    virtual int try_parse
     (
         const char* buffer,
         int offset,

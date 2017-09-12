@@ -2,6 +2,10 @@
 #ifndef PARSER_HPP_
 #define PARSER_HPP_
 
+#define TRY_PARSE_OK 0
+#define TRY_PARSE_BUFFER_SHORT -1
+#define TRY_PARSE_INVALID -2
+
 #include <vector>
 
 #include "../parsing/hooker.hpp"
@@ -41,7 +45,7 @@ public:
 
         It MUST be called first
     */
-    virtual bool try_parse
+    virtual int try_parse
     (
         const char* buffer,
         int offset,

@@ -2,7 +2,7 @@
 
 #include "listparser.hpp"
 
-bool ListParser::try_parse
+int ListParser::try_parse
 (
     const char* buffer,
     int offset,
@@ -18,14 +18,14 @@ bool ListParser::try_parse
     // validating for at least 4 char space
     // to check for the "List" keyword
     if (count < checked + 4)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
     // making a string from the first 4 chars in buffer
     std::string keyword(buffer+offset, buffer+offset+4);
 
     // validating, if the string equals "List"
     if (keyword != "List")
-        return false;
+        return TRY_PARSE_INVALID;
 
     // 4 chars were validated
     checked += 4;
@@ -36,11 +36,11 @@ bool ListParser::try_parse
     // validating for at least 1 char space
     // to check for the chevrons open "<"
     if (count < checked + 1)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if the char equals  chevrons open "<"
     if (buffer[offset + checked] != '<')
-        return false;
+        return TRY_PARSE_INVALID;
 
     // 1 char was validated
     checked += 1;
@@ -62,11 +62,11 @@ bool ListParser::try_parse
     // validating for at least length + 1 char space
     // to check for the List Type keyword and chevrons close ">"
     if (count < checked + length + 1)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if at the and of the keyword, there is a chenvrons close
     if (buffer[offset + checked + length] != '>')
-        return false;
+        return TRY_PARSE_INVALID;
 
     // saving the List Type in a string
     std::string ltype
@@ -83,7 +83,7 @@ bool ListParser::try_parse
 
     // validating, if List Type is supported
     if (ltype != "scalar" && ltype != "vector" && ltype != "tensor")
-        return false;
+        return TRY_PARSE_INVALID;
 
     // now white spaces are allowed
     while
@@ -96,7 +96,7 @@ bool ListParser::try_parse
     // validating for at least checked char space
     // to ensure that we are not out of buffer after whitespace checking
     if (count < checked)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
     // STATUS: List<\w+>\s[\d\s]*\(\s
     //                    ^
@@ -115,7 +115,7 @@ bool ListParser::try_parse
         // validating for at least length + checked char space
         // to ensure, that we are not out of buffer after number checking
         if (count < checked + length)
-            return false;
+            return TRY_PARSE_BUFFER_SHORT;
 
         checked += length;
 
@@ -130,14 +130,14 @@ bool ListParser::try_parse
         // validating for at least checked char space
         // to ensure that we are not out of buffer after whitespace checking
         if (count < checked)
-            return false;
+            return TRY_PARSE_BUFFER_SHORT;
     }
 
     // STATUS: List<\w+>\s[\d\s]*\(\s
     //                            ^
 
     if (buffer[offset + checked] != '(')
-        return false;
+        return TRY_PARSE_INVALID;
 
     checked++;
 
@@ -152,7 +152,7 @@ bool ListParser::try_parse
 		checked++;
 
     // from this point on, we are sure that this is a list
-    return true;
+    return TRY_PARSE_OK;
 }
 
 int ListParser::parse_constant
@@ -322,7 +322,8 @@ int ListParser::parse_variable
     while (result > 0)
     {
         // trying to parse the variable record
-        if (blockyParser->try_parse(buffer, offset + parsed, count - parsed))
+		int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
+        if (try_parse_result == TRY_PARSE_OK)
         {
             // if it is parsable, then parse
             result = blockyParser->parse_constant
