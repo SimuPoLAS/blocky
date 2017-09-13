@@ -30,6 +30,17 @@ BlockyDecompression::BlockyDecompression(FILE * file, MarerReporter reporter)
 }
 */
 
+size_t BlockyDecompression::reporter_get_size()
+{
+	return buffer.size();
+}
+
+void BlockyDecompression::reporter_set_size(size_t size)
+{
+	buffer.resize(size);
+	reporter_position = 0;
+}
+
 std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
 (
 	Block block
@@ -91,5 +102,38 @@ void BlockyDecompression::write(BlockyNumber value)
 
 void BlockyDecompression::report(BlockyNumber value)
 {
-	// reporter.report(value);
+	buffer[reporter_position++] = value.to_s();
+	if (reporter_position == buffer.size())
+	{
+		// so to get things clear, this method is actually responsible
+		// for the conversion of our data (in form of blockynumbers) to
+		// strings that are written directly to the output file
+
+		// please don't implement rudimentary code before actually checking
+		// how this usually gets implemented in cpp projects
+
+		// for future reference: 
+		// https://github.com/SimuPoLAS/Ofc/blob/master/src/Ofc/IO/MarerReader.cs#L131
+		switch (reporter_get_size())
+		{
+		case 1:
+			// TODO: check how to actually use write
+			// ofc: _writer.WriteLine(_buffer[0]);
+			//writer.write(buffer[0],)
+		default:
+			break;
+		}
+		reporter_position = 0;
+	}
+}
+
+void BlockyDecompression::report(BlockyNumber* values, size_t offset, size_t amount)
+{
+	for (size_t i = offset; i < offset + amount; i++)
+		report(values[i]);
+}
+
+void BlockyDecompression::finish()
+{
+	// do nothing and be useless, just like in ofc :)
 }
