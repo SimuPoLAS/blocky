@@ -7,9 +7,10 @@
 #include "methods/patternsame/patternsamedecompression.hpp"
 
 BlockyDecompression::BlockyDecompression(FILE* file)
-	: reader(BitReader(file))
+	: reader(BitReader(file)), file(file)
 {
 	metadata = BlockyMetadata::from_bit_stream(reader);
+	reporter_set_size(1);
 
 	methods[(int)Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
 	methods[(int)Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, values, index);
@@ -22,13 +23,16 @@ BlockyDecompression::BlockyDecompression(FILE* file)
 		exit(-501);
 }
 
-/*
-BlockyDecompression::BlockyDecompression(FILE * file, MarerReporter reporter)
-	: reader(BitReader(file)), reporter(reporter)
+BlockyDecompression::BlockyDecompression(FILE* file, nullptr_t nul)
+	: reader(BitReader(file)), file(file)
 {
-	
 }
-*/
+
+BlockyDecompression::~BlockyDecompression()
+{
+	delete file;
+	delete methods;
+}
 
 size_t BlockyDecompression::reporter_get_size()
 {
@@ -105,25 +109,40 @@ void BlockyDecompression::report(BlockyNumber value)
 	buffer[reporter_position++] = value.to_s();
 	if (reporter_position == buffer.size())
 	{
-		// so to get things clear, this method is actually responsible
-		// for the conversion of our data (in form of blockynumbers) to
-		// strings that are written directly to the output file
-
-		// please don't implement rudimentary code before actually checking
-		// how this usually gets implemented in cpp projects
-
 		// for future reference: 
 		// https://github.com/SimuPoLAS/Ofc/blob/master/src/Ofc/IO/MarerReader.cs#L131
+		std::ofstream out(file);
+		std::stringstream ss;
+
 		switch (reporter_get_size())
 		{
 		case 1:
-			// TODO: check how to actually use write
-			// ofc: _writer.WriteLine(_buffer[0]);
-			//writer.write(buffer[0],)
-		default:
+			out << buffer[0];
+		case 3:
+			// what did the femtolas team mean by this? we may never find out
+		case 9:
+			// strongest number 9
+
+			ss << "(";
+			// concatenate strings in buffer
+			// TODO: check that the efficiency of the copy approach isn't garbage
+			// (at the very least, this isn't the worst method there is)
+			copy
+			(
+				buffer.begin(), 
+				buffer.end(), 
+				ostream_iterator<int>(ss, string(" ").c_str())
+			);
+			ss << ")";
+
+			out << ss.str();
 			break;
+		default:
+			// TODO: throw meaningful exception instead of not implemented error code
+			exit(-501);
 		}
 		reporter_position = 0;
+		out.close();
 	}
 }
 
