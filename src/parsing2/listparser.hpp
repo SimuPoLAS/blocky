@@ -35,7 +35,7 @@ public:
         (NUMBER)
         PARANTHESE_OPEN
     */
-    virtual bool try_parse
+    virtual int try_parse
     (
         const char* buffer,
         int offset,

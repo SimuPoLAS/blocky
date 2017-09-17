@@ -13,7 +13,7 @@ class BlockyStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 100;
+    static const int bufferSize = 850;
 
     char buffer[bufferSize];
 

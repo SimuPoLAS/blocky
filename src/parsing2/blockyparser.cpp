@@ -2,7 +2,7 @@
 
 #include "blockyparser.hpp"
 
-bool BlockyParser::try_parse
+int BlockyParser::try_parse
 (
     const char* buffer,
     int offset,
@@ -13,7 +13,7 @@ bool BlockyParser::try_parse
     int checked = 0;
 
     if (count < 1)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
     std::string number;
 
@@ -30,7 +30,7 @@ bool BlockyParser::try_parse
 	}
 
 	if (!isdigit(buffer[offset + checked]))
-		return false;
+		return TRY_PARSE_INVALID;
     
 	while(isdigit(buffer[offset + checked]))
     {
@@ -38,12 +38,12 @@ bool BlockyParser::try_parse
         checked++;
 
         if (count < checked + 1)
-            return false;
+            return TRY_PARSE_BUFFER_SHORT;
     }
 
     if (buffer[offset + checked] != '.')
         if (!isspace(buffer[offset + checked]))
-            return false;
+            return TRY_PARSE_INVALID;
 
     if (buffer[offset + checked] == '.')
     {
@@ -51,7 +51,7 @@ bool BlockyParser::try_parse
         checked++;
 
         if (count < checked + 1)
-            return false;
+            return TRY_PARSE_BUFFER_SHORT;
 
         while
 		(
@@ -66,7 +66,7 @@ bool BlockyParser::try_parse
             checked++;
 
             if (count < checked + 1)
-                return false;
+                return TRY_PARSE_BUFFER_SHORT;
         }
     }
 
@@ -75,10 +75,10 @@ bool BlockyParser::try_parse
         // TODO: validate, if number really is blockynumber
         // but should be true
 
-        return true;
+        return TRY_PARSE_OK;
     }
 
-    return false;
+    return TRY_PARSE_INVALID;
 }
 
 int BlockyParser::parse_constant

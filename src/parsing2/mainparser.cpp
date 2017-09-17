@@ -80,96 +80,99 @@ int MainParser::parse
         someone_parsed = false;
         for (auto parser : parsers)
         {
+			int try_parse_result = parser->try_parse(buffer, offset + parsed, count - parsed);
             // check, if parser can parse the given buffer
-            if (parser->try_parse(buffer, offset + parsed, count - parsed))
-            {
-                // parse constant buffer
-                result = parser->parse_constant
-                (
-                    buffer,
-                    offset + parsed,
-                    count - parsed
-                );
+			if (try_parse_result == TRY_PARSE_OK)
+			{
+				// parse constant buffer
+				result = parser->parse_constant
+				(
+					buffer,
+					offset + parsed,
+					count - parsed
+				);
 
-                // check for errors (constant parsing)
-                if (result < 0)
-                {
-                    std::cerr << "error happened while parsing constant" << '\n';
-                    std::cerr << "error code: " << result << '\n';
-                    exit(result);
-                }
+				// check for errors (constant parsing)
+				if (result < 0)
+					return result;
 
-                someone_parsed = true;
+				someone_parsed = true;
 
-                // if there were no errors
-                // add up to parsed
-                total_parsed += result;
-                parsed += result;
+				// if there were no errors
+				// add up to parsed
+				total_parsed += result;
+				parsed += result;
 
-                // parse variable buffer
-                result = parser->parse_variable
-                (
-                    buffer,
-                    offset + parsed,
-                    count - parsed
-                );
+				// parse variable buffer
+				result = parser->parse_variable
+				(
+					buffer,
+					offset + parsed,
+					count - parsed
+				);
 
-                // check, if parser_variable is implemented
-                if (result == -404)
-                    // if not, just continue
-                    continue;
+				// check, if parser_variable is implemented
+				if (result == -404)
+					// if not, just continue
+					continue;
 
-                // check for errors (variable parsing)
-                if (result < 0)
-                {
-                    std::cerr << "error happened while parsing variable" << '\n';
-                    std::cerr << "error code: " << result << '\n';
-                    exit(result);
-                }
+				// check for errors (variable parsing)
+				if (result < 0)
+				{
+					std::cerr << "error happened while parsing variable" << '\n';
+					std::cerr << "error code: " << result << '\n';
+					exit(result);
+				}
 
-                // if the code reached here, parse_variable is working
-                // and there is a sure return after this section of code
-                // will continue after this session to ensure,
-                // that the variable part is completely parsed
+				// if the code reached here, parse_variable is working
+				// and there is a sure return after this section of code
+				// will continue after this session to ensure,
+				// that the variable part is completely parsed
 
 				// first, set the global parser to this parser
 				curr_parser = parser;
 
-                // if result is 0, then buffer should be reloaded
-                // => quit and refill buffer
-                if (result == 0)
-                    return parsed;
-
-                // add up to parsed
-                total_parsed += result;
-                parsed += result;
-
-                // parse, as long as parse_variable returns 0
-                while (result != 0)
-                {
-                    result = parser->parse_variable
-                    (
-                        buffer,
-                        offset + parsed,
-                        count - parsed
-                    );
-
-                    // check for error
-                    if (result < 0)
-                    {
-                        std::cerr << "error while parsing variable" << '\n';
-                        std::cerr << "error code: " << result << '\n';
-                        exit(result);
-                    }
-
-                    total_parsed += result;
-                    parsed += result;
-                }
-
-                // result is 0
+				// if result is 0, then buffer should be reloaded
 				// => quit and refill buffer
-                return parsed;
-            }
+				if (result == 0)
+					return parsed;
+
+				// add up to parsed
+				total_parsed += result;
+				parsed += result;
+
+				// parse, as long as parse_variable returns 0
+				while (result != 0)
+				{
+					result = parser->parse_variable
+					(
+						buffer,
+						offset + parsed,
+						count - parsed
+					);
+
+					// check for error
+					if (result < 0)
+					{
+						std::cerr << "error while parsing variable" << '\n';
+						std::cerr << "error code: " << result << '\n';
+						exit(result);
+					}
+
+					total_parsed += result;
+					parsed += result;
+				}
+
+				// result is 0
+				// => quit and refill buffer
+				return parsed;
+			}
+			else if (try_parse_result == TRY_PARSE_BUFFER_SHORT)
+			{
+				// if the try_parse method indicates, that the buffer needs more place
+				// then return to trigger buffer flushing
+				return parsed;
+			}
         }
     }
 

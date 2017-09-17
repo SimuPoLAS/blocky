@@ -1,6 +1,6 @@
 #include "charparser.hpp"
 
-bool CharParser::try_parse
+int CharParser::try_parse
 (
     const char* buffer,
     int offset,
@@ -8,9 +8,9 @@ bool CharParser::try_parse
 )
 {
     if (count < 1)
-        return false;
+        return TRY_PARSE_BUFFER_SHORT;
 
-    return true;
+    return TRY_PARSE_OK;
 }
 
 int CharParser::parse_constant
