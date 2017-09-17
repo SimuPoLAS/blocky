@@ -11,6 +11,7 @@ public:
     (
         // TODO: decide whether to use normal pointers
         // as parameter or shared_ptr
+		// @ugi use vectors
         BlockyNumber* numbers,
         size_t offset,
         size_t count
