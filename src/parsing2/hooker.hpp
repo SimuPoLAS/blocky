@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "positionprovider.hpp"
 #include "listtype.hpp"
 #include "directivetype.hpp"
 #include "../reporter.hpp"
@@ -23,6 +22,7 @@ private:
     uint32_t start;
     uint8_t size;
     uint32_t const& providedPosition;
+	std::string meta;
 
 public:
     vector<shared_ptr<CompressedSection>> CompessedDataSections;

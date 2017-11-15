@@ -33,30 +33,30 @@ public:
         );
     }
 
-	void decompress(FILE* file, size_t width = 1) {
-		if (width == 0)
-		{
-			BlockyDecompression(file).decompress();
-			return;
-		}
+	//void decompress(FILE* file, size_t width = 1) {
+	//	if (width == 0)
+	//	{
+	//		BlockyDecompression(file).decompress();
+	//		return;
+	//	}
 
-		std::vector<BlockyDecompression> decomp;
-		decomp.resize(width);
+	//	std::vector<BlockyDecompression> decomp;
+	//	decomp.resize(width);
 
-		// the norbi way (using good code)
-		for (size_t i = 0; i < width; i++)
-		{
-			decomp[i] = BlockyDecompression(file);
-			decomp[i].initialize(decomp[i].metadata.ValueCount);
-			decomp[i].decompress();
-		}
+	//	// the norbi way (using good code)
+	//	for (size_t i = 0; i < width; i++)
+	//	{
+	//		decomp[i] = BlockyDecompression(file);
+	//		decomp[i].initialize(decomp[i].metadata.ValueCount);
+	//		decomp[i].decompress();
+	//	}
 
-		auto len = decomp[0].values.size();
+	//	auto len = decomp[0].values.size();
 
-		for (size_t i = 0; i < len; i++)
-			for (size_t j = 0; j < decomp.size(); j++)
-				decomp[0].report(decomp[j].values[i]);
-	}
+	//	for (size_t i = 0; i < len; i++)
+	//		for (size_t j = 0; j < decomp.size(); j++)
+	//			decomp[0].report(decomp[j].values[i]);
+	//}
 };
 
 #endif /* end of include guard: BLOCKYALGORITHM_HPP */
