@@ -45,14 +45,22 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
     *fmodeptr++ = 'b';
     *fmodeptr = '\0';
 
-    file = fopen(name, fmode);
+	char data_name[1024];
+	strcpy(data_name, name);
+	strcat(data_name, ".data");
+	char meta_name[1024];
+	strcpy(meta_name, name);
+	strcat(meta_name, ".meta");
 
-    if (file == 0)
+    data = fopen(data_name, fmode);
+	meta = fopen(meta_name, fmode);
+
+    if (data == 0)
         return 0;
 
     opened = true;
 
-    parser = make_unique<MainParser>(file);
+    parser = make_unique<MainParser>(data);
 
     return this;
 }
@@ -63,7 +71,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
     {
         sync();
         opened = false;
-        if (fclose(file) == 0)
+        if (fclose(data) == 0 && fclose(meta) == 0)
             return this;
     }
     return 0;
@@ -75,7 +83,7 @@ int BlockyStreamBuffer::underflow()
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    int num = fread(buffer, 1, bufferSize, file);
+    int num = fread(buffer, 1, bufferSize, data);
 
     if (num <= 0)
         return EOF;

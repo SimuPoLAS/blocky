@@ -17,7 +17,9 @@ private:
 
     char buffer[bufferSize];
 
-    FILE* file;
+    FILE* data;
+	FILE* meta;
+
     bool opened;
     int mode;
 
