@@ -16,6 +16,16 @@ Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
 void Hooker::handle_meta_char(char c)
 {
 	// TODO: handle meta char and later, compress to as lzma into meta file
+	fwrite(&c, sizeof(char), 1, meta);
+}
+
+void Hooker::handle_meta_char_array(const char* c, size_t size)
+{
+	// TODO: benchmark if this is performancewise acceptable
+	// we could instead write the whole array into the file
+	// with fwrite
+	for (size_t i = 0; i < size; i++)
+		handle_meta_char(c[i]);
 }
 
 void Hooker::enter_dictionary(string name)

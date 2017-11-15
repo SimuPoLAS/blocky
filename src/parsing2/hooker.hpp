@@ -34,6 +34,7 @@ public:
     ListType get_type() const { return type; }
 
 	void handle_meta_char(char c);
+	void handle_meta_char_array(const char* c, size_t size);
     void enter_dictionary(string name);
     void leave_dictionary();
     void enter_code_stream_dictionary(string name);
