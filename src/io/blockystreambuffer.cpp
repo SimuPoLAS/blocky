@@ -71,6 +71,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
     {
         sync();
         opened = false;
+		parser->end();
         if (fclose(data) == 0 && fclose(meta) == 0)
             return this;
     }

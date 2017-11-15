@@ -178,3 +178,8 @@ int MainParser::parse
 
     return parsed;
 }
+
+void MainParser::end()
+{
+	hooker.end_file();
+}

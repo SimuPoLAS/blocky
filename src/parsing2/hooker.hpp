@@ -50,6 +50,7 @@ public:
     void handle_scalar(string value);
     void handle_keyword(string value);
     void handle_string(string data);
+	void end_file();
     void flush();
 };
 

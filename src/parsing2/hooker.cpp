@@ -15,8 +15,7 @@ Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
 
 void Hooker::handle_meta_char(char c)
 {
-	// TODO: handle meta char and later, compress to as lzma into meta file
-	fwrite(&c, sizeof(char), 1, meta);
+	meta_str += c;
 }
 
 void Hooker::handle_meta_char_array(const char* c, size_t size)
@@ -153,6 +152,13 @@ void Hooker::handle_string(string data)
     if (inList)
         // TODO: throw meaningful exception, not just zero
         throw 0;
+}
+
+void Hooker::end_file()
+{
+	// TODO: add meta header
+	// TODO: compress lzma
+	fwrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
 }
 
 void Hooker::flush() { }

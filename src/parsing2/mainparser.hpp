@@ -24,6 +24,8 @@ public:
         int offset,
         int count
     );
+
+	void end();
 };
 
 #endif /* end of include guard: MAINPARSER_HPP */
