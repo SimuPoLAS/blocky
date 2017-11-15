@@ -156,8 +156,20 @@ void Hooker::handle_string(string data)
 
 void Hooker::end_file()
 {
-	// TODO: add meta header
 	// TODO: compress lzma
+
+	// write header
+	int64_t off = 0;
+	for (size_t i = 0; i < CompessedDataSections.size(); i++)
+	{
+		auto section = CompessedDataSections[i];
+		int64_t value = section->Start - off;
+		off += section->End - section->Start;
+		fwrite(&value, sizeof(int64_t), 1, meta);
+		fwrite(&section->Size, sizeof(uint8_t), 1, meta);
+	}
+
+	// write real data
 	fwrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
 }
 
