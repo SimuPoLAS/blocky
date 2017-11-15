@@ -2,7 +2,7 @@
 
 CompressionSplitter::CompressionSplitter
 (
-    shared_ptr<shared_ptr<Reporter>> compressions,
+    std::vector<shared_ptr<Reporter>> compressions,
     size_t size
 )
     : compressions(compressions)
@@ -10,7 +10,7 @@ CompressionSplitter::CompressionSplitter
 
 void CompressionSplitter::report(BlockyNumber number)
 {
-    compressions.get()[numberIndex]->report(number);
+    compressions[numberIndex]->report(number);
     numberIndex = (numberIndex + 1) % count;
 }
 
@@ -31,6 +31,6 @@ void CompressionSplitter::finish()
 {
     for (size_t i = 0; i < count; i++)
     {
-        compressions.get()[i]->finish();
+        compressions[i]->finish();
     }
 }

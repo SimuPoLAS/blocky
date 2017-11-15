@@ -2,6 +2,7 @@
 #define COMPRESSIONSPLITTER_HPP
 
 #include <memory>
+#include <vector>
 
 #include "reporter.hpp"
 #include "blockynumber.hpp"
@@ -11,14 +12,14 @@ using namespace std;
 class CompressionSplitter : public Reporter
 {
 private:
-    shared_ptr<shared_ptr<Reporter>> compressions;
+    std::vector<shared_ptr<Reporter>> compressions;
     int32_t numberIndex;
     size_t count;
 
 public:
     CompressionSplitter
     (
-        shared_ptr<shared_ptr<Reporter>> compressions,
+        std::vector<shared_ptr<Reporter>> compressions,
         size_t size
     );
 
