@@ -2,14 +2,21 @@
 
 #include "hooker.hpp"
 
-Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
+Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
     : algorithm()
-	, file(file)
+	, data(data)
+	, meta(meta)
+	, meta_str("")
 	, inList(false)
 	, type(ListType::Anonymous)
 	, start(0)
 	, size(0)
     , providedPosition(providedPosition) { }
+
+void Hooker::handle_meta_char(char c)
+{
+	// TODO: handle meta char and later, compress to as lzma into meta file
+}
 
 void Hooker::enter_dictionary(string name)
 {
@@ -63,7 +70,7 @@ void Hooker::enter_list(ListType type, int capacity)
         throw 0;
     this->type = type;
     inList = true;
-    reporter = algorithm.compress(file, (int)type, capacity);
+    reporter = algorithm.compress(data, (int)type, capacity);
     size = uint8_t(type);
     if (reporter == nullptr)
         // TODO: throw meaningful exception, not just zero

@@ -16,7 +16,7 @@ private:
     std::shared_ptr<Parser> curr_parser = nullptr;
 
 public:
-    MainParser(FILE* file);
+    MainParser(FILE* data, FILE* meta);
 
     int parse
     (

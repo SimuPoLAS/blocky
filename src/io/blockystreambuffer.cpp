@@ -60,7 +60,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
     opened = true;
 
-    parser = make_unique<MainParser>(data);
+    parser = make_unique<MainParser>(data, meta);
 
     return this;
 }
