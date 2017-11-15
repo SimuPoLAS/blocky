@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include "../parsing2/mainparser.hpp"
+#include "../parsing/mainparser.hpp"
 
 using namespace std;
 
