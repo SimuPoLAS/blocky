@@ -1,8 +1,8 @@
 #include "mainparser.hpp"
 
-MainParser::MainParser(FILE* file)
+MainParser::MainParser(FILE* data, FILE* meta)
     : total_parsed(0)
-    , hooker(file, total_parsed)
+    , hooker(data, meta, total_parsed)
     , parsers
     ({
         std::make_shared<ListParser>(hooker),
@@ -177,4 +177,9 @@ int MainParser::parse
     }
 
     return parsed;
+}
+
+void MainParser::end()
+{
+	hooker.end_file();
 }

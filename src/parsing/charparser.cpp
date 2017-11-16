@@ -20,6 +20,6 @@ int CharParser::parse_constant
     int count
 )
 {
-    // TODO: add char to hooker for meta compression (LZMA)
+	hooker.handle_meta_char(buffer[offset]);
     return 1;
 }

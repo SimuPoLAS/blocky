@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include "../parsing2/mainparser.hpp"
+#include "../parsing/mainparser.hpp"
 
 using namespace std;
 
@@ -17,7 +17,9 @@ private:
 
     char buffer[bufferSize];
 
-    FILE* file;
+    FILE* data;
+	FILE* meta;
+
     bool opened;
     int mode;
 

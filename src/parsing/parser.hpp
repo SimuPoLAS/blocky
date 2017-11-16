@@ -1,76 +1,94 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+// TODO: remove underline
+#ifndef PARSER_HPP_
+#define PARSER_HPP_
+
+#define TRY_PARSE_OK 0
+#define TRY_PARSE_BUFFER_SHORT -1
+#define TRY_PARSE_INVALID -2
 
 #include <vector>
-#include <memory>
 
-#include "token.hpp"
-#include "lexer.hpp"
-#include "hooker.hpp"
-#include "positionprovider.hpp"
+#include "../parsing/hooker.hpp"
 
-using namespace std;
+/*
+    This class is responsible for parsing records
 
-enum class ParserResult
-{
-    SUCCESS = 0,
-    END_OF_BUFFER = 1,
-    UNEXPECTED_TOKEN = -1,
-    UNEXPECTED_EOF = -2
-};
+    Records consist of two parts:
+    1. constant part
+    2. variable part
 
+    constant part:
+    * MUST be available
+    * its size MUST be fixed
+
+    variable part:
+    * MAY be available
+    * its size MUST be dynamic
+        * its end MUST be defined by an escape sequence
+    * MAY span over the size of a buffer
+*/
 class Parser
-    : public PositionProvider
 {
-private:
-    // TODO: make bufferSize globaly available
-    static const int bufferSize = 4096;
+protected:
+    /*
 
-    shared_ptr<Token> (&buffer)[bufferSize];
-    bool eos;
-    int32_t length;
-    int32_t position;
-    int32_t size;
-    int32_t filePos;
-    unique_ptr<Hooker> hooker;
-
-    // base parser methods
-    // TODO: decide whether to use int32_t or size_t for amount
-    ParserResult ensure(int32_t amount);
-    void fill();
-    ParserResult needs(int32_t amount);
-    void skip();
-    void skip(int32_t amount);
-    // void relocate();
-
-    // parser methods
-    ParserResult expect(TokenType type);
-    ParserResult expect(TokenType types[], size_t count);
-
-    ParserResult parse_entry_or_object(Token const& me);
-    ParserResult parse_object(Token const& me);
-    ParserResult parse_code_stream_object(Token const& me);
-    ParserResult parse_entry(Token const& me);
-    ParserResult parse_directive();
-    ParserResult parse_value(Token const& me);
-    ParserResult parse_list(ListType type, int32_t amount);
-    ParserResult parse_list_continue(ListType type);
-    ParserResult parse_anonymous_list(int32_t number = -1);
-    ParserResult parse_scalar();
-    ParserResult parse_vector();
-    ParserResult parse_tensor();
+    */
+    Hooker& hooker;
 
 public:
-    bool SimpleAnonyomousLists;
+    Parser(Hooker& hooker)
+        : hooker(hooker) { }
 
-    Parser
+    /*
+        This method decides whether the provided buffer can be parsed or not
+        It communicates this information via the return bool
+
+        It MUST be called first
+    */
+    virtual int try_parse
     (
-        FILE* file,
-        shared_ptr<Token> (&buffer)[bufferSize]
-    );
+        const char* buffer,
+        int offset,
+        int count
+    ) = 0;
 
-    uint32_t get_position() override;
-    void parse(int w);
+    /*
+        This method parses the constant part of the provided record
+
+        If the record spans over the size of a buffer:
+        * it MUST called only once at the beginning of the record
+
+        It MUST be called before parse_variable()
+
+        It returns the size it has parsed
+    */
+    virtual int parse_constant
+    (
+        const char* buffer,
+        int offset,
+        int count
+    ) = 0;
+
+    /*
+        This method parses the varable part of the provided record
+
+        If the record spans over the size of a buffer:
+        * it MUST called every time the buffer is refilled
+
+        It MUST be called after parse_constant()
+
+        If it was declared, then
+        * It returns the size it has parsed
+        * or an error (below 0)
+        If not then
+        * it returns a not implemented error (-404)
+    */
+    virtual int parse_variable
+    (
+        const char* buffer,
+        int offset,
+        int count
+    ) { return -404; } // TODO: throw meaningful errors
 };
 
-#endif /* end of include guard: PARSER_HPP */
+#endif /* end of include guard: PARSER_HPP_ */

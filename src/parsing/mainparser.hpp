@@ -16,7 +16,7 @@ private:
     std::shared_ptr<Parser> curr_parser = nullptr;
 
 public:
-    MainParser(FILE* file);
+    MainParser(FILE* data, FILE* meta);
 
     int parse
     (
@@ -24,6 +24,8 @@ public:
         int offset,
         int count
     );
+
+	void end();
 };
 
 #endif /* end of include guard: MAINPARSER_HPP */

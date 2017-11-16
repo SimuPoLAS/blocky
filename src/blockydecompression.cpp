@@ -127,12 +127,12 @@ void BlockyDecompression::report(BlockyNumber value)
 			// concatenate strings in buffer
 			// TODO: check that the efficiency of the copy approach isn't garbage
 			// (at the very least, this isn't the worst method there is)
-			copy
-			(
-				buffer.begin(), 
-				buffer.end(), 
-				ostream_iterator<int>(ss, string(" ").c_str())
-			);
+			//copy
+			//(
+			//	buffer.begin(), 
+			//	buffer.end(), 
+			//	ostream_iterator<int>(ss, " ")
+			//);
 			ss << ")";
 
 			out << ss.str();

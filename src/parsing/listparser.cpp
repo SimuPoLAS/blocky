@@ -300,6 +300,9 @@ int ListParser::parse_constant
 	)
 		parsed++;
 
+	// TODO: check if OFC also adds list count to meta
+	hooker.handle_meta_char_array(buffer + offset, parsed);
+
     return parsed;
 }
 

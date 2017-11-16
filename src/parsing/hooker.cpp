@@ -2,14 +2,30 @@
 
 #include "hooker.hpp"
 
-Hooker::Hooker(FILE* file, uint32_t const& providedPosition)
+Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
     : algorithm()
-	, file(file)
+	, data(data)
+	, meta(meta)
+	, meta_str("")
 	, inList(false)
 	, type(ListType::Anonymous)
 	, start(0)
 	, size(0)
     , providedPosition(providedPosition) { }
+
+void Hooker::handle_meta_char(char c)
+{
+	meta_str += c;
+}
+
+void Hooker::handle_meta_char_array(const char* c, size_t size)
+{
+	// TODO: benchmark if this is performancewise acceptable
+	// we could instead write the whole array into the file
+	// with fwrite
+	for (size_t i = 0; i < size; i++)
+		handle_meta_char(c[i]);
+}
 
 void Hooker::enter_dictionary(string name)
 {
@@ -63,7 +79,7 @@ void Hooker::enter_list(ListType type, int capacity)
         throw 0;
     this->type = type;
     inList = true;
-    reporter = algorithm.compress(file, (int)type, capacity);
+    reporter = algorithm.compress(data, (int)type, capacity);
     size = uint8_t(type);
     if (reporter == nullptr)
         // TODO: throw meaningful exception, not just zero
@@ -136,6 +152,25 @@ void Hooker::handle_string(string data)
     if (inList)
         // TODO: throw meaningful exception, not just zero
         throw 0;
+}
+
+void Hooker::end_file()
+{
+	// TODO: compress lzma
+
+	// write header
+	int64_t off = 0;
+	for (size_t i = 0; i < CompessedDataSections.size(); i++)
+	{
+		auto section = CompessedDataSections[i];
+		int64_t value = section->Start - off;
+		off += section->End - section->Start;
+		fwrite(&value, sizeof(int64_t), 1, meta);
+		fwrite(&section->Size, sizeof(uint8_t), 1, meta);
+	}
+
+	// write real data
+	fwrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
 }
 
 void Hooker::flush() { }
