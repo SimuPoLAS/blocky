@@ -31,7 +31,8 @@ BlockyDecompression::BlockyDecompression(FILE* file, nullptr_t nul)
 BlockyDecompression::~BlockyDecompression()
 {
 	delete file;
-	delete methods;
+	for (size_t i = 0; i < METHODS_COUNT; i++)
+		delete methods[i];
 }
 
 size_t BlockyDecompression::reporter_get_size()
