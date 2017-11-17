@@ -46,3 +46,8 @@
 
 # Windows debugging directory
 Win32/*
+
+# Blocky Compression/Decompression results
+*.meta
+*.data
+*.original
