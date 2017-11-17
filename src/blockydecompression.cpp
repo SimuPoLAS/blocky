@@ -31,7 +31,8 @@ BlockyDecompression::BlockyDecompression(FILE* file, nullptr_t nul)
 BlockyDecompression::~BlockyDecompression()
 {
 	delete file;
-	delete methods;
+	for (size_t i = 0; i < METHODS_COUNT; i++)
+		delete methods[i];
 }
 
 size_t BlockyDecompression::reporter_get_size()
@@ -111,13 +112,14 @@ void BlockyDecompression::report(BlockyNumber value)
 	{
 		// for future reference: 
 		// https://github.com/SimuPoLAS/Ofc/blob/master/src/Ofc/IO/MarerReader.cs#L131
-		std::ofstream out(file);
+		//std::ofstream out(file);
 		std::stringstream ss;
 
 		switch (reporter_get_size())
 		{
 		case 1:
-			out << buffer[0];
+			fwrite(buffer.data(), sizeof(char), buffer.size(), file);
+			//out << buffer[0];
 		case 3:
 			// what did the femtolas team mean by this? we may never find out
 		case 9:
@@ -135,14 +137,15 @@ void BlockyDecompression::report(BlockyNumber value)
 			//);
 			ss << ")";
 
-			out << ss.str();
+			fwrite(ss.str().data(), sizeof(char), ss.str().size(), file);
+			//out << ss.str();
 			break;
 		default:
 			// TODO: throw meaningful exception instead of not implemented error code
 			exit(-501);
 		}
 		reporter_position = 0;
-		out.close();
+		//out.close();
 	}
 }
 
