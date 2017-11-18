@@ -192,7 +192,6 @@ int ListParser::parse_constant
         // TODO: return unexpected end of buffer
         return -1;
 
-    ListType type;
     std::string ltype
     (
         buffer + offset + parsed,
@@ -322,31 +321,58 @@ int ListParser::parse_variable
 
     int result = 1;
     int parsed = 0;
+
+	// parse whitespaces
+	while
+	(
+		count > parsed
+		&& isspace(buffer[offset + parsed])
+	)
+		parsed++;
+
     while (result > 0)
     {
-        // trying to parse the variable record
-		int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
-        if (try_parse_result == TRY_PARSE_OK)
-        {
-            // if it is parsable, then parse
-            result = blockyParser->parse_constant
-            (
-                buffer,
-                offset + parsed,
-                count - parsed
-            );
 
-            // if an error happened, forward it
-            if (result < 0)
-                return result;
+		if (type != ListType::Scalar)
+			parsed++;
 
-            parsed += result;
-        }
-        else
-        {
-            // if not, returning what we parsed
-            return parsed;
-        }
+		for (int i = 0; i < (int)type; i++) 
+		{
+			// trying to parse the variable record
+			int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
+			if (try_parse_result == TRY_PARSE_OK)
+			{
+				// if it is parsable, then parse
+				result = blockyParser->parse_constant
+				(
+					buffer,
+					offset + parsed,
+					count - parsed
+				);
+
+				// if an error happened, forward it
+				if (result < 0)
+					return result;
+
+				parsed += result;
+			}
+			else
+			{
+				// if not, returning what we parsed
+				return parsed;
+			}
+		}
+
+		if (type != ListType::Scalar)
+			parsed++;
+
+		// parse whitespaces
+		while
+		(
+			count > parsed
+			&& isspace(buffer[offset + parsed])
+		)
+			parsed++;
 
         // after parsing is done, we check for the escape sequence
         if (buffer[offset + parsed] == ')')

@@ -21,6 +21,7 @@ private:
 
     */
     bool end = true;
+	ListType type = ListType::Scalar;
 
 public:
     ListParser(Hooker& hooker)

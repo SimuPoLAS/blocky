@@ -6,7 +6,8 @@ CompressionSplitter::CompressionSplitter
     size_t size
 )
     : compressions(compressions)
-    , count(size) { }
+    , count(size) 
+	, numberIndex(0) { }
 
 void CompressionSplitter::report(BlockyNumber number)
 {
