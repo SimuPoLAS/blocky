@@ -22,13 +22,13 @@ private:
     ListType type;
     uint32_t start;
     uint8_t size;
-    const size_t& providedPosition;
 	std::string meta_str;
 
 public:
+	size_t& providedPosition;
     vector<shared_ptr<CompressedSection>> CompessedDataSections;
 
-    Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition);
+    Hooker(FILE* data, FILE* meta, size_t& providedPosition);
 
     bool is_in_list() const { return inList; }
     ListType get_type() const { return type; }

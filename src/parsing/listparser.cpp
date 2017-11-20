@@ -282,12 +282,6 @@ int ListParser::parse_constant
     // STATUS: List<\w+>\s[\d\s]*\(\s
     //                          ^
 
-    hooker.enter_list(type, amount);
-
-    blockyParser = std::make_unique<BlockyParser>(hooker);
-
-    end = false;
-
 	// parse (
 	parsed++;
 
@@ -299,6 +293,15 @@ int ListParser::parse_constant
 	)
 		parsed++;
 
+	// TODO: better solution pls >.<
+	hooker.providedPosition += parsed;
+    hooker.enter_list(type, amount);
+	hooker.providedPosition -= parsed;
+
+    blockyParser = std::make_unique<BlockyParser>(hooker);
+
+    end = false;
+	
 	// TODO: check if OFC also adds list count to meta
 	hooker.handle_meta_char_array(buffer + offset, parsed);
 
