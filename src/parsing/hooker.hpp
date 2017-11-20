@@ -22,7 +22,7 @@ private:
     ListType type;
     uint32_t start;
     uint8_t size;
-    uint32_t const& providedPosition;
+    const size_t& providedPosition;
 	std::string meta_str;
 
 public:

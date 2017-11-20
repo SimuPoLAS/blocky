@@ -9,7 +9,7 @@
 class MainParser
 {
 private:
-    int total_parsed = 0;
+    size_t total_parsed = 0;
     Hooker hooker;
     std::vector<std::shared_ptr<Parser>> parsers;
 

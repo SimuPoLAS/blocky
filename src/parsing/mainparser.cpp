@@ -44,6 +44,10 @@ int MainParser::parse
                 count - parsed
             );
 
+			if (result > 1) {
+
+			}
+
             if (result < 0)
             {
                 std::cerr << "error happened while parsing variable" << '\n';
