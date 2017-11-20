@@ -15,7 +15,7 @@ Hooker::Hooker(FILE* data, FILE* meta, size_t& providedPosition)
 
 void Hooker::handle_meta_char(char c)
 {
-	meta_str += c;
+	meta_str.append(&c);
 }
 
 void Hooker::handle_meta_char_array(const char* c, size_t size)

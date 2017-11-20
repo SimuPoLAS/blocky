@@ -7,6 +7,7 @@ using namespace std;
 
 BlockyStreamBuffer::BlockyStreamBuffer()
     : opened(false)
+	, last(false)
 {
     setp(buffer, buffer + (bufferSize - 1));
     setg(buffer, buffer, buffer);
@@ -69,8 +70,9 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 {
     if (is_open())
     {
+		last = true;
         sync();
-        opened = false;
+		opened = false;
 		parser->end();
         if (fclose(data) == 0 && fclose(meta) == 0)
             return this;
@@ -98,7 +100,7 @@ int BlockyStreamBuffer::flush_buffer()
 {
     int w = pptr() - pbase();
 
-    int processed = parser->parse(buffer, 0, w);
+    int processed = parser->parse(buffer, 0, w, last);
 
     // copy rest to beginning of buffer
     memcpy(buffer, buffer + processed, (bufferSize - processed));

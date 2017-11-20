@@ -22,7 +22,8 @@ public:
     (
         const char* buffer,
         int offset,
-        int count
+        int count,
+		bool last
     );
 
 	void end();
