@@ -16,7 +16,8 @@ int MainParser::parse
 (
     const char* buffer,
     int offset,
-    int count
+    int count,
+	bool last
 )
 {
     int parsed = 0;
@@ -167,7 +168,7 @@ int MainParser::parse
 				// => quit and refill buffer
 				return parsed;
 			}
-			else if (try_parse_result == TRY_PARSE_BUFFER_SHORT)
+			else if (try_parse_result == TRY_PARSE_BUFFER_SHORT && !last)
 			{
 				// if the try_parse method indicates, that the buffer needs more place
 				// then return to trigger buffer flushing

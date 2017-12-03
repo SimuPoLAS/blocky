@@ -9,7 +9,7 @@
 class MainParser
 {
 private:
-    int total_parsed = 0;
+    size_t total_parsed = 0;
     Hooker hooker;
     std::vector<std::shared_ptr<Parser>> parsers;
 
@@ -22,7 +22,8 @@ public:
     (
         const char* buffer,
         int offset,
-        int count
+        int count,
+		bool last
     );
 
 	void end();

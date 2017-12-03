@@ -70,7 +70,7 @@ int BlockyParser::try_parse
         }
     }
 
-    if (isspace(buffer[offset + checked]))
+    if (isspace(buffer[offset + checked]) || buffer[offset + checked] == ')')
     {
         // TODO: validate, if number really is blockynumber
         // but should be true
@@ -98,6 +98,7 @@ int BlockyParser::parse_constant
     (
         count > parsed
      && !isspace(buffer[offset + parsed])
+	 && buffer[offset + parsed] != ')'
     )
         parsed++;
 

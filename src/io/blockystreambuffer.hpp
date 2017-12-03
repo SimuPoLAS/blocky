@@ -13,7 +13,7 @@ class BlockyStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 850;
+    static const int bufferSize = 840;
 
     char buffer[bufferSize];
 
@@ -22,6 +22,7 @@ private:
 
     bool opened;
     int mode;
+	bool last = false;
 
     unique_ptr<MainParser> parser;
 

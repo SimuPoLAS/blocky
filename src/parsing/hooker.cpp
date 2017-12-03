@@ -2,7 +2,7 @@
 
 #include "hooker.hpp"
 
-Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
+Hooker::Hooker(FILE* data, FILE* meta, size_t& providedPosition)
     : algorithm()
 	, data(data)
 	, meta(meta)
@@ -15,7 +15,7 @@ Hooker::Hooker(FILE* data, FILE* meta, uint32_t const& providedPosition)
 
 void Hooker::handle_meta_char(char c)
 {
-	meta_str += c;
+	meta_str.append(&c);
 }
 
 void Hooker::handle_meta_char_array(const char* c, size_t size)
@@ -168,7 +168,9 @@ void Hooker::end_file()
 		fwrite(&value, sizeof(int64_t), 1, meta);
 		fwrite(&section->Size, sizeof(uint8_t), 1, meta);
 	}
-
+	uint8_t buff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+	fwrite(buff, sizeof(uint8_t), 8, meta);
+	
 	// write real data
 	fwrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
 }
