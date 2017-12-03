@@ -53,8 +53,8 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 	strcpy(meta_name, name);
 	strcat(meta_name, ".meta");
 
-    data = fopen(data_name, fmode);
-	meta = fopen(meta_name, fmode);
+    data = lzmaopen(data_name, fmode);
+	meta = lzmaopen(meta_name, fmode);
 
     if (data == 0)
         return 0;
@@ -74,7 +74,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
         sync();
 		opened = false;
 		parser->end();
-        if (fclose(data) == 0 && fclose(meta) == 0)
+        if (lzmaclose(data) == 0 && lzmaclose(meta) == 0)
             return this;
     }
     return 0;
@@ -86,7 +86,7 @@ int BlockyStreamBuffer::underflow()
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    int num = fread(buffer, 1, bufferSize, data);
+    int num = lzmaread(buffer, 1, bufferSize, data);
 
     if (num <= 0)
         return EOF;

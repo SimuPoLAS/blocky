@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "lzmaio.hpp"
 #include "reporter.hpp"
 #include "blockycompression.hpp"
 #include "blockydecompression.hpp"
@@ -13,7 +14,7 @@ using namespace std;
 class BlockyAlgorithm
 {
 public:
-    shared_ptr<Reporter> compress(FILE* file, size_t width, int elements)
+    shared_ptr<Reporter> compress(LZMAFILE* file, size_t width, int elements)
     {
         if (width == 1)
             return make_shared<BlockyCompression>(file);

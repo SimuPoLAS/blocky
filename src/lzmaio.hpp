@@ -20,7 +20,7 @@ typedef struct {
 	uint8_t out[BUFFER_SIZE];
 } LZMAFILE;
 
-LZMAFILE* lzmaopen(const char* filepath, const char* mode) {
+static LZMAFILE* lzmaopen(const char* filepath, const char* mode) {
 	LZMAFILE* file = (LZMAFILE*)malloc(sizeof(LZMAFILE));
 	file->decode = LZMA_STREAM_INIT;
 	file->encode = LZMA_STREAM_INIT;
@@ -39,7 +39,7 @@ LZMAFILE* lzmaopen(const char* filepath, const char* mode) {
 	return file;
 }
 
-int lzmaclose(LZMAFILE* file) {
+static int lzmaclose(LZMAFILE* file) {
 	for (;;) {
 		lzma_ret ret = lzma_code(&file->encode, LZMA_FINISH);
 		file->out_size = file->BUFFER_SIZE - file->encode.avail_out;
@@ -63,7 +63,7 @@ int lzmaclose(LZMAFILE* file) {
 	free(file);
 }
 
-size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) {
+static size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) {
 	file->decode.next_out = (uint8_t*)buffer;
 	file->decode.avail_out = size * count;
 
@@ -96,7 +96,7 @@ size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) {
 	return size*count;
 }
 
-size_t lzmawrite(void* buffer, size_t size, size_t count, LZMAFILE* file) {
+static size_t lzmawrite(const void* buffer, size_t size, size_t count, LZMAFILE* file) {
 	file->encode.next_in = (uint8_t*)buffer;
 	file->encode.avail_in = size * count;
 

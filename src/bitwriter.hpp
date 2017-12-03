@@ -5,11 +5,13 @@
 #include <iostream>
 #include <memory>
 
+#include "lzmaio.hpp"
+
 using namespace std;
 
 class BitWriter {
 private:
-    FILE* file;
+	LZMAFILE* file;
     // TODO: try use it as reference and notas pointer
     uint8_t buffer;
     uint8_t offset;
@@ -18,7 +20,7 @@ public:
 	// TODO: decide whether we keep position or not
 	uint64_t Position;
 
-    BitWriter(FILE* file)
+    BitWriter(LZMAFILE* file)
         : file(file)
 		, buffer(0)
 		, offset(0)

@@ -5,7 +5,7 @@
 #include "blockycompression.hpp"
 #include "methods/patternpingpong/patternpingpongcompression.hpp"
 
-BlockyCompression::BlockyCompression(FILE* file)
+BlockyCompression::BlockyCompression(LZMAFILE* file)
     : writer(file) { }
 
 void BlockyCompression::report(BlockyNumber number)

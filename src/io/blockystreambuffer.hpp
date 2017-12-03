@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 
+#include "../lzmaio.hpp"
 #include "../parsing/mainparser.hpp"
 
 using namespace std;
@@ -17,8 +18,8 @@ private:
 
     char buffer[bufferSize];
 
-    FILE* data;
-	FILE* meta;
+    LZMAFILE* data;
+	LZMAFILE* meta;
 
     bool opened;
     int mode;

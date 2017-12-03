@@ -1,6 +1,6 @@
 #include "mainparser.hpp"
 
-MainParser::MainParser(FILE* data, FILE* meta)
+MainParser::MainParser(LZMAFILE* data, LZMAFILE* meta)
     : total_parsed(0)
     , hooker(data, meta, total_parsed)
     , parsers
