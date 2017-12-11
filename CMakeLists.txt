@@ -33,5 +33,10 @@ list(REMOVE_ITEM blocky_TESTING_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 
 file(COPY resources DESTINATION .)
 
+find_package(LibLZMA REQUIRED)
+include_directories(${LIBLZMA_INCLUDE_DIR})
+set(LIBS ${LIBS} ${LIBLZMA_LIBRARIES})
+
 add_executable(blocky ${blocky_SOURCES} ${blocky_HEADERS})
+target_link_libraries(blocky ${LIBS})
 #add_executable(blocky_test ${blocky_TEST} ${blocky_TESTING_SOURCES})

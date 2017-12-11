@@ -4,6 +4,7 @@
 #include "parser.hpp"
 #include "listparser.hpp"
 #include "charparser.hpp"
+#include "../lzmaio.hpp"
 #include "../parsing/hooker.hpp"
 
 class MainParser
@@ -16,7 +17,7 @@ private:
     std::shared_ptr<Parser> curr_parser = nullptr;
 
 public:
-    MainParser(FILE* data, FILE* meta);
+    MainParser(LZMAFILE* data, LZMAFILE* meta);
 
     int parse
     (
