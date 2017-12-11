@@ -21,12 +21,17 @@ int BlockyParser::try_parse
 	{
 		number += '+';
 		checked++;
-	}
 
-	if (buffer[offset + checked] == '-')
+		if (count < checked + 1)
+			return TRY_PARSE_BUFFER_SHORT;
+	}
+	else if (buffer[offset + checked] == '-')
 	{
 		number += '-';
 		checked++;
+
+		if (count < checked + 1)
+			return TRY_PARSE_BUFFER_SHORT;
 	}
 
 	if (!isdigit(buffer[offset + checked]))
