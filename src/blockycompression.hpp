@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 
+#include "lzmaio.hpp"
 #include "bitwriter.hpp"
 #include "blockynumber.hpp"
 #include "block.hpp"
@@ -26,7 +27,7 @@ public:
     BlockyMetadata Metadata;
 
     // TODO: decide whether use normal ptr or shared_ptr for file
-    BlockyCompression(FILE* file);
+    BlockyCompression(LZMAFILE* file);
 
     void report(BlockyNumber number) override;
     void report

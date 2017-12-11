@@ -5,6 +5,7 @@
 
 #include "listtype.hpp"
 #include "directivetype.hpp"
+#include "../lzmaio.hpp"
 #include "../reporter.hpp"
 #include "../blockyalgorithm.hpp"
 #include "../blockynumber.hpp"
@@ -15,8 +16,8 @@ using namespace std;
 class Hooker {
 private:
     BlockyAlgorithm algorithm;
-    FILE* data;
-	FILE* meta;
+	LZMAFILE* data;
+	LZMAFILE* meta;
     shared_ptr<Reporter> reporter;
     bool inList;
     ListType type;
@@ -28,7 +29,7 @@ public:
 	size_t& providedPosition;
     vector<shared_ptr<CompressedSection>> CompessedDataSections;
 
-    Hooker(FILE* data, FILE* meta, size_t& providedPosition);
+    Hooker(LZMAFILE* data, LZMAFILE* meta, size_t& providedPosition);
 
     bool is_in_list() const { return inList; }
     ListType get_type() const { return type; }

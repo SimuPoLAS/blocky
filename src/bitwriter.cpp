@@ -20,7 +20,7 @@ void BitWriter::write(uint64_t data, uint8_t count)
 			return;
 		}
 		buffer |= uint8_t((data & uint64_t(pow(2, bitsLeft) - 1)) << offset);
-		fwrite(&buffer, 1, 1, file);
+		lzmawrite(&buffer, 1, 1, file);
 		Position++;
 		offset = 0;
 		buffer = 0;
@@ -38,7 +38,7 @@ void BitWriter::flush()
 {
 	if (buffer == 0 && offset == 0)
 		return;
-	fwrite(&buffer, 1, 1, file);
+	lzmawrite(&buffer, 1, 1, file);
 	buffer = 0;
 	offset = 0;
 }

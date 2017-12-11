@@ -2,7 +2,7 @@
 
 #include "hooker.hpp"
 
-Hooker::Hooker(FILE* data, FILE* meta, size_t& providedPosition)
+Hooker::Hooker(LZMAFILE* data, LZMAFILE* meta, size_t& providedPosition)
     : algorithm()
 	, data(data)
 	, meta(meta)
@@ -165,14 +165,14 @@ void Hooker::end_file()
 		auto section = CompessedDataSections[i];
 		int64_t value = section->Start - off;
 		off += section->End - section->Start;
-		fwrite(&value, sizeof(int64_t), 1, meta);
-		fwrite(&section->Size, sizeof(uint8_t), 1, meta);
+		lzmawrite(&value, sizeof(int64_t), 1, meta);
+		lzmawrite(&section->Size, sizeof(uint8_t), 1, meta);
 	}
 	uint8_t buff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-	fwrite(buff, sizeof(uint8_t), 8, meta);
+	lzmawrite(buff, sizeof(uint8_t), 8, meta);
 	
 	// write real data
-	fwrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
+	lzmawrite(meta_str.data(), sizeof(char), meta_str.size(), meta);
 }
 
 void Hooker::flush() { }
