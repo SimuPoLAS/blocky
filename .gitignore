@@ -51,3 +51,6 @@ Win32/*
 *.meta
 *.data
 *.original
+
+# big files needed for testing
+resources/U

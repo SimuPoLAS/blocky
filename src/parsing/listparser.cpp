@@ -335,7 +335,6 @@ int ListParser::parse_variable
 
     while (result > 0)
     {
-
 		if (type != ListType::Scalar)
 			parsed++;
 
@@ -362,7 +361,8 @@ int ListParser::parse_variable
 			else
 			{
 				// if not, returning what we parsed
-				return parsed;
+				// and exclude the first parsed bracket
+				return parsed - 1;
 			}
 		}
 
