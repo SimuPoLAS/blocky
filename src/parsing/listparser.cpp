@@ -298,7 +298,7 @@ int ListParser::parse_constant
     hooker.enter_list(type, amount);
 	hooker.providedPosition -= parsed;
 
-    blockyParser = std::make_unique<BlockyParser>(hooker);
+    blockyParser = std::make_unique<BlockyScalarParser>(hooker);
 
     end = false;
 	

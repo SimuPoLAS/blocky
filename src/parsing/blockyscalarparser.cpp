@@ -1,8 +1,8 @@
 #include <cctype>
 
-#include "blockyparser.hpp"
+#include "blockyscalarparser.hpp"
 
-int BlockyParser::try_parse
+int BlockyScalarParser::try_parse
 (
     const char* buffer,
     int offset,
@@ -81,7 +81,7 @@ int BlockyParser::try_parse
     return TRY_PARSE_INVALID;
 }
 
-int BlockyParser::parse_constant
+int BlockyScalarParser::parse_constant
 (
     const char* buffer,
     int offset,
