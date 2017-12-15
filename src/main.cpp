@@ -6,21 +6,19 @@
 
 int main(int argc, char const *argv[])
 {
-    BlockyOutputStream bky("resources/alpha.water.bky");
-    ifstream file("resources/alpha.water", std::ios::binary);
+    BlockyOutputStream bkyout("resources/U.small.bky");
+    ifstream file("resources/U.small", std::ios::binary);
     std::noskipws(file);
 
     uint8_t b;
-    while(file >> b)
-        bky << b;
+    while (file >> b)
+        bkyout << b;
 
-	//BlockyInputStream bkyin("resources/alpha.water.bky");
-	//ofstream filein("resources/alpha.water.bky.original");
-	//std::noskipws(filein);
-
-	//uint8_t bin;
-	//while (bkyin >> bin)
-	//	filein << bin;
+    // just testin
+    BlockyInputStream bkyin("resources/U.small.bky");
+    while (bkyin >> b) {
+        // do nothing
+    }
 
     return 0;
 }

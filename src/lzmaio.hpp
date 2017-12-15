@@ -6,7 +6,7 @@
 #include <string.h>
 #include <lzma.h>
 
-typedef struct {
+typedef struct LZMAFILE {
 	static const int BUFFER_SIZE = 4096;
 
 	lzma_stream decode;

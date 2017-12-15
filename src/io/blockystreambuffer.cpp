@@ -7,7 +7,7 @@ using namespace std;
 
 BlockyStreamBuffer::BlockyStreamBuffer()
     : opened(false)
-	, last(false)
+    , last(false)
 {
     setp(buffer, buffer + (bufferSize - 1));
     setg(buffer, buffer, buffer);
@@ -46,34 +46,42 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
     *fmodeptr++ = 'b';
     *fmodeptr = '\0';
 
-	char data_name[1024];
-	strcpy(data_name, name);
-	strcat(data_name, ".data");
-	char meta_name[1024];
-	strcpy(meta_name, name);
-	strcat(meta_name, ".meta");
+    // weird fixed length char arrays
+    char data_name[1024];
+    strcpy(data_name, name);
+    strcat(data_name, ".data");
+    char meta_name[1024];
+    strcpy(meta_name, name);
+    strcat(meta_name, ".meta");
 
     data = lzmaopen(data_name, fmode);
-	meta = lzmaopen(meta_name, fmode);
+    meta = lzmaopen(meta_name, fmode);
 
     if (data == 0)
         return 0;
 
     opened = true;
 
-    parser = make_unique<MainParser>(data, meta);
+    // make a distinction between reading and writing a file
+    if (mode & std::ios::in) {
+        decompression = make_unique<DecompressionParser>(data, meta);
+        printf("bkyin triggered\n");
+    } else {
+        parser = make_unique<MainParser>(data, meta);
+        printf("bkyout triggered\n");
+    }
 
     return this;
 }
 
 BlockyStreamBuffer* BlockyStreamBuffer::close()
 {
-    if (is_open())
+    if (is_open() && (mode & std::ios::out))
     {
-		last = true;
+        last = true;
         sync();
-		opened = false;
-		parser->end();
+        opened = false;
+        parser->end();
         if (lzmaclose(data) == 0 && lzmaclose(meta) == 0)
             return this;
     }
@@ -82,16 +90,29 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
-	// TODO: blocky inputstream magic
+    printf("underflow ocurred\n");
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
     int num = lzmaread(buffer, 1, bufferSize, data);
 
+    printf("num read %d", num);
+
     if (num <= 0)
         return EOF;
 
-    setg(buffer, buffer, buffer + num);
+    /*
+    for (size_t i = 0; i < num; i++) {
+        printf("%c", buffer[i]);
+    }
+    */
+    int processed = decompression->parse(buffer, 0, num, last);
+
+    // TODO: figure out a way to make the decompression parser say how much was
+    // processed and set the get area pointer ACCORDINGLY
+    setg(buffer, buffer, buffer + processed);
+
+    printf("\nreached underflow end\n");
 
     return *reinterpret_cast<unsigned char*>(gptr());
 }
