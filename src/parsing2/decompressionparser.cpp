@@ -33,7 +33,9 @@ int DecompressionParser::parse
             count - parsed
         );
 
-        printf("try parse result %d", try_parse_result);
+        if (try_parse_result != TRY_PARSE_OK) {
+            printf("try parse result NOT OK %d\n", try_parse_result);
+        }
 
         if (try_parse_result == TRY_PARSE_OK) {
             // if the current parser indicates it's done, move on to the next
@@ -51,7 +53,7 @@ int DecompressionParser::parse
 
             result = 1;
             while (result != 0) {
-                printf("yaaay parsing");
+                //printf("yaaay parsing");
                 result = curr_parser->parse
                 (
                     buffer,

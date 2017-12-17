@@ -21,6 +21,10 @@ typedef struct LZMAFILE {
 } LZMAFILE;
 
 static LZMAFILE* lzmaopen(const char* filepath, const char* mode) {
+    printf("entered lzmaopen\n");
+
+    printf("filepath %s\nfilemode %s\n", filepath, mode);
+
 	LZMAFILE* file = (LZMAFILE*)malloc(sizeof(LZMAFILE));
 	file->decode = LZMA_STREAM_INIT;
 	file->encode = LZMA_STREAM_INIT;
@@ -34,8 +38,14 @@ static LZMAFILE* lzmaopen(const char* filepath, const char* mode) {
 		return NULL;
 
 	file->fp = fopen(filepath, mode);
+	if (file->fp == NULL) {
+		printf("file error");
+	}
 	file->in_size = 0;
 	file->out_size = 0;
+
+	printf("lzmaopen finished\n");
+
 	return file;
 }
 
@@ -67,10 +77,13 @@ static size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) 
 	file->decode.next_out = (uint8_t*)buffer;
 	file->decode.avail_out = size * count;
 
+	//printf("entered lzmaread\n");
+
 	while (file->decode.avail_out > 0) {
 		if (file->in_size == 0) {
 			size_t read = fread(file->in, sizeof(char), file->BUFFER_SIZE, file->fp);
 			file->in_size = read;
+			//printf("read %d\n", read);
 		}
 
 		file->decode.next_in = file->in;
@@ -81,8 +94,10 @@ static size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) 
 		if (rc == LZMA_STREAM_END)
 			break;
 
-		if (rc != LZMA_OK)
+		if (rc != LZMA_OK) {
 			return -1;
+			printf("lzma NOT OK return code %d\n", rc);
+		}
 
 		if (file->decode.avail_in > 0) {
 			// copy the rest from avail_in to BUFFER_SIZE to the beginning of in buffer

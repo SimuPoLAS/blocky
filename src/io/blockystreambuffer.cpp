@@ -46,6 +46,7 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
     *fmodeptr++ = 'b';
     *fmodeptr = '\0';
 
+
     // weird fixed length char arrays
     char data_name[1024];
     strcpy(data_name, name);
@@ -53,7 +54,6 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
     char meta_name[1024];
     strcpy(meta_name, name);
     strcat(meta_name, ".meta");
-
     data = lzmaopen(data_name, fmode);
     meta = lzmaopen(meta_name, fmode);
 
@@ -64,8 +64,9 @@ BlockyStreamBuffer* BlockyStreamBuffer::open(const char* name, int open_mode)
 
     // make a distinction between reading and writing a file
     if (mode & std::ios::in) {
-        decompression = make_unique<DecompressionParser>(data, meta);
+        //decompression = make_unique<DecompressionParser>(data, meta);
         printf("bkyin triggered\n");
+        printf("USE DECOMPIN INSTEAD\n");
     } else {
         parser = make_unique<MainParser>(data, meta);
         printf("bkyout triggered\n");
@@ -90,13 +91,14 @@ BlockyStreamBuffer* BlockyStreamBuffer::close()
 
 int BlockyStreamBuffer::underflow()
 {
-    printf("underflow ocurred\n");
+    //printf("underflow ocurred\n");
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    int num = lzmaread(buffer, 1, bufferSize, data);
+    //int num = lzmaread(buffer, 1, bufferSize, data);
+    int num = bufferSize;
 
-    printf("num read %d", num);
+    //printf("num read %d", num);
 
     if (num <= 0)
         return EOF;
@@ -106,13 +108,14 @@ int BlockyStreamBuffer::underflow()
         printf("%c", buffer[i]);
     }
     */
-    int processed = decompression->parse(buffer, 0, num, last);
+    //int processed = decompression->parse(buffer, 0, num, last);
+    int processed = num;
 
     // TODO: figure out a way to make the decompression parser say how much was
     // processed and set the get area pointer ACCORDINGLY
     setg(buffer, buffer, buffer + processed);
 
-    printf("\nreached underflow end\n");
+    //printf("\nreached underflow end\n");
 
     return *reinterpret_cast<unsigned char*>(gptr());
 }

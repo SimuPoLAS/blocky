@@ -8,7 +8,7 @@
 #include "../lzmaio.hpp"
 // rename mainparser to compressionparser like before
 #include "../parsing/mainparser.hpp"
-#include "../parsing2/decompressionparser.hpp"
+//#include "../parsing2/decompressionparser.hpp"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ class BlockyStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 840;
+    static const int bufferSize = 4096;
 
     char buffer[bufferSize];
 
@@ -28,7 +28,7 @@ private:
     bool last = false;
 
     unique_ptr<MainParser> parser;
-    unique_ptr<DecompressionParser> decompression;
+    //unique_ptr<DecompressionParser> decompression;
 
     // uint32_t width;
     // uint32_t position;

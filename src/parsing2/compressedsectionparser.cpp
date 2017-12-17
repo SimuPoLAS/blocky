@@ -30,6 +30,7 @@ int CompressedsectionParser::parse
         processed++;
     }
     printf("\n");
+    // NOTE TO SELF: NEVER, EVER, PRINT YOUR ENTIRE BUFFER
 
     return processed;
 }
