@@ -10,6 +10,7 @@ int BlockyTensorParser::try_parse
 )
 {
 	// TODO: try_parse
+	return 0;
 }
 
 int BlockyTensorParser::parse_constant
@@ -20,4 +21,5 @@ int BlockyTensorParser::parse_constant
 )
 {
 	// TODO: parse_constant
+	return 0;
 }

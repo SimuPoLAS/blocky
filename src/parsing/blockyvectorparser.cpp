@@ -10,6 +10,7 @@ int BlockyVectorParser::try_parse
 )
 {
 	// TODO: try_parse
+	return 0;
 }
 
 int BlockyVectorParser::parse_constant
@@ -20,4 +21,5 @@ int BlockyVectorParser::parse_constant
 )
 {
 	// TODO: parse_constant
+	return 0;
 }
