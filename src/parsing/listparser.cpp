@@ -298,7 +298,9 @@ int ListParser::parse_constant
     hooker.enter_list(type, amount);
 	hooker.providedPosition -= parsed;
 
-    blockyParser = std::make_unique<BlockyScalarParser>(hooker);
+    scalarParser = std::make_unique<BlockyScalarParser>(hooker);
+	vectorParser = std::make_unique<BlockyVectorParser>(hooker);
+	tensorParser = std::make_unique<BlockyTensorParser>(hooker);
 
     end = false;
 	
@@ -335,56 +337,157 @@ int ListParser::parse_variable
 
     while (result > 0)
     {
-		if (type != ListType::Scalar)
+		if (type == ListType::Scalar)
+		{
+
+			for (int i = 0; i < (int)type; i++)
+			{
+				// trying to parse the variable record
+				int try_parse_result = scalarParser->try_parse(buffer, offset + parsed, count - parsed);
+				if (try_parse_result == TRY_PARSE_OK)
+				{
+					// if it is parsable, then parse
+					result = scalarParser->parse_constant
+					(
+						buffer,
+						offset + parsed,
+						count - parsed
+					);
+
+					// if an error happened, forward it
+					if (result < 0)
+						return result;
+
+					parsed += result;
+				}
+				else
+				{
+					// if not, returning what we parsed
+					// and exclude the first parsed bracket
+					return parsed - 1;
+				}
+			}
+
+			// parse whitespaces
+			while
+				(
+					count > parsed
+					&& isspace(buffer[offset + parsed])
+					)
+				parsed++;
+
+			// after parsing is done, we check for the escape sequence
+			if (buffer[offset + parsed] == ')')
+			{
+				// set the end of parsing
+				hooker.leave_list();
+				end = true;
+				return parsed;
+			}
+
+		}
+		else if (type == ListType::Vector) {
+
 			parsed++;
 
-		for (int i = 0; i < (int)type; i++) 
-		{
-			// trying to parse the variable record
-			int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
-			if (try_parse_result == TRY_PARSE_OK)
+			for (int i = 0; i < (int)type; i++)
 			{
-				// if it is parsable, then parse
-				result = blockyParser->parse_constant
-				(
-					buffer,
-					offset + parsed,
-					count - parsed
-				);
+				// trying to parse the variable record
+				int try_parse_result = vectorParser->try_parse(buffer, offset + parsed, count - parsed);
+				if (try_parse_result == TRY_PARSE_OK)
+				{
+					// if it is parsable, then parse
+					result = vectorParser->parse_constant
+					(
+						buffer,
+						offset + parsed,
+						count - parsed
+					);
 
-				// if an error happened, forward it
-				if (result < 0)
-					return result;
+					// if an error happened, forward it
+					if (result < 0)
+						return result;
 
-				parsed += result;
+					parsed += result;
+				}
+				else
+				{
+					// if not, returning what we parsed
+					// and exclude the first parsed bracket
+					return parsed - 1;
+				}
 			}
-			else
+
+			parsed++;
+
+			// parse whitespaces
+			while
+				(
+					count > parsed
+					&& isspace(buffer[offset + parsed])
+					)
+				parsed++;
+
+			// after parsing is done, we check for the escape sequence
+			if (buffer[offset + parsed] == ')')
 			{
-				// if not, returning what we parsed
-				// and exclude the first parsed bracket
-				return parsed - 1;
+				// set the end of parsing
+				hooker.leave_list();
+				end = true;
+				return parsed;
 			}
 		}
+		else if (type == ListType::Tensor) {
 
-		if (type != ListType::Scalar)
 			parsed++;
 
-		// parse whitespaces
-		while
-		(
-			count > parsed
-			&& isspace(buffer[offset + parsed])
-		)
+			for (int i = 0; i < (int)type; i++)
+			{
+				// trying to parse the variable record
+				int try_parse_result = tensorParser->try_parse(buffer, offset + parsed, count - parsed);
+				if (try_parse_result == TRY_PARSE_OK)
+				{
+					// if it is parsable, then parse
+					result = tensorParser->parse_constant
+					(
+						buffer,
+						offset + parsed,
+						count - parsed
+					);
+
+					// if an error happened, forward it
+					if (result < 0)
+						return result;
+
+					parsed += result;
+				}
+				else
+				{
+					// if not, returning what we parsed
+					// and exclude the first parsed bracket
+					return parsed - 1;
+				}
+			}
+
 			parsed++;
 
-        // after parsing is done, we check for the escape sequence
-        if (buffer[offset + parsed] == ')')
-        {
-            // set the end of parsing
-			hooker.leave_list();
-            end = true;
-            return parsed;
-        }
+			// parse whitespaces
+			while
+				(
+					count > parsed
+					&& isspace(buffer[offset + parsed])
+					)
+				parsed++;
+
+			// after parsing is done, we check for the escape sequence
+			if (buffer[offset + parsed] == ')')
+			{
+				// set the end of parsing
+				hooker.leave_list();
+				end = true;
+				return parsed;
+			}
+		}
     }
 
     return parsed;

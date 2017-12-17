@@ -80,7 +80,7 @@ int BlockyScalarParser::try_parse
         // TODO: validate, if number really is blockynumber
         // but should be true
 
-        return TRY_PARSE_OK;
+        return checked;
     }
 
     return TRY_PARSE_INVALID;

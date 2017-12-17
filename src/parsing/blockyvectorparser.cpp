@@ -4,22 +4,38 @@
 
 int BlockyVectorParser::try_parse
 (
-    const char* buffer,
-    int offset,
-    int count
+	const char* buffer,
+	int offset,
+	int count
 )
 {
-	// TODO: try_parse
-	return 0;
+	int checked = 0;
+
+	if (!buffer[offset + checked] == '(')
+	{
+		return TRY_PARSE_INVALID;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		checked += scalarParser->try_parse(buffer, offset + checked, count - checked);
+
+		if (checked == TRY_PARSE_INVALID)
+			return TRY_PARSE_INVALID;
+
+		if (checked == TRY_PARSE_BUFFER_SHORT)
+			return TRY_PARSE_BUFFER_SHORT;
+	}
+
+	return checked;
 }
 
 int BlockyVectorParser::parse_constant
 (
-    const char* buffer,
-    int offset,
-    int count
+	const char* buffer,
+	int offset,
+	int count
 )
 {
-	// TODO: parse_constant
-	return 0;
+	return scalarParser->parse_constant(buffer, offset, count);
 }

@@ -2,6 +2,7 @@
 #define BLOCKY_VECTOR_PARSER_HPP
 
 #include "parser.hpp"
+#include "blockyscalarparser.hpp"
 
 class BlockyVectorParser
     : public Parser
@@ -23,6 +24,8 @@ public:
         int offset,
         int count
     );
+private:
+	std::unique_ptr<BlockyScalarParser> scalarParser = make_unique<BlockyScalarParser>();
 };
 
 #endif /* end of include guard: BLOCKY_PARSER_HPP */
