@@ -9,8 +9,10 @@ class BlockyTensorParser
 {
 public:
     BlockyTensorParser(Hooker& hooker)
-        : Parser(hooker) { }
-
+        : Parser(hooker)
+	{
+		scalarParser = std::make_unique<BlockyScalarParser>(hooker);
+	}
     virtual int try_parse
     (
         const char* buffer,
@@ -25,7 +27,7 @@ public:
         int count
     );
 private:
-	std::unique_ptr<BlockyScalarParser> scalarParser = make_unique<BlockyScalarParser>();
+	std::unique_ptr<BlockyScalarParser> scalarParser;
 };
 
 #endif /* end of include guard: BLOCKY_TENSOR_PARSER_HPP */

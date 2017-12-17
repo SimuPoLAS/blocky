@@ -6,8 +6,8 @@
 
 int main(int argc, char const *argv[])
 {
-    BlockyOutputStream bky("resources/alpha.water.bky");
-    ifstream file("resources/alpha.water", std::ios::binary);
+    BlockyOutputStream bky("resources/U.small.bky");
+    ifstream file("resources/U.small", std::ios::binary);
     std::noskipws(file);
 
     uint8_t b;

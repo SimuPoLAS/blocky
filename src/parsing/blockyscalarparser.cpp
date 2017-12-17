@@ -116,8 +116,5 @@ int BlockyScalarParser::parse_constant
 
     hooker.handle_list_entry(number);
 
-	while (count > parsed && isspace(buffer[offset + parsed]))
-		parsed++;
-
     return parsed;
 }

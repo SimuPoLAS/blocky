@@ -9,7 +9,10 @@ class BlockyVectorParser
 {
 public:
 	BlockyVectorParser(Hooker& hooker)
-        : Parser(hooker) { }
+        : Parser(hooker)
+	{
+		scalarParser = std::make_unique<BlockyScalarParser>(hooker);
+	}
 
     virtual int try_parse
     (
@@ -25,7 +28,7 @@ public:
         int count
     );
 private:
-	std::unique_ptr<BlockyScalarParser> scalarParser = make_unique<BlockyScalarParser>();
+	std::unique_ptr<BlockyScalarParser> scalarParser;
 };
 
 #endif /* end of include guard: BLOCKY_PARSER_HPP */

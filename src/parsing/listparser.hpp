@@ -17,15 +17,13 @@ private:
         This parser is used for parsing the variable part
         The variable part for the listparser is the contant part for this parser
     */
-    std::unique_ptr<BlockyScalarParser> scalarParser;
-	std::unique_ptr<BlockyVectorParser> vectorParser;
-	std::unique_ptr<BlockyTensorParser> tensorParser;
+    std::unique_ptr<Parser> blockyParser;
 
     /*
 
     */
     bool end = true;
-	ListType type = ListType::Scalar;
+	ListType type = ListType::Anonymous;
 
 public:
     ListParser(Hooker& hooker)

@@ -152,7 +152,7 @@ int ListParser::try_parse
 		checked++;
 
     // from this point on, we are sure that this is a list
-    return TRY_PARSE_OK;
+    return checked;
 }
 
 int ListParser::parse_constant
@@ -298,9 +298,25 @@ int ListParser::parse_constant
     hooker.enter_list(type, amount);
 	hooker.providedPosition -= parsed;
 
-    scalarParser = std::make_unique<BlockyScalarParser>(hooker);
-	vectorParser = std::make_unique<BlockyVectorParser>(hooker);
-	tensorParser = std::make_unique<BlockyTensorParser>(hooker);
+	if (type == ListType::Scalar)
+	{
+		blockyParser = std::make_unique<BlockyScalarParser>(hooker);
+	}
+	else if (type == ListType::Vector)
+	{
+		blockyParser = std::make_unique<BlockyVectorParser>(hooker);
+	}
+	else if (type == ListType::Tensor)
+	{
+		blockyParser = std::make_unique<BlockyTensorParser>(hooker);
+	}
+	else
+	{
+		return TRY_PARSE_INVALID;
+	}
+    
+	
+	
 
     end = false;
 	
@@ -335,160 +351,50 @@ int ListParser::parse_variable
 	)
 		parsed++;
 
-    while (result > 0)
-    {
-		if (type == ListType::Scalar)
+	while (result > 0)
+	{
+		// trying to parse the variable record
+		int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
+		if (try_parse_result > 0)
 		{
+			// if it is parsable, then parse
+			result = blockyParser->parse_constant
+			(
+				buffer,
+				offset + parsed,
+				count - parsed
+			);
 
-			for (int i = 0; i < (int)type; i++)
-			{
-				// trying to parse the variable record
-				int try_parse_result = scalarParser->try_parse(buffer, offset + parsed, count - parsed);
-				if (try_parse_result == TRY_PARSE_OK)
-				{
-					// if it is parsable, then parse
-					result = scalarParser->parse_constant
-					(
-						buffer,
-						offset + parsed,
-						count - parsed
-					);
+			// if an error happened, forward it
+			if (result < 0)
+				return result;
 
-					// if an error happened, forward it
-					if (result < 0)
-						return result;
-
-					parsed += result;
-				}
-				else
-				{
-					// if not, returning what we parsed
-					// and exclude the first parsed bracket
-					return parsed - 1;
-				}
-			}
-
-			// parse whitespaces
-			while
-				(
-					count > parsed
-					&& isspace(buffer[offset + parsed])
-					)
-				parsed++;
-
-			// after parsing is done, we check for the escape sequence
-			if (buffer[offset + parsed] == ')')
-			{
-				// set the end of parsing
-				hooker.leave_list();
-				end = true;
-				return parsed;
-			}
-
+			parsed += result;
 		}
-		else if (type == ListType::Vector) {
-
-			parsed++;
-
-			for (int i = 0; i < (int)type; i++)
-			{
-				// trying to parse the variable record
-				int try_parse_result = vectorParser->try_parse(buffer, offset + parsed, count - parsed);
-				if (try_parse_result == TRY_PARSE_OK)
-				{
-					// if it is parsable, then parse
-					result = vectorParser->parse_constant
-					(
-						buffer,
-						offset + parsed,
-						count - parsed
-					);
-
-					// if an error happened, forward it
-					if (result < 0)
-						return result;
-
-					parsed += result;
-				}
-				else
-				{
-					// if not, returning what we parsed
-					// and exclude the first parsed bracket
-					return parsed - 1;
-				}
-			}
-
-			parsed++;
-
-			// parse whitespaces
-			while
-				(
-					count > parsed
-					&& isspace(buffer[offset + parsed])
-					)
-				parsed++;
-
-			// after parsing is done, we check for the escape sequence
-			if (buffer[offset + parsed] == ')')
-			{
-				// set the end of parsing
-				hooker.leave_list();
-				end = true;
-				return parsed;
-			}
+		else
+		{
+			// if not, returning what we parsed
+			// and exclude the first parsed bracket
+			return parsed;
 		}
-		else if (type == ListType::Tensor) {
 
+		// parse whitespaces
+		while
+			(
+				count > parsed
+				&& isspace(buffer[offset + parsed])
+				)
 			parsed++;
 
-			for (int i = 0; i < (int)type; i++)
-			{
-				// trying to parse the variable record
-				int try_parse_result = tensorParser->try_parse(buffer, offset + parsed, count - parsed);
-				if (try_parse_result == TRY_PARSE_OK)
-				{
-					// if it is parsable, then parse
-					result = tensorParser->parse_constant
-					(
-						buffer,
-						offset + parsed,
-						count - parsed
-					);
-
-					// if an error happened, forward it
-					if (result < 0)
-						return result;
-
-					parsed += result;
-				}
-				else
-				{
-					// if not, returning what we parsed
-					// and exclude the first parsed bracket
-					return parsed - 1;
-				}
-			}
-
-			parsed++;
-
-			// parse whitespaces
-			while
-				(
-					count > parsed
-					&& isspace(buffer[offset + parsed])
-					)
-				parsed++;
-
-			// after parsing is done, we check for the escape sequence
-			if (buffer[offset + parsed] == ')')
-			{
-				// set the end of parsing
-				hooker.leave_list();
-				end = true;
-				return parsed;
-			}
+		// after parsing is done, we check for the escape sequence
+		if (buffer[offset + parsed] == ')')
+		{
+			// set the end of parsing
+			hooker.leave_list();
+			end = true;
+			return parsed;
 		}
-    }
+	}
 
     return parsed;
 }
