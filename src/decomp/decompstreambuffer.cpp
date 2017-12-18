@@ -46,29 +46,69 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     *fmodeptr++ = 'b';
     *fmodeptr = '\0';
 
-
-    // weird fixed length char arrays
     char data_name[1024];
     strcpy(data_name, name);
     strcat(data_name, ".data");
+    data = lzmaopen(data_name, fmode);
     char meta_name[1024];
     strcpy(meta_name, name);
     strcat(meta_name, ".meta");
-    data = lzmaopen(data_name, fmode);
     meta = lzmaopen(meta_name, fmode);
 
-    if (data == 0)
+    if (meta == 0)
         return 0;
 
     opened = true;
 
-    // make a distinction between reading and writing a file
-    if (mode & std::ios::in) {
-        //decompression = make_unique<DecompressionParser>(data, meta);
-        printf("dcmpin triggered\n");
-    } else {
-        printf("dcmpout triggered\n");
+    printf("dcmpin triggered\n");
+
+    meta_processed = 0;
+    data_processed = 0;
+
+    // TODO: read compressedsections from meta
+    printf("dcmpin stage PARSE COMPRESSEDSECTIONS\n");
+
+    int num = 1;
+    int current = 0;
+    int status = BUFFER_SHORT;
+    char parse_buffer[4];
+    int32_t prev = 0;
+    while (num != 0 && status != FINISHED) {
+        if (status == NOT_OK) {
+            printf("AAAAAAAAAAAAAAAAAAAAAH\n");
+        }
+
+        if (status == BUFFER_SHORT) {
+            int num = lzmaread(buffer, 1, bufferSize, meta);
+            if (num < 0) {
+                status = NOT_OK;
+            }
+            current = 0;
+            status = OK;
+            continue;
+        }
+
+        if (current + 4 > bufferSize) {
+            status = BUFFER_SHORT;
+            continue;
+        }
+
+        for (size_t i = current; i < current + 4; i++) {
+            parse_buffer[i - current] = buffer[i];
+        }
+        current += 4;
+
+        // check for terminating sequence
+        int32_t buffer_number = *(int32_t *) parse_buffer;
+        if (prev == -1 && buffer_number == -1) {
+            status = FINISHED;
+            continue;
+        }
+
+        // add compressed section
     }
+
+    printf("dcmpin stage PARSE COMPRESSEDSECTIONS finished");
 
     return this;
 }
@@ -80,7 +120,7 @@ DecompStreamBuffer* DecompStreamBuffer::close()
         last = true;
         sync();
         opened = false;
-        if (lzmaclose(data) == 0 && lzmaclose(meta) == 0)
+        if (lzmaclose(meta) == 0 && lzmaclose(data))
             return this;
     }
     return 0;
@@ -88,7 +128,7 @@ DecompStreamBuffer* DecompStreamBuffer::close()
 
 int DecompStreamBuffer::underflow()
 {
-    //printf("underflow ocurred\n");
+    printf("underflow ocurred\n");
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
@@ -100,11 +140,6 @@ int DecompStreamBuffer::underflow()
     if (num <= 0)
         return EOF;
 
-    /*
-    for (size_t i = 0; i < num; i++) {
-        printf("%c", buffer[i]);
-    }
-    */
     //int processed = decompression->parse(buffer, 0, num, last);
     int processed = num;
 
@@ -117,6 +152,7 @@ int DecompStreamBuffer::underflow()
     return *reinterpret_cast<unsigned char*>(gptr());
 }
 
+/*
 int DecompStreamBuffer::flush_buffer()
 {
     int w = pptr() - pbase();
@@ -156,3 +192,4 @@ int DecompStreamBuffer::sync()
     }
     return 0;
 }
+*/

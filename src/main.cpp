@@ -16,15 +16,14 @@ int main(int argc, char const *argv[])
 
     bkyout.close();
 
-    return 0;
+    //return 0;
 
-    /* soon(tm)
-    DecompInputStream dcmpin("resources/alpha.water.bky.meta");
+    DecompInputStream dcmpin("resources/alpha.water.bky");
 
     while (dcmpin >> b) {
         // do nothing
         // TODO: write to console
-    }*/
+    }
 
     return 0;
 }

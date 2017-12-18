@@ -9,13 +9,18 @@
 #include "../lzmaio.hpp"
 #include "../parsing2/decompressionparser.hpp"
 
+#define OK 1
+#define FINISHED 0
+#define NOT_OK -1
+#define BUFFER_SHORT -2
+
 using namespace std;
 
 class DecompStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 4096;
+    static const int bufferSize = 256;
 
     char buffer[bufferSize];
 
@@ -25,10 +30,12 @@ private:
     bool opened;
     int mode;
     bool last = false;
+    int meta_processed;
+    int data_processed;
 
     unique_ptr<DecompressionParser> decompression;
 
-    int flush_buffer();
+    //int flush_buffer();
 
 public:
     DecompStreamBuffer();
@@ -39,9 +46,9 @@ public:
     DecompStreamBuffer* open(const char* name, int open_mode);
     DecompStreamBuffer* close();
 
-    int overflow(int c = EOF) override;
+    //int overflow(int c = EOF) override;
     int underflow() override;
-    int sync() override;
+    //int sync() override;
 };
 
 #endif /* end of include guard: DECOMPSTREAMBUFFER_HPP */
