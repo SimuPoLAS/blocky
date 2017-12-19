@@ -68,11 +68,15 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     // TODO: read compressedsections from meta
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS\n");
 
+    std::vector<CompressedSection> sections;
+
     int num = 1;
     int current = 0;
     int status = BUFFER_SHORT;
     char parse_buffer[4];
+    int32_t buffer_number;
     int32_t prev = 0;
+
     while (num != 0 && status != FINISHED) {
         if (status == NOT_OK) {
             printf("AAAAAAAAAAAAAAAAAAAAAH\n");
@@ -80,6 +84,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
         if (status == BUFFER_SHORT) {
             int num = lzmaread(buffer, 1, bufferSize, meta);
+            //printf("read %d into buffer\n", num);
             if (num < 0) {
                 status = NOT_OK;
             }
@@ -88,24 +93,54 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
             continue;
         }
 
-        if (current + 4 > bufferSize) {
+        // okay HERE'S WHAT HAPPENS:
+        // check if the buffer holds enough data to parse the following 8 bytes
+        // the next 4 + the prev 4 are used to form a long that is checked
+        // against -1 as a terminating sequence, if the terminating sequence
+        // doesnt occur, fetch 4 more bytes for the upcoming compressed
+        // section
+
+        if (current + 4 + 4 > bufferSize) {
             status = BUFFER_SHORT;
             continue;
         }
 
-        for (size_t i = current; i < current + 4; i++) {
-            parse_buffer[i - current] = buffer[i];
-        }
-        current += 4;
+        // copy int32_t from buffer to parse_buffer
+        memcpy(parse_buffer, buffer + current, sizeof(int32_t));
+        current += sizeof(int32_t);
 
+        //printf("START\n");
         // check for terminating sequence
-        int32_t buffer_number = *(int32_t *) parse_buffer;
+        //printf("parse_buffer %s    buffer_number %d    before converting\n", parse_buffer, buffer_number);
+
+        buffer_number = *(int32_t *) parse_buffer;
+
+        //printf("prev number %d current number %d\n", prev, buffer_number);
+
         if (prev == -1 && buffer_number == -1) {
             status = FINISHED;
             continue;
         }
 
         // add compressed section
+        //printf("parse_buffer %s    buffer_number %d    after converting\n", parse_buffer, buffer_number);
+
+        // copy int32_t from buffer to parse_buffer
+        memcpy(parse_buffer, buffer + current, sizeof(int32_t));
+        current += sizeof(int32_t);
+
+        //printf("parse_buffer %s    buffer_number %d    after reading\n", parse_buffer, buffer_number);
+        //printf("FINISH\n");
+
+        // this still needs to be checked for validity, as it stands ofc
+        // parses 8 bytes to a long, checks against -1 BUT parses this
+        // to a uint later, which can lead to overflow errors when left
+        // as a checked expression (and just wraps around if unchecked)
+        // so ultimately, I would need to know if I can just use the first
+        // 4 bytes or if I have to do all the parsing
+        sections.push_back(CompressedSection(prev, 0, *(int32_t *) parse_buffer));
+
+        prev = buffer_number;
     }
 
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS finished");

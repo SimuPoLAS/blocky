@@ -5,9 +5,11 @@
 #include <fstream>
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "../lzmaio.hpp"
 #include "../parsing2/decompressionparser.hpp"
+#include "../compressedsection.hpp"
 
 #define OK 1
 #define FINISHED 0
@@ -20,7 +22,7 @@ class DecompStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 256;
+    static const int bufferSize = 4096;
 
     char buffer[bufferSize];
 
