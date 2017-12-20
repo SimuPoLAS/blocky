@@ -1,6 +1,8 @@
 #ifndef DECOMPSTREAMBUFFER_HPP
 #define DECOMPSTREAMBUFFER_HPP
 
+#include <limits.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
