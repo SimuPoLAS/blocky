@@ -126,7 +126,8 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
     // create decompression
     // TODO: create parser that implements fill_buffer
-    int num = decompression->fill_buffer(buffer, bufferSize, sections);
+    // HINT: num gets repurposed here
+    num = decompression->fill_buffer(buffer, bufferSize, sections);
     if (num <= 0) {
         printf("FIRST BUFFER FILL RETURNED <= 0");
     }
@@ -150,9 +151,6 @@ int DecompStreamBuffer::underflow()
 {
     printf("underflow ocurred\n");
     if (!(mode & std::ios::in) || !opened)
-        return EOF;
-
-    if (num <= 0)
         return EOF;
 
     int num = 0;

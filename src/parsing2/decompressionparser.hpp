@@ -2,32 +2,18 @@
 #define DECOMPRESSIONPARSER_HPP
 
 #include <memory>
+#include <vector>
 
-//#include "compressedsectionparser.hpp"
-#include "decompression.hpp"
+#include "../compressedsection.hpp"
 #include "../lzmaio.hpp"
 
 class DecompressionParser
 {
 private:
-    size_t total_parsed = 0;
-    LZMAFILE* data;
-    LZMAFILE* meta;
-    std::vector<std::shared_ptr<Decompression>> parsers;
-
-    std::shared_ptr<Decompression> curr_parser = nullptr;
 public:
-    DecompressionParser(LZMAFILE* data, LZMAFILE* meta);
+    DecompressionParser();
 
-    int parse
-    (
-        const char* buffer,
-        int offset,
-        int count,
-        bool last
-    );
-
-    void end();
+    int fill_buffer(char* buffer, int bufferSize, std::vector<CompressedSection>& sections);
 };
 
 #endif /* end of include guard: DECOMPRESSIONPARSER_HPP */

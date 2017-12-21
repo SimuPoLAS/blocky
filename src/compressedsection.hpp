@@ -4,7 +4,7 @@
 struct CompressedSection
 {
     size_t Start;
-	size_t End;
+    size_t End;
     uint8_t Size;
 
     CompressedSection(uint32_t start, uint32_t end, uint8_t size)
