@@ -8,6 +8,7 @@
 #include "blockycompression.hpp"
 #include "blockydecompression.hpp"
 #include "blockynumber.hpp"
+#include "blockynumbersaver.hpp"
 #include "compressionsplitter.hpp"
 
 using namespace std;
@@ -28,37 +29,22 @@ public:
 
     void decompress(LZMAFILE* data, char* buffer, size_t size = 0) {
         /*
-        if (width == 0)
-        {
-            BlockyDecompression(file).decompress();
-            return;
-        }
-
-        std::vector<shared_ptr<BlockyDecompression>> decomp;
-        decomp.resize(width);
-
-        // the norbi way (using good code)
-        for (size_t i = 0; i < width; i++)
-        {
-            decomp[i] = make_shared<BlockyDecompression>(file);
-            decomp[i]->initialize(decomp[i]->metadata.ValueCount);
-            decomp[i]->decompress();
-        }
-
         auto len = decomp[0]->values.size();
 
         for (size_t i = 0; i < len; i++)
             for (size_t j = 0; j < decomp.size(); j++)
                 decomp[0]->report(decomp[j]->values[i]);
         */
+
         // handle case when compressed section has a sizesize of 0
         if (size == 0) { }
 
-        auto decomp = BlockyNumber[size][];
+        //BlockyNumber decomp[][] = BlockyNumber[size][];
+        BlockyNumberSaver decomp[size];
 
         for (size_t i = 0; i < size; i++) {
             auto blockyDecomp = new BlockyDecompression(data, buffer, decomp[i]);
-            decomp[i] = BlockyNumber[blockyDecomp->metadata.ValueCount];
+            decomp[i].initialize(blockyDecomp->metadata.ValueCount);
             // blockyDecomp->decompress();
         }
     }

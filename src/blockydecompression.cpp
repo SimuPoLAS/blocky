@@ -25,13 +25,23 @@ BlockyDecompression::BlockyDecompression(FILE* file)
 }
 */
 
-BlockyDecompression::BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumber* decomp)
-    : data(data)
+BlockyDecompression::BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp)
+    // temporary
+    : data(data), reader(nullptr)
 {
+    // TODO: get this to work
     metadata = BlockyMetadata::from_compressed_data(data);
     reporter_set_size(1);
 
-    // TODO: write rest of stuff that belongs here
+    methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
+    methods[(int) Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, values, index);
+    methods[(int) Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, values, index);
+    methods[(int) Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, values, index);
+    methods[(int) Methods::PatternOffset] = new PatternOffsetDecompression(metadata, values, index);
+
+    if (reader.read_byte(1) > 0) // use huffman (xd)
+        // TODO: meaningful exception (ecksdee)
+        exit(-501);
 }
 
 BlockyDecompression::~BlockyDecompression()

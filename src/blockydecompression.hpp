@@ -13,6 +13,7 @@
 #include "blockymetadata.hpp"
 #include "block.hpp"
 #include "blockynumber.hpp"
+#include "blockynumbersaver.hpp"
 #include "methods/methods.hpp"
 #include "methods/decompressionmethod.hpp"
 #include "reporter.hpp"
@@ -35,7 +36,7 @@ public:
     std::vector<BlockyNumber> values;
     BlockyMetadata metadata;
 
-    BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumber* decomp);
+    BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp);
     ~BlockyDecompression();
 
     void initialize(int value_count);

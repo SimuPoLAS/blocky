@@ -3,7 +3,8 @@
 
 #include <memory>
 
-#include "compressedsectionparser.hpp"
+//#include "compressedsectionparser.hpp"
+#include "decompression.hpp"
 #include "../lzmaio.hpp"
 
 class DecompressionParser

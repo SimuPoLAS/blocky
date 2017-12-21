@@ -6,7 +6,7 @@ DecompressionParser::DecompressionParser(LZMAFILE* data, LZMAFILE* meta)
     , total_parsed(0)
     , parsers
     ({
-        std::make_shared<CompressedsectionParser>()
+       // std::make_shared<CompressedsectionParser>()
     })
     , curr_parser(parsers[0])
 {
