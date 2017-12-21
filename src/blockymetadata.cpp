@@ -34,6 +34,28 @@ BlockyMetadata BlockyMetadata::from_bit_stream(BitReader& reader)
     return metadata;
 }
 
+BlockyMetadata BlockyMetadata::from_compressed_data(LZMAFILE* data)
+{
+    // TODO: rethink what should really happen here, apparently
+    // in Ofc they're actually reading BITS
+    BlockyMetadata metadata;
+    int32_t i32;
+    int8_t i8;
+
+    i32 = lzmaread(&i32, sizeof(int32_t), 1, data);
+    metadata.ValueCount = i32;
+
+    i8 = lzmaread(&i8, sizeof(int8_t), 1, data);
+    metadata.IsAbsolute = (bool) i8;
+
+    if (metadata.IsAbsolute > 0) {
+        i8 = lzmaread(&i8, sizeof(int8_t), 1, data);
+        metadata.IsNegative = (bool) i8;
+    }
+
+
+}
+
 BlockyMetadata BlockyMetadata::from_data
 (
     shared_ptr<BlockyNumber>* values,

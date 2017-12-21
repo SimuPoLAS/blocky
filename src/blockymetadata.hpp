@@ -31,6 +31,7 @@ public:
     void write(BitWriter& writer);
 
     static BlockyMetadata from_bit_stream(BitReader& reader);
+    static BlockyMetadata from_compressed_data(LZMAFILE* data);
     static BlockyMetadata from_data(shared_ptr<BlockyNumber>* values, size_t n);
 };
 

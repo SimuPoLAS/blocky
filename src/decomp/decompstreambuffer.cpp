@@ -64,6 +64,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
     printf("dcmpin triggered\n");
 
+    // read new long long into value
     meta_processed = 0;
     data_processed = 0;
 
@@ -76,7 +77,6 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     int current = 0;
     int status = BUFFER_SHORT;
     uint64_t value = 0;
-    uint32_t prev = 0;
     int8_t size = 0;
 
     while (num != 0 && status != FINISHED) {
@@ -84,22 +84,17 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
             printf("AAAAAAAAAAAAAAAAAAAAAH\n");
         }
 
+        // read new long long into value
         num = lzmaread(&value, sizeof(uint64_t), 1, meta);
-        printf("read %d into buffer\n", num);
+        //printf("read %d into buffer\n", num);
         if (num < 0) {
             status = NOT_OK;
             continue;
         }
         status = OK;
 
-        // okay HERE'S WHAT HAPPENS:
-        // check if the buffer holds enough data to parse the following 8 bytes
-        // the next 4 + the prev 4 are used to form a long that is checked
-        // against -1 as a terminating sequence, if the terminating sequence
-        // doesnt occur, fetch 4 more bytes for the upcoming compressed
-        // section
-
-        if (prev == UINT_MAX && value == UINT_MAX) {
+        // check for terminating sequence
+        if (value == UINT64_MAX) {
             status = FINISHED;
             continue;
         }
@@ -113,21 +108,22 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
         // so ultimately, I would need to know if I can just use the first
         // 4 bytes or if I have to do any sort of specific parsing
 
+        // EDIT: seems ok
+
         num = lzmaread(&size, sizeof(int8_t), 1, meta);
-        printf("read %d into buffer\n", num);
+        //printf("read %d into buffer\n", num);
         if (num < 0) {
             status = NOT_OK;
             continue;
         }
 
-        //printf("prev %u curr %u size %d\n", prev, value, size);
+        //printf("value %u size %d\n", value, size);
 
-        sections.push_back(CompressedSection((uint32_t)value, 0, size));
-
-        prev = value;
+       sections.push_back(CompressedSection((uint32_t) value, 0, size));
     }
 
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS finished\n");
+    printf("for a total of %d compressed sections\n", sections.size());
 
     return this;
 }
