@@ -81,6 +81,8 @@ static size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) 
 
 	while (file->decode.avail_out > 0) {
 		if (file->in_size == 0) {
+			if (feof(file->fp))
+				return 0;
 			size_t read = fread(file->in, sizeof(char), file->BUFFER_SIZE, file->fp);
 			file->in_size = read;
 			//printf("read %d\n", read);

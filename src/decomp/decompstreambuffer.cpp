@@ -75,7 +75,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     int num = 1;
     int current = 0;
     int status = BUFFER_SHORT;
-    uint32_t value = 0;
+    uint64_t value = 0;
     uint32_t prev = 0;
     int8_t size = 0;
 
@@ -84,8 +84,8 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
             printf("AAAAAAAAAAAAAAAAAAAAAH\n");
         }
 
-        num = lzmaread(&value, sizeof(uint32_t), 1, meta);
-        //printf("read %d into buffer\n", num);
+        num = lzmaread(&value, sizeof(uint64_t), 1, meta);
+        printf("read %d into buffer\n", num);
         if (num < 0) {
             status = NOT_OK;
             continue;
@@ -114,7 +114,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
         // 4 bytes or if I have to do any sort of specific parsing
 
         num = lzmaread(&size, sizeof(int8_t), 1, meta);
-        //printf("read %d into buffer\n", num);
+        printf("read %d into buffer\n", num);
         if (num < 0) {
             status = NOT_OK;
             continue;
@@ -122,7 +122,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
         //printf("prev %u curr %u size %d\n", prev, value, size);
 
-        sections.push_back(CompressedSection(prev, 0, size));
+        sections.push_back(CompressedSection((uint32_t)value, 0, size));
 
         prev = value;
     }
