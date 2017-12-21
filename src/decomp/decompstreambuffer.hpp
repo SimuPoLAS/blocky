@@ -34,10 +34,16 @@ private:
     bool opened;
     int mode;
     bool last = false;
+
+    // saves amount of processed bytes for respective files
     int meta_processed;
     int data_processed;
 
-    unique_ptr<DecompressionParser> decompression;
+    // saves position in buffer
+    int current;
+
+    std::unique_ptr<DecompressionParser> decompression;
+    std::vector<CompressedSection> sections;
 
     //int flush_buffer();
 

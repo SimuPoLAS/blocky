@@ -64,14 +64,13 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
     printf("dcmpin triggered\n");
 
-    // read new long long into value
     meta_processed = 0;
     data_processed = 0;
 
+    current = 0;
+
     // TODO: read compressedsections from meta
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS\n");
-
-    std::vector<CompressedSection> sections;
 
     int num = 1;
     int current = 0;
@@ -119,19 +118,25 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
 
         //printf("value %u size %d\n", value, size);
 
-       sections.push_back(CompressedSection((uint32_t) value, 0, size));
+        sections.push_back(CompressedSection((uint32_t) value, 0, size));
     }
 
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS finished\n");
     printf("for a total of %d compressed sections\n", sections.size());
+
+    // create decompression
+    // TODO: create parser that implements fill_buffer
+    int num = decompression->fill_buffer(buffer, bufferSize, sections);
+    if (num <= 0) {
+        printf("FIRST BUFFER FILL RETURNED <= 0");
+    }
 
     return this;
 }
 
 DecompStreamBuffer* DecompStreamBuffer::close()
 {
-    if (is_open() && (mode & std::ios::out))
-    {
+    if (is_open() && (mode & std::ios::out)) {
         last = true;
         sync();
         opened = false;
@@ -147,20 +152,20 @@ int DecompStreamBuffer::underflow()
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    //int num = lzmaread(buffer, 1, bufferSize, data);
-    int num = bufferSize;
-
-    //printf("num read %d", num);
-
     if (num <= 0)
         return EOF;
 
-    //int processed = decompression->parse(buffer, 0, num, last);
-    int processed = num;
+    int num = 0;
+    if (current + 1 == bufferSize) {
+        num = decompression->fill_buffer(buffer, bufferSize, sections);
+        current = 0;
+    }
 
-    // TODO: figure out a way to make the decompression parser say how much was
-    // processed and set the get area pointer ACCORDINGLY
-    setg(buffer, buffer, buffer + processed);
+    if (num <= 0) {
+        return EOF;
+    }
+
+    setg(buffer, buffer, buffer + num);
 
     //printf("\nreached underflow end\n");
 
