@@ -27,7 +27,7 @@ public:
         return make_shared<CompressionSplitter>(compressions, width);
     }
 
-    void decompress(LZMAFILE* data, char* buffer, size_t size = 0) {
+    void decompress(LZMAFILE* data, char* buffer, BitReader& reader, size_t size = 0) {
         /*
         auto len = decomp[0]->values.size();
 
@@ -43,7 +43,7 @@ public:
         BlockyNumberSaver decomp[size];
 
         for (size_t i = 0; i < size; i++) {
-            auto blockyDecomp = new BlockyDecompression(data, buffer, decomp[i]);
+            auto blockyDecomp = new BlockyDecompression(data, buffer, decomp[i], reader);
             decomp[i].initialize(blockyDecomp->metadata.ValueCount);
             // blockyDecomp->decompress();
         }

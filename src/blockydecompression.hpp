@@ -24,7 +24,7 @@ class BlockyDecompression
 private:
     LZMAFILE* data;
     size_t index = 0;
-    BitReader reader;
+    BitReader& reader;
     DecompressionMethod* methods[METHODS_COUNT];
 
     // marerreporter replacement members
@@ -36,7 +36,7 @@ public:
     std::vector<BlockyNumber> values;
     BlockyMetadata metadata;
 
-    BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp);
+    BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp, BitReader& reader);
     ~BlockyDecompression();
 
     void initialize(int value_count);

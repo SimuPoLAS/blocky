@@ -25,12 +25,12 @@ BlockyDecompression::BlockyDecompression(FILE* file)
 }
 */
 
-BlockyDecompression::BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp)
+BlockyDecompression::BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp, BitReader& reader)
     // temporary
-    : data(data), reader(nullptr)
+    : data(data), reader(reader)
 {
     // TODO: get this to work
-    metadata = BlockyMetadata::from_compressed_data(data);
+    metadata = BlockyMetadata::from_bit_stream(reader);
     reporter_set_size(1);
 
     methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
