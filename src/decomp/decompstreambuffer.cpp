@@ -67,8 +67,6 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     meta_processed = 0;
     data_processed = 0;
 
-    current = 0;
-
     // TODO: read compressedsections from meta
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS\n");
 
@@ -124,8 +122,13 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
     printf("dcmpin stage PARSE COMPRESSEDSECTIONS finished\n");
     printf("for a total of %d compressed sections\n", sections.size());
 
-    // create decompression
-    // TODO: create parser that implements fill_buffer
+    // start actual decompression
+    if (data == 0) {
+        return 0;
+    }
+
+    decompression = make_unique<DecompressionParser>(data, meta);
+
     // HINT: num gets repurposed here
     num = decompression->fill_buffer(buffer, bufferSize, sections);
     if (num <= 0) {
@@ -153,13 +156,10 @@ int DecompStreamBuffer::underflow()
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    int num = 0;
-    if (current + 1 == bufferSize) {
-        num = decompression->fill_buffer(buffer, bufferSize, sections);
-        current = 0;
-    }
+    int num = decompression->fill_buffer(buffer, bufferSize, sections);
 
     if (num <= 0) {
+        printf("RECEIVED EOF FROM FILL_BUFFER\n");
         return EOF;
     }
 

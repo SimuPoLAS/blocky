@@ -10,8 +10,15 @@
 class DecompressionParser
 {
 private:
+    LZMAFILE* data;
+    LZMAFILE* meta;
+
+    size_t current;
+    bool ended;
+    size_t to_read;
+    bool decompress;
 public:
-    DecompressionParser();
+    DecompressionParser(LZMAFILE* meta, LZMAFILE* data);
 
     int fill_buffer(char* buffer, int bufferSize, std::vector<CompressedSection>& sections);
 };
