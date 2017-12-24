@@ -11,20 +11,20 @@ using namespace std;
 
 class BitWriter {
 private:
-	LZMAFILE* file;
-    // TODO: try use it as reference and notas pointer
+    LZMAFILE* file;
+    // TODO: try use it as a reference and not as a pointer
     uint8_t buffer;
     uint8_t offset;
 
 public:
-	// TODO: decide whether we keep position or not
-	uint64_t Position;
+    // TODO: decide whether we keep position or not
+    uint64_t Position;
 
     BitWriter(LZMAFILE* file)
         : file(file)
-		, buffer(0)
-		, offset(0)
-		, Position(0) { }
+        , buffer(0)
+        , offset(0)
+        , Position(0) { }
 
     ~BitWriter();
 

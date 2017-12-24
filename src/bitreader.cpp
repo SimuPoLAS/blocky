@@ -2,12 +2,14 @@
 
 #include "bitreader.hpp"
 
-BitReader::BitReader(FILE* file)
+BitReader::BitReader(LZMAFILE* file)
     : file(file)
-	, buffer(0)
-	, offset(0)
+    , buffer(0)
+    , offset(0)
 {
-    auto c = getc(file);
+    //auto c = getc(file);
+    char c;
+    lzmaread(&c, sizeof(char), 1, file);
     if (c == EOF)
         // TODO: Throw a specified for this case value (not just 0)
         throw 0;
@@ -16,9 +18,11 @@ BitReader::BitReader(FILE* file)
 
 uint8_t BitReader::read_unaligned_byte()
 {
-    auto c = getc(file);
+    //auto c = getc(file);
+    char c;
+    lzmaread(&c, sizeof(char), 1, file);
     if (c == EOF)
-        // TODO: Throw a specified for this case value (not just 0)
+        // TODO: Throw a specified value for this case (not just 0)
         throw 0;
     return uint8_t(c);
 }
