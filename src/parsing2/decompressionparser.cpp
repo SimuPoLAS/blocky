@@ -1,11 +1,13 @@
 #include "decompressionparser.hpp"
 
 DecompressionParser::DecompressionParser(LZMAFILE* data, LZMAFILE* meta)
-    : data(data), meta(meta), current(0), ended(false), decompress(false)
+    : data(data), meta(meta), total(0), current(0), ended(false), decompress(false)
 {}
 
 int DecompressionParser::fill_buffer(char* buffer, int bufferSize, std::vector<CompressedSection> &sections) {
     size_t processed = 0;
+    printf("fill_buffer current   %d\n", current);
+
 
     // so the idea is, we want to read the contents of metadata UNTIL we hit
     // the start of a compressed section, we immediately return and next time
@@ -23,9 +25,12 @@ int DecompressionParser::fill_buffer(char* buffer, int bufferSize, std::vector<C
         decompress = false;
     } else {
         // this replaces JumpTo(section.START)
-        size_t diff = sections.front().Start - current;
 
-        to_read = diff > (bufferSize - current) ? (bufferSize - current) : diff;
+        size_t section_start = sections.front().Start;
+        size_t diff =  section_start- current;
+
+        to_read = diff > bufferSize ? bufferSize : diff;
+        printf("Section.START %d diff %d buffer size %d => to_read %d\n", section_start, diff, bufferSize, to_read);
 
         char c;
         int num;
@@ -39,16 +44,19 @@ int DecompressionParser::fill_buffer(char* buffer, int bufferSize, std::vector<C
             current++;
             processed++;
         }
+        total += to_read;
 
         printf("fill_buffer hit the META PART\n");
         printf("fill_buffer processed %d\n", processed);
 
         // if we're done with the whole section
-        if (current == sections.front().Start) {
+        //printf("Section.START %d\n", sections.front().Start);
+        if (current == section_start) {
             decompress = true;
             current = 0;
         }
     }
 
+    printf("fill_buffer total     %d\n", total);
     return processed;
 }

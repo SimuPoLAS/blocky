@@ -19,11 +19,13 @@ int main(int argc, char const *argv[])
     //return 0;
 
     DecompInputStream dcmpin("resources/alpha.water.bky");
+    std::noskipws(dcmpin);
 
+    printf("\n/---- MAIN DCMPIN START ----\\\n");
     while (dcmpin >> b) {
-        // do nothing
-        // TODO: write to console
+        std::cout << b;
     }
+    printf("\n\\----- MAIN DCPMIN END -----/\n");
 
     return 0;
 }

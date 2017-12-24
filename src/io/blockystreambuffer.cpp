@@ -103,12 +103,6 @@ int BlockyStreamBuffer::underflow()
     if (num <= 0)
         return EOF;
 
-    /*
-    for (size_t i = 0; i < num; i++) {
-        printf("%c", buffer[i]);
-    }
-    */
-    //int processed = decompression->parse(buffer, 0, num, last);
     int processed = num;
 
     // TODO: figure out a way to make the decompression parser say how much was

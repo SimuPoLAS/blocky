@@ -13,9 +13,11 @@ private:
     LZMAFILE* data;
     LZMAFILE* meta;
 
+    size_t total;
     size_t current;
-    bool ended;
     size_t to_read;
+
+    bool ended;
     bool decompress;
 public:
     DecompressionParser(LZMAFILE* meta, LZMAFILE* data);
