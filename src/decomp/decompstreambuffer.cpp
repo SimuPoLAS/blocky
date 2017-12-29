@@ -9,7 +9,7 @@ DecompStreamBuffer::DecompStreamBuffer()
     : opened(false)
     , last(false)
 {
-    setp(buffer, buffer + (bufferSize - 1));
+    setp(buffer, buffer + (buffer_size - 1));
     setg(buffer, buffer, buffer);
 }
 
@@ -127,7 +127,7 @@ DecompStreamBuffer* DecompStreamBuffer::open(const char* name, int open_mode)
         return 0;
     }
 
-    decompression = make_unique<DecompressionParser>(data, meta);
+    decompression = make_unique<DecompressionParser>(data, meta, sections);
 
     return this;
 }
@@ -151,7 +151,7 @@ int DecompStreamBuffer::underflow()
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
-    int num = decompression->fill_buffer(buffer, bufferSize, sections);
+    int num = decompression->fill_buffer(buffer, buffer_size);
     printf("streambuff num %d\n", num);
 
     if (num <= 0) {
@@ -174,7 +174,7 @@ int DecompStreamBuffer::flush_buffer()
     int processed = w;
 
     // copy rest to beginning of buffer
-    memcpy(buffer, buffer + processed, (bufferSize - processed));
+    memcpy(buffer, buffer + processed, (buffer_size - processed));
     pbump(-processed);
 
     return processed;

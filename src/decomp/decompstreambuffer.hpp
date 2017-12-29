@@ -24,9 +24,9 @@ class DecompStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int bufferSize = 256;
+    static const int buffer_size = 4096;
 
-    char buffer[bufferSize];
+    char buffer[buffer_size];
 
     LZMAFILE* meta;
     LZMAFILE* data;
@@ -46,7 +46,6 @@ private:
     std::vector<CompressedSection> sections;
 
     //int flush_buffer();
-
 public:
     DecompStreamBuffer();
     ~DecompStreamBuffer();

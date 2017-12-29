@@ -1,7 +1,7 @@
 #include "blockynumbersaver.hpp"
 
 void BlockyNumberSaver::initialize(int count) {
-    values = new BlockyNumber[count];
+    values.resize(count);
 }
 
 void BlockyNumberSaver::write(BlockyNumber value) {

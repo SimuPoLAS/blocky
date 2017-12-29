@@ -1,14 +1,16 @@
 #ifndef BLOCKYNUMBERSAVER_HPP
 #define BLOCKYNUMBERSAVER_HPP
 
+#include <vector>
+
 #include "blockynumber.hpp"
 
 class BlockyNumberSaver
 {
 private:
     int index;
-    BlockyNumber* values;
 public:
+    std::vector<BlockyNumber> values;
     void initialize(int count);
     void write(BlockyNumber value);
 };

@@ -27,7 +27,7 @@ public:
         return make_shared<CompressionSplitter>(compressions, width);
     }
 
-    void decompress(LZMAFILE* data, char* buffer, BitReader& reader, size_t size = 0) {
+    BlockyNumberSaver decompress(LZMAFILE* data, char* buffer, BitReader& reader/*, size_t size  = 0*/) {
         /*
         auto len = decomp[0]->values.size();
 
@@ -36,17 +36,27 @@ public:
                 decomp[0]->report(decomp[j]->values[i]);
         */
 
-        // handle case when compressed section has a sizesize of 0
-        if (size == 0) { }
+        printf("entered BlockyAlgorithm\n");
 
-        //BlockyNumber decomp[][] = BlockyNumber[size][];
-        BlockyNumberSaver decomp[size];
+        // handle case when compressed section has a size of 0
+        //if (size == 0) { }
 
+        //BlockyNumberSaver decomp[size]
+        BlockyNumberSaver decomp;
+
+        /*
         for (size_t i = 0; i < size; i++) {
             auto blockyDecomp = new BlockyDecompression(data, buffer, decomp[i], reader);
             decomp[i].initialize(blockyDecomp->metadata.ValueCount);
             // blockyDecomp->decompress();
-        }
+            printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
+        }*/
+        // TODO: figure out what the heck the OFC guys were thinking when writing this class
+        // see if this method is called only once
+        auto blockyDecomp = new BlockyDecompression(data, buffer, decomp, reader);
+        decomp.initialize(blockyDecomp->metadata.ValueCount);
+        blockyDecomp->decompress();
+        printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
     }
 };
 
