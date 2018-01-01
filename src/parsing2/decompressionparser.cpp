@@ -36,6 +36,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // if data_buffer has been fully written to our stream buffer
         if (current_data == data_buffer_size) {
             // get new data
+            // TODO: put in a lot of work to get this to function correctly
             current_numbersaver = algorithm.decompress(data, buffer, reader);
 
             // parse numbers to char to fill data_buffer

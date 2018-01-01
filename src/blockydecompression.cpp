@@ -6,38 +6,18 @@
 #include "methods/patternpingpong/patternpingpongdecompression.hpp"
 #include "methods/patternsame/patternsamedecompression.hpp"
 
-/*
-BlockyDecompression::BlockyDecompression(FILE* file)
-    : reader(BitReader(file)), file(file)
-{
-    metadata = BlockyMetadata::from_bit_stream(reader);
-    reporter_set_size(1);
-
-    methods[(int)Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
-    methods[(int)Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, values, index);
-    methods[(int)Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, values, index);
-    methods[(int)Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, values, index);
-    methods[(int)Methods::PatternOffset] = new PatternOffsetDecompression(metadata, values, index);
-
-    if (reader.read_byte(1) > 0) // use huffman (xd)
-        // TODO: meaningful exception (ecksdee)
-        exit(-501);
-}
-*/
-
-BlockyDecompression::BlockyDecompression(LZMAFILE* data, char* buffer, BlockyNumberSaver decomp, BitReader& reader)
-    // temporary
-    : data(data), reader(reader)
+BlockyDecompression::BlockyDecompression(LZMAFILE* data, BlockyNumberSaver& saver, BitReader& reader)
+    : reader(reader), saver(saver)
 {
     // TODO: get this to work
     metadata = BlockyMetadata::from_bit_stream(reader);
     reporter_set_size(1);
 
-    methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, values, index);
-    methods[(int) Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, values, index);
-    methods[(int) Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, values, index);
-    methods[(int) Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, values, index);
-    methods[(int) Methods::PatternOffset] = new PatternOffsetDecompression(metadata, values, index);
+    methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, saver.values, index);
+    methods[(int) Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, saver.values, index);
+    methods[(int) Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, saver.values, index);
+    methods[(int) Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, saver.values, index);
+    methods[(int) Methods::PatternOffset] = new PatternOffsetDecompression(metadata, saver.values, index);
 
     if (reader.read_byte(1) > 0) // use huffman (xd)
         // TODO: meaningful exception (ecksdee)
@@ -90,11 +70,6 @@ std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
     }
 }
 
-void BlockyDecompression::initialize(int value_count)
-{
-    values.resize(value_count);
-}
-
 void BlockyDecompression::decompress()
 {
     size_t value_count = 0;
@@ -118,7 +93,7 @@ void BlockyDecompression::decompress()
 void BlockyDecompression::write(BlockyNumber value)
 {
     std::cout << "[blockydecompression] write called" << "\n";
-    values[index++] = value;
+    saver.write(value);
 }
 
 void BlockyDecompression::report(BlockyNumber value)

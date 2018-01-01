@@ -53,10 +53,13 @@ public:
         }*/
         // TODO: figure out what the heck the OFC guys were thinking when writing this class
         // see if this method is called only once
-        auto blockyDecomp = new BlockyDecompression(data, buffer, decomp, reader);
+        // NOTE: apparently this is called once for each section, if the file only has scalar values
+        auto blockyDecomp = new BlockyDecompression(data, decomp, reader);
         decomp.initialize(blockyDecomp->metadata.ValueCount);
         blockyDecomp->decompress();
         printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
+
+        return decomp;
     }
 };
 
