@@ -1,13 +1,13 @@
-#ifndef BLOCKY_PARSER_HPP
-#define BLOCKY_PARSER_HPP
+#ifndef BLOCKY_SCALAR_PARSER_HPP
+#define BLOCKY_SCALAR_PARSER_HPP
 
 #include "parser.hpp"
 
-class BlockyParser
+class BlockyScalarParser
     : public Parser
 {
 public:
-    BlockyParser(Hooker& hooker)
+    BlockyScalarParser(Hooker& hooker)
         : Parser(hooker) { }
 
     /*
@@ -38,4 +38,4 @@ public:
 
 };
 
-#endif /* end of include guard: BLOCKY_PARSER_HPP */
+#endif /* end of include guard: BLOCKY_SCALAR_PARSER_HPP */

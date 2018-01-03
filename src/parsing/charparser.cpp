@@ -10,7 +10,7 @@ int CharParser::try_parse
     if (count < 1)
         return TRY_PARSE_BUFFER_SHORT;
 
-    return TRY_PARSE_OK;
+    return 1;
 }
 
 int CharParser::parse_constant

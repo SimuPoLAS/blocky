@@ -9,8 +9,47 @@ int BlockyTensorParser::try_parse
     int count
 )
 {
-	// TODO: try_parse
-	return 0;
+	int checked = 0;
+
+	if (buffer[offset + checked] != '(')
+	{
+		return TRY_PARSE_INVALID;
+	}
+
+	checked++;
+	if (checked >= count)
+		return TRY_PARSE_BUFFER_SHORT;
+
+	for (int i = 0; i < 9; i++) 
+	{
+		int result = scalarParser->try_parse(buffer, offset + checked, count - checked);
+
+		if (result == TRY_PARSE_INVALID)
+			return TRY_PARSE_INVALID;
+
+		if (result == TRY_PARSE_BUFFER_SHORT)
+			return TRY_PARSE_BUFFER_SHORT;
+
+		checked += result;
+
+		while (isspace(buffer[offset + checked]))
+		{
+			checked++;
+			if (checked >= count)
+				return TRY_PARSE_BUFFER_SHORT;
+		}
+	}
+
+	if (buffer[offset + checked] != ')')
+	{
+		return TRY_PARSE_INVALID;
+	}
+
+	checked++;
+	if (checked >= count)
+		return TRY_PARSE_BUFFER_SHORT;
+
+	return checked;
 }
 
 int BlockyTensorParser::parse_constant
@@ -20,6 +59,24 @@ int BlockyTensorParser::parse_constant
     int count
 )
 {
-	// TODO: parse_constant
-	return 0;
+	int parsed = 0;
+
+	parsed++;
+
+	for (int i = 0; i < 9; i++)
+	{
+		int result = scalarParser->parse_constant(buffer, offset + parsed, count - parsed);
+
+		if (result < 0)
+			return result;
+
+		parsed += result;
+
+		while (isspace(buffer[offset + parsed]))
+			parsed++;
+	}
+
+	parsed++;
+
+	return parsed;
 }
