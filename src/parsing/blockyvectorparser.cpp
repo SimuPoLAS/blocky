@@ -17,7 +17,7 @@ int BlockyVectorParser::try_parse
 	}
 
 	checked++;
-	if (checked > count)
+	if (checked >= count)
 		return TRY_PARSE_BUFFER_SHORT;
 
 	for (int i = 0; i < 3; i++)
@@ -35,7 +35,7 @@ int BlockyVectorParser::try_parse
 		while (isspace(buffer[offset + checked]))
 		{
 			checked++;
-			if (checked > count)
+			if (checked >= count)
 				return TRY_PARSE_BUFFER_SHORT;
 		}
 	}
@@ -46,7 +46,7 @@ int BlockyVectorParser::try_parse
 	}
 
 	checked++;
-	if (checked > count)
+	if (checked >= count)
 		return TRY_PARSE_BUFFER_SHORT;
 
 	return checked;

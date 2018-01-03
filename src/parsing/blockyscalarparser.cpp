@@ -22,7 +22,7 @@ int BlockyScalarParser::try_parse
 		number += '+';
 		checked++;
 
-		if (count < checked + 1)
+		if (checked >= count)
 			return TRY_PARSE_BUFFER_SHORT;
 	}
 	else if (buffer[offset + checked] == '-')
@@ -30,7 +30,7 @@ int BlockyScalarParser::try_parse
 		number += '-';
 		checked++;
 
-		if (count < checked + 1)
+		if (checked >= count)
 			return TRY_PARSE_BUFFER_SHORT;
 	}
 
@@ -42,7 +42,7 @@ int BlockyScalarParser::try_parse
         number += buffer[offset + checked];
         checked++;
 
-        if (count < checked + 1)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
     }
 
@@ -55,7 +55,7 @@ int BlockyScalarParser::try_parse
         number += '.';
         checked++;
 
-        if (count < checked + 1)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
 
         while
@@ -70,7 +70,7 @@ int BlockyScalarParser::try_parse
             number += buffer[offset + checked];
             checked++;
 
-            if (count < checked + 1)
+            if (checked >= count)
                 return TRY_PARSE_BUFFER_SHORT;
         }
     }
@@ -107,12 +107,12 @@ int BlockyScalarParser::parse_constant
     )
         parsed++;
 
-    if (count < parsed)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
     std::string number(buffer + offset, parsed);
-    std::cout << "number: " << number << '\n';
+    //std::cout << "number: " << number << '\n';
 
     hooker.handle_list_entry(number);
 

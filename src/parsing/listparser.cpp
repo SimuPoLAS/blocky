@@ -35,7 +35,7 @@ int ListParser::try_parse
 
     // validating for at least 1 char space
     // to check for the chevrons open "<"
-    if (count < checked + 1)
+    if (checked >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if the char equals  chevrons open "<"
@@ -61,7 +61,7 @@ int ListParser::try_parse
 
     // validating for at least length + 1 char space
     // to check for the List Type keyword and chevrons close ">"
-    if (count < checked + length + 1)
+    if (checked + length >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if at the and of the keyword, there is a chenvrons close
@@ -95,7 +95,7 @@ int ListParser::try_parse
 
     // validating for at least checked char space
     // to ensure that we are not out of buffer after whitespace checking
-    if (count < checked)
+    if (checked >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // STATUS: List<\w+>\s[\d\s]*\(\s
@@ -114,7 +114,7 @@ int ListParser::try_parse
 
         // validating for at least length + checked char space
         // to ensure, that we are not out of buffer after number checking
-        if (count < checked + length)
+        if (checked + length >= count)
             return TRY_PARSE_BUFFER_SHORT;
 
         checked += length;
@@ -129,7 +129,7 @@ int ListParser::try_parse
 
         // validating for at least checked char space
         // to ensure that we are not out of buffer after whitespace checking
-        if (count < checked)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
     }
 
@@ -188,7 +188,7 @@ int ListParser::parse_constant
         length++;
 
     // validate, that there is enough count
-    if (count < parsed + length)
+    if (parsed + length >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -213,7 +213,7 @@ int ListParser::parse_constant
     // STATUS: List<\w+>\s[\d\s]*\(\s
     //                 ^
 
-    if (count < parsed + 1)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -229,7 +229,7 @@ int ListParser::parse_constant
     )
         parsed++;
 
-    if (count < parsed)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -250,7 +250,7 @@ int ListParser::parse_constant
 
         // validating for at least length + checked char space
         // to ensure, that we are not out of buffer after number checking
-        if (count < parsed + length)
+        if (parsed + length >= count)
             // TODO: return unexpected end of buffer
             return -1;
 
@@ -274,7 +274,7 @@ int ListParser::parse_constant
 
         // validating for at least checked char space
         // to ensure that we are not out of buffer after whitespace checking
-        if (count < parsed)
+        if (parsed >= count)
             // TODO: return unexpected end of buffer
             return -1;
     }
