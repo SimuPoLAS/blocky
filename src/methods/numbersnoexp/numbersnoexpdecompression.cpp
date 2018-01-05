@@ -2,6 +2,7 @@
 
 int NumbersNoExpDecompression::read
 (
+    BlockyNumberSaver& saver,
 	BitReader & reader,
 	Block block
 )
@@ -23,7 +24,7 @@ int NumbersNoExpDecompression::read
 		BlockyNumber value = BlockyNumber(number, 0);
 		// AAAAAAAAA
 		std::cout << "[numbersnoexpdecompression]" << "\n" << value.to_s() << "\n";
-		write(value);
+		saver.write(value);
 	}
 
 	return block.Length;

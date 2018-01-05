@@ -8,7 +8,7 @@
 class BlockyNumberSaver
 {
 private:
-    int index;
+    int index = 0;
 public:
     std::vector<BlockyNumber> values;
     void initialize(int count);

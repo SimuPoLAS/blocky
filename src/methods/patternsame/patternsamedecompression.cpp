@@ -2,6 +2,7 @@
 
 int PatternSameDecompression::read
 (
+    BlockyNumberSaver& saver,
 	BitReader & reader,
 	Block block
 )
@@ -10,7 +11,7 @@ int PatternSameDecompression::read
 	for (size_t i = 0; i < block.Length; i++)
 	{
 		std::cout << "[patternsamedecompression]" << "\n" << value.to_s() << "\n";
-		write(value);
+		saver.write(value);
 	}
 	return 0;
 }

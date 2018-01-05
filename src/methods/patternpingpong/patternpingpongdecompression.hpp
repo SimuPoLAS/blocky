@@ -12,13 +12,13 @@ public:
 	PatternPingPongDecompression
 	(
 		BlockyMetadata const& metadata,
-		std::vector<BlockyNumber>& values,
 		size_t& index
 	)
-		: DecompressionMethod(metadata, values, index) { }
+		: DecompressionMethod(metadata, index) { }
 
 	int read
 	(
+        BlockyNumberSaver& saver,
 		BitReader& reader,
 		Block block
 	) override;

@@ -6,6 +6,7 @@
 #include "../bitwriter.hpp"
 #include "../bitreader.hpp"
 #include "../blockymetadata.hpp"
+#include "../blockynumbersaver.hpp"
 #include "methods.hpp"
 
 #include "../block.hpp"
@@ -13,25 +14,23 @@
 class DecompressionMethod
 {
 protected:
-	std::vector<BlockyNumber>& values;
 	size_t& index;
 	BlockyMetadata const& metadata;
 
 	DecompressionMethod
 	(
 		BlockyMetadata const& metadata,
-		std::vector<BlockyNumber>& values,
 		size_t& index
 	)
 		: metadata(metadata)
-		, values(values)
 		, index(index) { }
 
-	void write(BlockyNumber value);
+	void write(BlockyNumberSaver& saver, BlockyNumber value);
 
 public:
 	virtual int read
 	(
+        BlockyNumberSaver& saver,
 		BitReader& reader,
 		Block block
 	) = 0;

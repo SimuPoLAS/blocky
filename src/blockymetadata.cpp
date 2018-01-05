@@ -30,7 +30,9 @@ BlockyMetadata BlockyMetadata::from_bit_stream(BitReader& reader)
     metadata.MaxNeededBitsNumber = reader.read_byte(6);
     metadata.MaxNeededBitsNeededBitsNumber =
         uint8_t(floor(log2(metadata.MaxNeededBitsNumber)) + 1);
-    metadata.LargestPossibleValue = pow(2, metadata.MaxNeededBitsNumber);
+    // this is the same as in Ofc, but for some reason off by 1
+    // TODO: figure out whether the "-1" turns out to be a grave mistake
+    metadata.LargestPossibleValue = pow(2, metadata.MaxNeededBitsNumber) - 1;
     return metadata;
 }
 

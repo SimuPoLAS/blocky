@@ -1,9 +1,9 @@
 #include "decompressionmethod.hpp"
 
-void DecompressionMethod::write(BlockyNumber value)
+void DecompressionMethod::write(BlockyNumberSaver& saver, BlockyNumber value)
 {
 	std::cout << "[decompressionmethod] write called" << "\n";
-	values[index++] = value;
+	saver.values[index++] = value;
 }
 
 // Exclusive IsBlock
@@ -36,7 +36,7 @@ Block DecompressionMethod::read_default_block_header
 BlockyNumber DecompressionMethod::read_single_value_without_control_bit
 (
 	BitReader& reader,
-	BlockyMetadata const & metadata
+	BlockyMetadata const& metadata
 )
 {
 	bool is_negative;
@@ -47,7 +47,7 @@ BlockyNumber DecompressionMethod::read_single_value_without_control_bit
 
 	int64_t number = (int64_t)reader.read(metadata.MaxNeededBitsNumber);
 
-	auto is_exp_negative = reader.read_byte(1) > 0;
+	bool is_exp_negative = reader.read_byte(1) > 0;
 	// Bug (taken from Ofc): 
 	// may potentially read exp even though no exp is set
 	// same in the writing method!

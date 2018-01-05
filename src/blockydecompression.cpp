@@ -13,11 +13,11 @@ BlockyDecompression::BlockyDecompression(LZMAFILE* data, BlockyNumberSaver& save
     metadata = BlockyMetadata::from_bit_stream(reader);
     reporter_set_size(1);
 
-    methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, saver.values, index);
-    methods[(int) Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, saver.values, index);
-    methods[(int) Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, saver.values, index);
-    methods[(int) Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, saver.values, index);
-    methods[(int) Methods::PatternOffset] = new PatternOffsetDecompression(metadata, saver.values, index);
+    methods[(int) Methods::PatternSame] = new PatternOffsetDecompression(metadata, index);
+    methods[(int) Methods::PatternPingPong] = new PatternPingPongDecompression(metadata, index);
+    methods[(int) Methods::FloatSimilar] = new FloatSimilarDecompression(metadata, index);
+    methods[(int) Methods::NumbersNoExp] = new NumbersNoExpDecompression(metadata, index);
+    methods[(int) Methods::PatternOffset] = new PatternOffsetDecompression(metadata, index);
 
     if (reader.read_byte(1) > 0) // use huffman (xd)
         // TODO: meaningful exception (ecksdee)
@@ -79,7 +79,7 @@ void BlockyDecompression::decompress()
         {
             Block block = DecompressionMethod::read_default_block_header(reader, metadata);
             auto method = get_method_for_block(block);
-            value_count += method->read(reader, block);
+            value_count += method->read(saver, reader, block);
         }
         else
         {

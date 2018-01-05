@@ -2,6 +2,7 @@
 
 int FloatSimilarDecompression::read
 (
+    BlockyNumberSaver& saver,
 	BitReader & reader,
 	Block block
 )
@@ -24,7 +25,7 @@ int FloatSimilarDecompression::read
 		// TODO: how the heck does one use write
 		// AAAAAAAAA ?
 		std::cout << "[floatsimilardecompression]" << "\n" << value.to_s() << "\n";
-		write(value);
+		saver.write(value);
 	}
 
 	return block.Length;

@@ -26,7 +26,9 @@ public:
         : ValueCount(0)
         , MaxNeededBitsNumber(0)
         , MaxNeededBitsNeededBitsNumber(0)
-        , MaxNeededBitsExponent(0) { }
+        , MaxNeededBitsExponent(0)
+        , IsAbsolute(0)
+        , IsNegative(0) { }
 
     void write(BitWriter& writer);
 

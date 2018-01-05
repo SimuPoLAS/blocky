@@ -24,6 +24,7 @@ class BlockyDecompression
 private:
     LZMAFILE* data;
     size_t index = 0;
+    size_t size = 1;
     BitReader& reader;
     DecompressionMethod* methods[METHODS_COUNT];
     BlockyNumberSaver& saver;
