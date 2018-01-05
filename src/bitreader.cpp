@@ -29,7 +29,7 @@ uint8_t BitReader::read_unaligned_byte()
 
 uint64_t BitReader::read(uint8_t count)
 {
-    if (offset == 0)
+    if (offset == 8)
     {
         buffer = read_unaligned_byte();
         offset = 0;
@@ -41,12 +41,12 @@ uint64_t BitReader::read(uint8_t count)
         auto bitsLeft = 8 - offset;
         if (bitsLeft >= count)
         {
-            data |= (buffer & uint64_t(pow(2, count) - 1)) << offset;
+            data |= (buffer & uint64_t(pow(2, count) - 1)) << _offset;
             offset += count;
             buffer = uint8_t(buffer >> count);
             return data;
         }
-        data |= uint64_t(buffer << offset);
+        data |= uint64_t(buffer) << _offset;
         count -= uint8_t(bitsLeft);
         _offset += bitsLeft;
         offset = 0;
