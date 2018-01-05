@@ -41,7 +41,9 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             // TODO: to truly replace the marerreader, have some sort of
             // reimplementation of number reporting like it is done here:
             // https://github.com/SimuPoLAS/Ofc/blob/master/src/Ofc/IO/MarerReader.cs#L131
-            current_numbersaver = algorithm.decompress(data, buffer, reader);
+            // also take special note that a variable size (as is used for
+            // vectors and tensors, is yet to be implemented
+            current_numbersaver = algorithm.decompress(data, buffer, reader, 1);
 
             // parse numbers to char to fill data_buffer
             int num;

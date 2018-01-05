@@ -19,36 +19,24 @@
 #include "reporter.hpp"
 
 class BlockyDecompression
-    : public Reporter
 {
 private:
     LZMAFILE* data;
     size_t index = 0;
-    size_t size = 1;
+    size_t size;
     BitReader& reader;
     DecompressionMethod* methods[METHODS_COUNT];
     BlockyNumberSaver& saver;
-
-    // marerreporter replacement members
-    std::vector<std::string> buffer;
-    size_t reporter_position;
 
     std::unique_ptr<DecompressionMethod> get_method_for_block(Block block);
 public:
     BlockyMetadata metadata;
 
-    BlockyDecompression(LZMAFILE* data, BlockyNumberSaver& saver, BitReader& reader);
+    BlockyDecompression(LZMAFILE* data, BlockyNumberSaver& saver, BitReader& reader, size_t size);
     ~BlockyDecompression();
 
     void decompress();
     void write(BlockyNumber value);
-
-    // marerreporter replacement members
-    size_t reporter_get_size();
-    void reporter_set_size(size_t size);
-    void report(BlockyNumber value) override;
-    void report(BlockyNumber* values, size_t offset, size_t amount) override;
-    void finish() override;
 };
 
 #endif /* end of include guard: BLOCKYDECOMPRESSION_HPP */

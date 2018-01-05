@@ -27,7 +27,7 @@ public:
         return make_shared<CompressionSplitter>(compressions, width);
     }
 
-    BlockyNumberSaver decompress(LZMAFILE* data, char* buffer, BitReader& reader/*, size_t size  = 0*/) {
+    BlockyNumberSaver decompress(LZMAFILE* data, char* buffer, BitReader& reader, size_t size  = 0) {
         /*
         auto len = decomp[0]->values.size();
 
@@ -51,10 +51,9 @@ public:
             // blockyDecomp->decompress();
             printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
         }*/
-        // TODO: figure out what the heck the OFC guys were thinking when writing this class
-        // see if this method is called only once
-        // NOTE: apparently this is called once for each section, if the file only has scalar values
-        auto blockyDecomp = new BlockyDecompression(data, decomp, reader);
+        // TODO: figure out how to handle multidimensional data
+        // (vectors and tensors have a size of 3 and 9 respectively)
+        auto blockyDecomp = new BlockyDecompression(data, decomp, reader, size);
         decomp.initialize(blockyDecomp->metadata.ValueCount);
         blockyDecomp->decompress();
         printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
