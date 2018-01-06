@@ -29,23 +29,22 @@ BlockyDecompression::~BlockyDecompression()
         delete methods[i];
 }
 
-std::unique_ptr<DecompressionMethod> BlockyDecompression::get_method_for_block
-(
-    Block block
-)
+DecompressionMethod* BlockyDecompression::get_method_for_block(Block block)
 {
-    if (!block.HasPattern) return block.HasExponent 
-        ? std::unique_ptr<DecompressionMethod>(methods[(int)Methods::FloatSimilar]) 
-            : std::unique_ptr<DecompressionMethod>(methods[(int)Methods::NumbersNoExp]);
+    if (!block.HasPattern) {
+        return block.HasExponent
+            ? (methods[(int)Methods::FloatSimilar])
+            : (methods[(int)Methods::NumbersNoExp]);
+    }
 
     switch (block.Pattern)
     {
     case PatternType::Same:
-        return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternSame]);
+        return methods[(int)Methods::PatternSame];
     case PatternType::Offset:
-        return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternOffset]);
+        return methods[(int)Methods::PatternOffset];
     case PatternType::Pingpong:
-        return std::unique_ptr<DecompressionMethod>(methods[(int)Methods::PatternPingPong]);
+        return methods[(int)Methods::PatternPingPong];
     case PatternType::Reserved:
         // TODO: throw meaningful exception instead of not implemented error code
         std::cout << "invalid pattern type" << "\n";
@@ -64,8 +63,9 @@ void BlockyDecompression::decompress()
     {
         if (reader.read_byte(1) > 0) // isBlock
         {
+            // TODO: evaluate safety of pointer arithmetic
             Block block = DecompressionMethod::read_default_block_header(reader, metadata);
-            auto method = get_method_for_block(block);
+            DecompressionMethod* method = get_method_for_block(block);
             value_count += method->read(saver, reader, block);
         }
         else
@@ -79,6 +79,6 @@ void BlockyDecompression::decompress()
 
 void BlockyDecompression::write(BlockyNumber value)
 {
-    std::cout << "[blockydecompression] write called" << "\n";
+    std::cout << "[blockydecompression]" << "\n" << value.to_s() << "\n";
     saver.write(value);
 }

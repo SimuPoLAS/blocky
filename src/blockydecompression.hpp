@@ -28,7 +28,7 @@ private:
     DecompressionMethod* methods[METHODS_COUNT];
     BlockyNumberSaver& saver;
 
-    std::unique_ptr<DecompressionMethod> get_method_for_block(Block block);
+    DecompressionMethod* get_method_for_block(Block block);
 public:
     BlockyMetadata metadata;
 
