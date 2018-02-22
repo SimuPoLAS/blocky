@@ -24,7 +24,7 @@ class DecompStreamBuffer
     : public std::streambuf
 {
 private:
-    static const int buffer_size = 4096;
+    static const int buffer_size = 256;
 
     char buffer[buffer_size];
 

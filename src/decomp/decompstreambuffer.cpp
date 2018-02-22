@@ -159,9 +159,10 @@ int DecompStreamBuffer::underflow()
         return EOF;
     }
 
+    printf("num %d\n", num);
     setg(buffer, buffer, buffer + num);
 
-    //printf("\nreached underflow end\n");
+    printf("\nreached underflow end\n");
 
     return *reinterpret_cast<unsigned char*>(gptr());
 }

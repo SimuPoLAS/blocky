@@ -22,6 +22,11 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // debug placeholders
         printf("fill_buffer hit the DECOMPRESS PART\n");
 
+        sections.erase(sections.begin());
+        decompress = false;
+        buffer[0] = 'a';
+        return ++processed;
+
         // HOW IT'S SUPPOSED TO WORK:
         // the general idea is, as you can't parse specific parts of a
         // compressed sections at will (blocky decompression isn't designed
@@ -31,6 +36,8 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // parsed into char arrays and put into the data_buffer until there are
         // no more numbers in the current BlockyNUmberSaver, the whole process
         // then repeats
+
+        printf("fill_buffer total     %d\n", total);
 
         size_t data_buffer_size = data_buffer.size();
         // if data_buffer has been fully written to our stream buffer
@@ -90,7 +97,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
                 printf("fill_buffer lzmaread not work, sudden end of stream\n");
                 return 0;
             }
-            buffer[current_meta] = c;
+            buffer[current_meta % buffer_size] = c;
             current_meta++;
             processed++;
         }
