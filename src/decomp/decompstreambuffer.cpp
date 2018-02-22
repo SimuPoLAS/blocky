@@ -146,23 +146,25 @@ DecompStreamBuffer* DecompStreamBuffer::close()
 
 int DecompStreamBuffer::underflow()
 {
-    printf("\nunderflow ocurred\n");
+    printf("\n\nunderflow ocurred\n");
 
     if (!(mode & std::ios::in) || !opened)
         return EOF;
 
     int num = decompression->fill_buffer(buffer, buffer_size);
-    printf("streambuff num %d\n", num);
+    printf("streambuff  num       %d\n", num);
 
+    // if fill_buffer returned nothing or error
     if (num <= 0) {
         printf("RECEIVED EOF FROM FILL_BUFFER\n");
         return EOF;
     }
 
-    printf("num %d\n", num);
+    // set gpointer anew
+    // setg(START, CURRENT, END);
     setg(buffer, buffer, buffer + num);
 
-    printf("\nreached underflow end\n");
+    printf("reached underflow end\n\n");
 
     return *reinterpret_cast<unsigned char*>(gptr());
 }

@@ -1,11 +1,10 @@
 #include "decompressionparser.hpp"
 
 DecompressionParser::DecompressionParser(LZMAFILE* data, LZMAFILE* meta, std::vector<CompressedSection>& sections)
-    : data(data), meta(meta), total(0), current_meta(0), current_data(0), ended(false), decompress(false), sections(sections), algorithm(), reader(data) { }
+    : data(data), meta(meta), total(0), current_meta(0), current_data(0), ended(false), decompress(false), numbers_left(false), sections(sections), algorithm(), reader(data) { }
 
 int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
     size_t processed = 0;
-    printf("fill_buffer current_meta   %d\n", current_meta);
 
     // HOW IT'S SUPPOSED TO WORK:
     // so the idea is, we want to read the contents of metadata UNTIL we hit
@@ -22,11 +21,6 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // debug placeholders
         printf("fill_buffer hit the DECOMPRESS PART\n");
 
-        sections.erase(sections.begin());
-        decompress = false;
-        buffer[0] = 'a';
-        return ++processed;
-
         // HOW IT'S SUPPOSED TO WORK:
         // the general idea is, as you can't parse specific parts of a
         // compressed sections at will (blocky decompression isn't designed
@@ -37,11 +31,8 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // no more numbers in the current BlockyNUmberSaver, the whole process
         // then repeats
 
-        printf("fill_buffer total     %d\n", total);
-
-        size_t data_buffer_size = data_buffer.size();
-        // if data_buffer has been fully written to our stream buffer
-        if (current_data == data_buffer_size) {
+        // if the current_numbersave has no more numbers to be written to the buffer
+        if (!numbers_left) {
             // get new data
             // TODO: put in a lot of work to get this to function correctly
 
@@ -52,42 +43,52 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             // vectors and tensors, is yet to be implemented
             current_numbersaver = algorithm.decompress(data, buffer, reader, 1);
 
-            // parse numbers to char to fill data_buffer
-            int num;
-            // TODO: figure out whether this is enough for a string repr of double values
-            char buf[24];
-            for (size_t i = 0; i < current_numbersaver.values.size(); i++) {
-                num = sprintf(buf, "%g", current_numbersaver.values[i].reconstructed());
-                for (size_t j = 0; j < num; j++) {
-                    data_buffer.push_back(buf[j]);
-                }
-            }
-
-            current_data = 0;
         // if data_buffer still has characters to be written to stream buffer
         } else {
-            size_t diff = data_buffer_size - current_data;
-            to_read = diff > buffer_size ? buffer_size : diff;
+            current_data = 0;
+            while (current_numbersaver.has_numbers()) {
+                // parse numbers to char and fill buffer
+                int num;
+                // TODO: figure out whether this is enough for a string repr of double values
+                char buf[24];
 
-            for (int i = 0; i < to_read; i++) {
-                buffer[i] = data_buffer[i];
-                current_data++;
+                // reconstruct next number in numbersaver
+                // result gets put into buf, number of characters gets put into num
+                num = sprintf(buf, "%g", current_numbersaver.get_next().reconstructed());
+
+                // if the buffer has no more place for the current number
+                if (current_data + num >= buffer_size) {
+                    break;
+                }
+
+                // copy from buf to buffer
+                for (size_t i = 0; i < num; i++) {
+                    buffer[current_data + i] = buf[i];
+                }
+                // inc current_data
+                current_data += num;
+                // inc current_numbersaver index
+                current_numbersaver.inc_index();
+
+                // inc stat values
+                total += num;
+                processed += num;
             }
-            total += to_read;
-
+            if (!current_numbersaver.has_numbers()) {
+                decompress = false;
+            }
             printf("fill_buffer processed %d\n", processed);
         }
-
-        decompress = false;
     } else {
         // this replaces JumpTo(section.START)
         printf("fill_buffer hit the META PART\n");
+        printf("fill_buffer current_meta %d\n", current_meta);
 
         size_t start = sections.front().Start;
         size_t diff =  start - current_meta;
 
         to_read = diff > buffer_size ? buffer_size : diff;
-        printf("Section.START %d diff %d buffer size %d => to_read %d\n", start, diff, buffer_size, to_read);
+        printf("Section.START %d diff %d buffer size %d\n         => to_read   %d\n", start, diff, buffer_size, to_read);
 
         char c;
         int num;

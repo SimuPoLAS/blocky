@@ -24,9 +24,9 @@ private:
 
     bool ended;
     bool decompress;
+    bool numbers_left;
 
     std::vector<CompressedSection>& sections;
-    std::vector<char> data_buffer;
     BlockyNumberSaver current_numbersaver;
     BlockyAlgorithm algorithm;
     BitReader reader;
