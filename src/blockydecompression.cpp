@@ -59,6 +59,11 @@ DecompressionMethod* BlockyDecompression::get_method_for_block(Block block)
 void BlockyDecompression::decompress()
 {
     size_t value_count = 0;
+    // TODO: lmao this fix just stops the program on segaulting with alpha.water
+    // definitely temporary, remove ASAP
+    if (metadata.ValueCount > 2400) {
+        return;
+    }
     while (value_count < metadata.ValueCount)
     {
         if (reader.read_byte(1) > 0) // isBlock

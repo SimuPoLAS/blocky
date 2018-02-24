@@ -56,7 +56,7 @@ public:
         auto blockyDecomp = new BlockyDecompression(data, decomp, reader, size);
         decomp.initialize(blockyDecomp->metadata.ValueCount);
         blockyDecomp->decompress();
-        printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
+        printf("metadata.ValueCount for this section is %d\n", blockyDecomp->metadata.ValueCount);
 
         return decomp;
     }

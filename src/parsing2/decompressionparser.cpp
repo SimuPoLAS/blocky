@@ -22,19 +22,25 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         printf("fill_buffer hit the DECOMPRESS PART\n");
 
         // HOW IT'S SUPPOSED TO WORK:
-        // the general idea is, as you can't parse specific parts of a
-        // compressed sections at will (blocky decompression isn't designed
-        // like that), whenever the data_buffer is found empty, a new
-        // BlockyDecompression is spawned that will generate some amount of
-        // BlockyNumbers in form of a BlockyNumberSaver, and those numbers are
-        // parsed into char arrays and put into the data_buffer until there are
-        // no more numbers in the current BlockyNUmberSaver, the whole process
-        // then repeats
+        // the general idea is, as you can't parse only parts of a compressed
+        // section at will (blocky decompression isn't designed like that),
+        // whenever we hit the DECOMPRESS PART, but have no numbers to fill the
+        // buffer with, we decompress another section and save BlockyNumbers in
+        // form of a BlockyNumberSaver, those numbers are then used to fill the
+        // buffer until none are left anymore
+        // we also pop sections we are done parsing so as to not accidentally
+        // parse a section again, this entire process repeats until no sections
+        // are left to parse
 
         // if the current_numbersave has no more numbers to be written to the buffer
         if (!current_numbersaver.has_numbers()) {
             // get new data
             // TODO: put in a lot of work to get this to function correctly
+
+            // when no sections are left, we're pretty much EOF
+            if (sections.size() == 0) {
+                return -1;
+            }
 
             // TODO: to truly replace the marerreader, have some sort of
             // reimplementation of number reporting like it is done here:
@@ -42,6 +48,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             // also take special note that a variable size (as is used for
             // vectors and tensors, is yet to be implemented
             current_numbersaver = algorithm.decompress(data, buffer, reader, 1);
+            sections.erase(sections.begin());
         }
 
         current_data = 0;
@@ -77,6 +84,9 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             total += num;
             processed += num;
         }
+        // after filling the buffer with numbers, if the next iteration doesn't
+        // require further filling with the current numbersaver, we set the
+        // decompress flag to false to signal the processing of a META PART
         if (!current_numbersaver.has_numbers()) {
             decompress = false;
         }
@@ -89,21 +99,30 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         size_t start = sections.front().Start;
         size_t diff =  start - current_meta;
 
+        // which is greater? the buffer size? or the amount of characters
+        // we have yet to read? to_read gets assigned with the smaller one
         to_read = diff > buffer_size ? buffer_size : diff;
         printf("Section.START %d diff %d buffer size %d\n         => to_read   %d\n", start, diff, buffer_size, to_read);
 
         char c;
         int num;
+        // for to_read characters
         for (int i = 0; i < to_read; i++) {
+            // reads single character
             num = lzmaread(&c, sizeof(char), 1, meta);
+            // no characters read means sudden end of stream
             if (num == 0) {
                 printf("fill_buffer lzmaread not work, sudden end of stream\n");
-                return 0;
+                // TODO: error code shenanigans
+                return -2;
             }
+            // set char in buffer
             buffer[current_meta % buffer_size] = c;
+            // inc stat values
             current_meta++;
             processed++;
         }
+        // inc stat value
         total += to_read;
 
         printf("fill_buffer processed %d\n", processed);
@@ -112,7 +131,9 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         //printf("Section.START %d\n", sections.front().Start);
         if (current_meta == start) {
             decompress = true;
-            current_meta = 0;
+            // TODO: evaluate whether this needs to be reset or not after
+            // a decompressed section
+            //current_meta = 0;
         }
     }
 
