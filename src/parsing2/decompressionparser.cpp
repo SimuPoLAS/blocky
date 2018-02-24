@@ -1,7 +1,7 @@
 #include "decompressionparser.hpp"
 
 DecompressionParser::DecompressionParser(LZMAFILE* data, LZMAFILE* meta, std::vector<CompressedSection>& sections)
-    : data(data), meta(meta), total(0), current_meta(0), current_data(0), ended(false), decompress(false), numbers_left(false), sections(sections), algorithm(), reader(data) { }
+    : data(data), meta(meta), total(0), current_meta(0), current_data(0), ended(false), decompress(false), sections(sections), algorithm(), reader(data) { }
 
 int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
     size_t processed = 0;
@@ -32,7 +32,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // then repeats
 
         // if the current_numbersave has no more numbers to be written to the buffer
-        if (!numbers_left) {
+        if (!current_numbersaver.has_numbers()) {
             // get new data
             // TODO: put in a lot of work to get this to function correctly
 
@@ -42,43 +42,45 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             // also take special note that a variable size (as is used for
             // vectors and tensors, is yet to be implemented
             current_numbersaver = algorithm.decompress(data, buffer, reader, 1);
-
-        // if data_buffer still has characters to be written to stream buffer
-        } else {
-            current_data = 0;
-            while (current_numbersaver.has_numbers()) {
-                // parse numbers to char and fill buffer
-                int num;
-                // TODO: figure out whether this is enough for a string repr of double values
-                char buf[24];
-
-                // reconstruct next number in numbersaver
-                // result gets put into buf, number of characters gets put into num
-                num = sprintf(buf, "%g", current_numbersaver.get_next().reconstructed());
-
-                // if the buffer has no more place for the current number
-                if (current_data + num >= buffer_size) {
-                    break;
-                }
-
-                // copy from buf to buffer
-                for (size_t i = 0; i < num; i++) {
-                    buffer[current_data + i] = buf[i];
-                }
-                // inc current_data
-                current_data += num;
-                // inc current_numbersaver index
-                current_numbersaver.inc_index();
-
-                // inc stat values
-                total += num;
-                processed += num;
-            }
-            if (!current_numbersaver.has_numbers()) {
-                decompress = false;
-            }
-            printf("fill_buffer processed %d\n", processed);
         }
+
+        current_data = 0;
+        while (current_numbersaver.has_numbers()) {
+            // parse numbers to char and fill buffer
+            int num;
+            // TODO: figure out whether this is enough for a string repr of double values
+            char buf[24];
+
+            // reconstruct next number in numbersaver
+            // result gets put into buf, number of characters gets put into num
+            num = sprintf(buf, "%g", current_numbersaver.get_next().reconstructed());
+
+            // if the buffer (+ newline char) has no more place for the current number
+            if (current_data + num + 1 >= buffer_size) {
+                break;
+            }
+
+            // copy from buf to buffer
+            for (size_t i = 0; i < num; i++) {
+                buffer[current_data + i] = buf[i];
+            }
+            buffer[current_data + num] = '\n';
+            // inc num to account for extra newline char
+            num++;
+
+            // inc current_data
+            current_data += num;
+            // inc current_numbersaver index
+            current_numbersaver.inc_index();
+
+            // inc stat values
+            total += num;
+            processed += num;
+        }
+        if (!current_numbersaver.has_numbers()) {
+            decompress = false;
+        }
+        printf("fill_buffer processed %d\n", processed);
     } else {
         // this replaces JumpTo(section.START)
         printf("fill_buffer hit the META PART\n");

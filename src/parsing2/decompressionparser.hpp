@@ -24,7 +24,6 @@ private:
 
     bool ended;
     bool decompress;
-    bool numbers_left;
 
     std::vector<CompressedSection>& sections;
     BlockyNumberSaver current_numbersaver;
