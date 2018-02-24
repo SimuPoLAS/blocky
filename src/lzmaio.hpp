@@ -97,8 +97,8 @@ static size_t lzmaread(void* buffer, size_t size, size_t count, LZMAFILE* file) 
 			break;
 
 		if (rc != LZMA_OK) {
+            printf("lzma NOT OK return code %d\n", rc);
 			return -1;
-			printf("lzma NOT OK return code %d\n", rc);
 		}
 
 		if (file->decode.avail_in > 0) {

@@ -21,9 +21,14 @@ uint8_t BitReader::read_unaligned_byte()
     //auto c = getc(file);
     char c;
     lzmaread(&c, sizeof(char), 1, file);
-    if (c == EOF)
+    // checking an lzmaread char that is later parsed into an uint anyway
+    // is dangerous, as the next uint digit may just happen to equal EOF
+    // in it's char representation
+    // TODO: eventually bring back EOF check, but implemented in a less
+    // horribly wrong way
+    //if (uint8_t(c) == EOF)
         // TODO: Throw a specified value for this case (not just 0)
-        throw 0;
+        //throw 0;
     return uint8_t(c);
 }
 
