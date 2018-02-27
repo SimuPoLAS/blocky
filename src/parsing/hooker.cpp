@@ -167,6 +167,8 @@ void Hooker::end_file()
 		off += section->End - section->Start;
 		lzmawrite(&value, sizeof(int64_t), 1, meta);
 		lzmawrite(&section->Size, sizeof(uint8_t), 1, meta);
+		// TODO: REMOVE AFTER BUG IS FIXED
+		std::cout << "NEW SECTION AAA start " << value << "\n";
 	}
 	uint8_t buff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 	lzmawrite(buff, sizeof(uint8_t), 8, meta);

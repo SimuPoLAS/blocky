@@ -133,7 +133,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
             decompress = true;
             // TODO: evaluate whether this needs to be reset or not after
             // a decompressed section
-            //current_meta = 0;
+            current_meta = 0;
         }
     }
 
