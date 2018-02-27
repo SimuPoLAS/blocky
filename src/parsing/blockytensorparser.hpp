@@ -2,14 +2,17 @@
 #define BLOCKY_TENSOR_PARSER_HPP
 
 #include "parser.hpp"
+#include "blockyscalarparser.hpp"
 
 class BlockyTensorParser
     : public Parser
 {
 public:
     BlockyTensorParser(Hooker& hooker)
-        : Parser(hooker) { }
-
+        : Parser(hooker)
+	{
+		scalarParser = std::make_unique<BlockyScalarParser>(hooker);
+	}
     virtual int try_parse
     (
         const char* buffer,
@@ -23,7 +26,8 @@ public:
         int offset,
         int count
     );
-
+private:
+	std::unique_ptr<BlockyScalarParser> scalarParser;
 };
 
 #endif /* end of include guard: BLOCKY_TENSOR_PARSER_HPP */

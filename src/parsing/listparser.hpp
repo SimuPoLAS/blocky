@@ -5,7 +5,9 @@
 
 #include "../parsing/listtype.hpp"
 #include "parser.hpp"
-#include "blockyparser.hpp"
+#include "blockyscalarparser.hpp"
+#include "blockyvectorparser.hpp"
+#include "blockytensorparser.hpp"
 
 class ListParser
     : public Parser
@@ -15,13 +17,13 @@ private:
         This parser is used for parsing the variable part
         The variable part for the listparser is the contant part for this parser
     */
-    std::unique_ptr<BlockyParser> blockyParser;
+    std::unique_ptr<Parser> blockyParser;
 
     /*
 
     */
     bool end = true;
-	ListType type = ListType::Scalar;
+	ListType type = ListType::Anonymous;
 
 public:
     ListParser(Hooker& hooker)
@@ -56,7 +58,7 @@ public:
     );
 
     /*
-        Parses the variable part of the record by using the list_element_parser
+        Parses the variable part of the record by using the blockyParser
     */
     virtual int parse_variable
     (

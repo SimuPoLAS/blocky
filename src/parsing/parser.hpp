@@ -7,7 +7,6 @@
 #ifndef PARSER_HPP_
 #define PARSER_HPP_
 
-#define TRY_PARSE_OK 0
 #define TRY_PARSE_BUFFER_SHORT -1
 #define TRY_PARSE_INVALID -2
 

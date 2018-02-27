@@ -35,7 +35,7 @@ int ListParser::try_parse
 
     // validating for at least 1 char space
     // to check for the chevrons open "<"
-    if (count < checked + 1)
+    if (checked >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if the char equals  chevrons open "<"
@@ -61,7 +61,7 @@ int ListParser::try_parse
 
     // validating for at least length + 1 char space
     // to check for the List Type keyword and chevrons close ">"
-    if (count < checked + length + 1)
+    if (checked + length >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // validating, if at the and of the keyword, there is a chenvrons close
@@ -95,7 +95,7 @@ int ListParser::try_parse
 
     // validating for at least checked char space
     // to ensure that we are not out of buffer after whitespace checking
-    if (count < checked)
+    if (checked >= count)
         return TRY_PARSE_BUFFER_SHORT;
 
     // STATUS: List<\w+>\s[\d\s]*\(\s
@@ -114,7 +114,7 @@ int ListParser::try_parse
 
         // validating for at least length + checked char space
         // to ensure, that we are not out of buffer after number checking
-        if (count < checked + length)
+        if (checked + length >= count)
             return TRY_PARSE_BUFFER_SHORT;
 
         checked += length;
@@ -129,7 +129,7 @@ int ListParser::try_parse
 
         // validating for at least checked char space
         // to ensure that we are not out of buffer after whitespace checking
-        if (count < checked)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
     }
 
@@ -152,7 +152,7 @@ int ListParser::try_parse
 		checked++;
 
     // from this point on, we are sure that this is a list
-    return TRY_PARSE_OK;
+    return checked;
 }
 
 int ListParser::parse_constant
@@ -188,7 +188,7 @@ int ListParser::parse_constant
         length++;
 
     // validate, that there is enough count
-    if (count < parsed + length)
+    if (parsed + length >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -213,7 +213,7 @@ int ListParser::parse_constant
     // STATUS: List<\w+>\s[\d\s]*\(\s
     //                 ^
 
-    if (count < parsed + 1)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -229,7 +229,7 @@ int ListParser::parse_constant
     )
         parsed++;
 
-    if (count < parsed)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
@@ -250,7 +250,7 @@ int ListParser::parse_constant
 
         // validating for at least length + checked char space
         // to ensure, that we are not out of buffer after number checking
-        if (count < parsed + length)
+        if (parsed + length >= count)
             // TODO: return unexpected end of buffer
             return -1;
 
@@ -274,7 +274,7 @@ int ListParser::parse_constant
 
         // validating for at least checked char space
         // to ensure that we are not out of buffer after whitespace checking
-        if (count < parsed)
+        if (parsed >= count)
             // TODO: return unexpected end of buffer
             return -1;
     }
@@ -298,7 +298,25 @@ int ListParser::parse_constant
     hooker.enter_list(type, amount);
 	hooker.providedPosition -= parsed;
 
-    blockyParser = std::make_unique<BlockyParser>(hooker);
+	if (type == ListType::Scalar)
+	{
+		blockyParser = std::make_unique<BlockyScalarParser>(hooker);
+	}
+	else if (type == ListType::Vector)
+	{
+		blockyParser = std::make_unique<BlockyVectorParser>(hooker);
+	}
+	else if (type == ListType::Tensor)
+	{
+		blockyParser = std::make_unique<BlockyTensorParser>(hooker);
+	}
+	else
+	{
+		return TRY_PARSE_INVALID;
+	}
+    
+	
+	
 
     end = false;
 	
@@ -333,59 +351,50 @@ int ListParser::parse_variable
 	)
 		parsed++;
 
-    while (result > 0)
-    {
-		if (type != ListType::Scalar)
-			parsed++;
-
-		for (int i = 0; i < (int)type; i++) 
+	while (result > 0)
+	{
+		// trying to parse the variable record
+		int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
+		if (try_parse_result > 0)
 		{
-			// trying to parse the variable record
-			int try_parse_result = blockyParser->try_parse(buffer, offset + parsed, count - parsed);
-			if (try_parse_result == TRY_PARSE_OK)
-			{
-				// if it is parsable, then parse
-				result = blockyParser->parse_constant
-				(
-					buffer,
-					offset + parsed,
-					count - parsed
-				);
+			// if it is parsable, then parse
+			result = blockyParser->parse_constant
+			(
+				buffer,
+				offset + parsed,
+				count - parsed
+			);
 
-				// if an error happened, forward it
-				if (result < 0)
-					return result;
+			// if an error happened, forward it
+			if (result < 0)
+				return result;
 
-				parsed += result;
-			}
-			else
-			{
-				// if not, returning what we parsed
-				// and exclude the first parsed bracket
-				return parsed - 1;
-			}
+			parsed += result;
 		}
-
-		if (type != ListType::Scalar)
-			parsed++;
+		else
+		{
+			// if not, returning what we parsed
+			// and exclude the first parsed bracket
+			return parsed;
+		}
 
 		// parse whitespaces
 		while
-		(
-			count > parsed
-			&& isspace(buffer[offset + parsed])
-		)
+			(
+				count > parsed
+				&& isspace(buffer[offset + parsed])
+				)
 			parsed++;
 
-        // after parsing is done, we check for the escape sequence
-        if (buffer[offset + parsed] == ')')
-        {
-            // set the end of parsing
+		// after parsing is done, we check for the escape sequence
+		if (buffer[offset + parsed] == ')')
+		{
+			// set the end of parsing
 			hooker.leave_list();
-            end = true;
-            return parsed;
-        }
-    }
+			end = true;
+			return parsed;
+		}
+	}
 
     return parsed;
 }

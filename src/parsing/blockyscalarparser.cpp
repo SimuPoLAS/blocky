@@ -1,8 +1,8 @@
 #include <cctype>
 
-#include "blockyparser.hpp"
+#include "blockyscalarparser.hpp"
 
-int BlockyParser::try_parse
+int BlockyScalarParser::try_parse
 (
     const char* buffer,
     int offset,
@@ -22,7 +22,7 @@ int BlockyParser::try_parse
 		number += '+';
 		checked++;
 
-		if (count < checked + 1)
+		if (checked >= count)
 			return TRY_PARSE_BUFFER_SHORT;
 	}
 	else if (buffer[offset + checked] == '-')
@@ -30,7 +30,7 @@ int BlockyParser::try_parse
 		number += '-';
 		checked++;
 
-		if (count < checked + 1)
+		if (checked >= count)
 			return TRY_PARSE_BUFFER_SHORT;
 	}
 
@@ -42,7 +42,7 @@ int BlockyParser::try_parse
         number += buffer[offset + checked];
         checked++;
 
-        if (count < checked + 1)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
     }
 
@@ -55,7 +55,7 @@ int BlockyParser::try_parse
         number += '.';
         checked++;
 
-        if (count < checked + 1)
+        if (checked >= count)
             return TRY_PARSE_BUFFER_SHORT;
 
         while
@@ -70,7 +70,7 @@ int BlockyParser::try_parse
             number += buffer[offset + checked];
             checked++;
 
-            if (count < checked + 1)
+            if (checked >= count)
                 return TRY_PARSE_BUFFER_SHORT;
         }
     }
@@ -80,13 +80,13 @@ int BlockyParser::try_parse
         // TODO: validate, if number really is blockynumber
         // but should be true
 
-        return TRY_PARSE_OK;
+        return checked;
     }
 
     return TRY_PARSE_INVALID;
 }
 
-int BlockyParser::parse_constant
+int BlockyScalarParser::parse_constant
 (
     const char* buffer,
     int offset,
@@ -107,17 +107,14 @@ int BlockyParser::parse_constant
     )
         parsed++;
 
-    if (count < parsed)
+    if (parsed >= count)
         // TODO: return unexpected end of buffer
         return -1;
 
     std::string number(buffer + offset, parsed);
-    std::cout << "number: " << number << '\n';
+    //std::cout << "number: " << number << '\n';
 
     hooker.handle_list_entry(number);
-
-	while (count > parsed && isspace(buffer[offset + parsed]))
-		parsed++;
 
     return parsed;
 }

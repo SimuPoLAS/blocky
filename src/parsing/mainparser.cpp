@@ -83,7 +83,7 @@ int MainParser::parse
         {
 			int try_parse_result = parser->try_parse(buffer, offset + parsed, count - parsed);
             // check, if parser can parse the given buffer
-			if (try_parse_result == TRY_PARSE_OK)
+			if (try_parse_result > 0)
 			{
 				// parse constant buffer
 				result = parser->parse_constant
