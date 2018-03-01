@@ -294,9 +294,15 @@ int ListParser::parse_constant
 		parsed++;
 
 	// TODO: better solution pls >.<
+    // since providedPosition is a reference
+    // it also changes total_parsed in MainParser
+    // so this solution has to be edited or completely changed
+    printf("parsed: %d\n", parsed);
 	hooker.providedPosition += parsed;
+    printf("providedPosition added: %d\n", hooker.providedPosition);
     hooker.enter_list(type, amount);
 	hooker.providedPosition -= parsed;
+    printf("providedPosition subracted: %d\n", hooker.providedPosition);
 
 	if (type == ListType::Scalar)
 	{
@@ -390,7 +396,13 @@ int ListParser::parse_variable
 		if (buffer[offset + parsed] == ')')
 		{
 			// set the end of parsing
+            // TODO: again this tedious solution >.<
+            // should obviously fixed too
+            // second occurence (first one is line 301)
+            hooker.providedPosition += parsed;
 			hooker.leave_list();
+            hooker.providedPosition -= parsed;
+
 			end = true;
 			return parsed;
 		}

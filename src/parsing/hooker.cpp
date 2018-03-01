@@ -85,6 +85,7 @@ void Hooker::enter_list(ListType type, int capacity)
         // TODO: throw meaningful exception, not just zero
         throw 0;
     start = providedPosition;
+    std::cout << "PROVIDEDPOSITION AAAAAAAAA position " << providedPosition << "\n";
 }
 
 void Hooker::handle_list_entry(string value)
@@ -169,6 +170,8 @@ void Hooker::end_file()
 		lzmawrite(&section->Size, sizeof(uint8_t), 1, meta);
 		// TODO: REMOVE AFTER BUG IS FIXED
 		std::cout << "NEW SECTION AAA start " << value << "\n";
+        printf("start: %d; end: %d\n", section->Start, section->End);
+        printf("off: %d\n", off);
 	}
 	uint8_t buff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 	lzmawrite(buff, sizeof(uint8_t), 8, meta);
