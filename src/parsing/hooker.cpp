@@ -165,7 +165,10 @@ void Hooker::end_file()
 	{
 		auto section = CompessedDataSections[i];
 		int64_t value = section->Start - off;
-		off += section->End - section->Start;
+		// off behaviour changed to represent the relative amount of bytes from the
+		// last section that have to be read until the next section starts, before it
+		//  meant the absolute position of the section START
+		off = section->End;
 		lzmawrite(&value, sizeof(int64_t), 1, meta);
 		lzmawrite(&section->Size, sizeof(uint8_t), 1, meta);
 		// TODO: REMOVE AFTER BUG IS FIXED
