@@ -22,7 +22,7 @@ int NumbersNoExpDecompression::read
 		// TODO: check whether this is actually real? no idea how to interact with blockynumber
 		// when it's a number with no exp
 		BlockyNumber value = BlockyNumber(number, 0);
-		// AAAAAAAAA
+
 		std::cout << "[numbersnoexpdecompression]" << "\n" << value.to_s() << "\n";
 		saver.write(value);
 	}

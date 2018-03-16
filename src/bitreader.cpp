@@ -20,7 +20,7 @@ uint8_t BitReader::read_unaligned_byte()
 {
     //auto c = getc(file);
     char c;
-    lzmaread(&c, sizeof(char), 1, file);
+    int num = lzmaread(&c, sizeof(char), 1, file);
     // checking an lzmaread char that is later parsed into an uint anyway
     // is dangerous, as the next uint digit may just happen to equal EOF
     // in it's char representation
@@ -29,6 +29,10 @@ uint8_t BitReader::read_unaligned_byte()
     //if (uint8_t(c) == EOF)
         // TODO: Throw a specified value for this case (not just 0)
         //throw 0;
+    // edit: actual solution to the above, as suggested by @UgiNyaa
+    if (num == 0) {
+        throw 0;
+    }
     return uint8_t(c);
 }
 

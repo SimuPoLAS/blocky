@@ -106,6 +106,7 @@ int BlockyStreamBuffer::underflow()
     int processed = num;
 
     // TODO: figure out a way to make the decompression parser say how much was
+    // edit: done
     // processed and set the get area pointer ACCORDINGLY
     setg(buffer, buffer, buffer + processed);
 

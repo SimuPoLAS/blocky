@@ -35,7 +35,6 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
         // if the current_numbersave has no more numbers to be written to the buffer
         if (!current_numbersaver.has_numbers()) {
             // get new data
-            // TODO: put in a lot of work to get this to function correctly
 
             // when no sections are left, we're pretty much EOF
             if (sections.size() == 0) {
@@ -117,7 +116,7 @@ int DecompressionParser::fill_buffer(char* buffer, int buffer_size) {
                 return -2;
             }
             // set char in buffer
-            buffer[current_meta % buffer_size] = c;
+            buffer[i] = c;
             // inc stat values
             current_meta++;
             processed++;
