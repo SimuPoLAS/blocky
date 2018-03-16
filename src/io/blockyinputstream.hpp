@@ -18,16 +18,16 @@ public:
         : std::istream(&buffer)
         , BlockyStreamBase(name, open_mode) {}
 
-	BlockyStreamBuffer* rdbuf()
-	{
-		std::cout << "rdbuf (in)" << '\n';
-		return BlockyStreamBase::rdbuf();
-	}
+    BlockyStreamBuffer* rdbuf()
+    {
+        std::cout << "rdbuf (in)" << '\n';
+        return BlockyStreamBase::rdbuf();
+    }
 
-	void open(const char* name, int open_mode = std::ios::in)
-	{
-		BlockyStreamBase::open(name, open_mode);
-	}
+    void open(const char* name, int open_mode = std::ios::in)
+    {
+        BlockyStreamBase::open(name, open_mode);
+    }
 };
 
 #endif /* end of include guard: BLOCKYINPUTSTREAM_HPP */

@@ -6,7 +6,9 @@
 #include <string>
 
 #include "../lzmaio.hpp"
+// rename mainparser to compressionparser like before
 #include "../parsing/mainparser.hpp"
+//#include "../parsing2/decompressionparser.hpp"
 
 using namespace std;
 
@@ -19,13 +21,14 @@ private:
     char buffer[bufferSize];
 
     LZMAFILE* data;
-	LZMAFILE* meta;
+    LZMAFILE* meta;
 
     bool opened;
     int mode;
-	bool last = false;
+    bool last = false;
 
     unique_ptr<MainParser> parser;
+    //unique_ptr<DecompressionParser> decompression;
 
     // uint32_t width;
     // uint32_t position;

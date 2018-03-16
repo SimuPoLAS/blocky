@@ -1,4 +1,9 @@
 // TODO: remove underline
+// TODO: what are you waiting for, remove them! you can do it!
+// - noby
+// TODO: think of a good naming convention for the de-/compression parsers
+// as parser as a name is already taken, I opted for decompression.hpp, maybe do the same for this file?
+// - noby
 #ifndef PARSER_HPP_
 #define PARSER_HPP_
 
@@ -40,7 +45,7 @@ public:
 
     /*
         This method decides whether the provided buffer can be parsed or not
-        It communicates this information via the return bool
+        It communicates this information via the returned bool
 
         It MUST be called first
     */
@@ -69,7 +74,7 @@ public:
     ) = 0;
 
     /*
-        This method parses the varable part of the provided record
+        This method parses the variable part of the provided record
 
         If the record spans over the size of a buffer:
         * it MUST called every time the buffer is refilled

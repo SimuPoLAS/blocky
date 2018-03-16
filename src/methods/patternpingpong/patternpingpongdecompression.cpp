@@ -2,6 +2,7 @@
 
 int PatternPingPongDecompression::read
 (
+    BlockyNumberSaver& saver,
 	BitReader & reader,
 	Block block
 )
@@ -16,7 +17,7 @@ int PatternPingPongDecompression::read
 	{
 		BlockyNumber& value = i % (pp_length * 2) >= pp_length ? value2 : value1;
 		std::cout << "[patterndingdongdecompression]" << "\n" << value.to_s() << "\n";
-		write(value);
+		saver.write(value);
 	}
 	return 0;
 }

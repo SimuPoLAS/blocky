@@ -2,25 +2,30 @@
 #include <fstream>
 
 #include "io/blockyoutputstream.hpp"
-#include "io/blockyinputstream.hpp"
+#include "decomp/decompinputstream.hpp"
 
 int main(int argc, char const *argv[])
 {
-    BlockyOutputStream bky("resources/U.bky");
-    ifstream file("resources/U", std::ios::binary);
+    BlockyOutputStream bkyout("resources/alpha.water.bky");
+    ifstream file("resources/alpha.water", std::ios::binary);
     std::noskipws(file);
 
     uint8_t b;
-    while(file >> b)
-        bky << b;
+    while (file >> b)
+        bkyout << b;
 
-	//BlockyInputStream bkyin("resources/alpha.water.bky");
-	//ofstream filein("resources/alpha.water.bky.original");
-	//std::noskipws(filein);
+    bkyout.close();
 
-	//uint8_t bin;
-	//while (bkyin >> bin)
-	//	filein << bin;
+    //return 0;
+
+    DecompInputStream dcmpin("resources/alpha.water.bky");
+    std::noskipws(dcmpin);
+
+    printf("\n/---- MAIN DCMPIN START ----\\\n");
+    while (dcmpin >> b) {
+        std::cout << b;
+    }
+    printf("\n\\----- MAIN DCPMIN END -----/\n");
 
     return 0;
 }

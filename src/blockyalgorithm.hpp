@@ -7,6 +7,8 @@
 #include "reporter.hpp"
 #include "blockycompression.hpp"
 #include "blockydecompression.hpp"
+#include "blockynumber.hpp"
+#include "blockynumbersaver.hpp"
 #include "compressionsplitter.hpp"
 
 using namespace std;
@@ -20,35 +22,44 @@ public:
             return make_shared<BlockyCompression>(file);
 
         auto compressions = std::vector<shared_ptr<Reporter>>(width);
-		for (size_t i = 0; i < width; i++)
-			compressions[i] = make_shared<BlockyCompression>(file);
-		return make_shared<CompressionSplitter>(compressions, width);
+        for (size_t i = 0; i < width; i++)
+            compressions[i] = make_shared<BlockyCompression>(file);
+        return make_shared<CompressionSplitter>(compressions, width);
     }
 
-	void decompress(FILE* file, size_t width = 1) {
-		if (width == 0)
-		{
-			BlockyDecompression(file).decompress();
-			return;
-		}
+    BlockyNumberSaver decompress(LZMAFILE* data, char* buffer, BitReader& reader, size_t size  = 0) {
+        /*
+        auto len = decomp[0]->values.size();
 
-		std::vector<shared_ptr<BlockyDecompression>> decomp;
-		decomp.resize(width);
+        for (size_t i = 0; i < len; i++)
+            for (size_t j = 0; j < decomp.size(); j++)
+                decomp[0]->report(decomp[j]->values[i]);
+        */
 
-		// the norbi way (using good code)
-		for (size_t i = 0; i < width; i++)
-		{
-			decomp[i] = make_shared<BlockyDecompression>(file);
-			decomp[i]->initialize(decomp[i]->metadata.ValueCount);
-			decomp[i]->decompress();
-		}
+        printf("entered BlockyAlgorithm\n");
 
-		auto len = decomp[0]->values.size();
+        // handle case when compressed section has a size of 0
+        //if (size == 0) { }
 
-		for (size_t i = 0; i < len; i++)
-			for (size_t j = 0; j < decomp.size(); j++)
-				decomp[0]->report(decomp[j]->values[i]);
-	}
+        //BlockyNumberSaver decomp[size]
+        BlockyNumberSaver decomp;
+
+        /*
+        for (size_t i = 0; i < size; i++) {
+            auto blockyDecomp = new BlockyDecompression(data, buffer, decomp[i], reader);
+            decomp[i].initialize(blockyDecomp->metadata.ValueCount);
+            // blockyDecomp->decompress();
+            printf("metadata.ValueCount for this section is %d", blockyDecomp->metadata.ValueCount);
+        }*/
+        // TODO: figure out how to handle multidimensional data
+        // (vectors and tensors have a size of 3 and 9 respectively)
+        auto blockyDecomp = new BlockyDecompression(data, decomp, reader, size);
+        decomp.initialize(blockyDecomp->metadata.ValueCount);
+        blockyDecomp->decompress();
+        printf("metadata.ValueCount for this section is %d\n", blockyDecomp->metadata.ValueCount);
+
+        return decomp;
+    }
 };
 
 #endif /* end of include guard: BLOCKYALGORITHM_HPP */

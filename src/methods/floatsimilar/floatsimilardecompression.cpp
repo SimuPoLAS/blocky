@@ -2,6 +2,7 @@
 
 int FloatSimilarDecompression::read
 (
+    BlockyNumberSaver& saver,
 	BitReader & reader,
 	Block block
 )
@@ -18,13 +19,15 @@ int FloatSimilarDecompression::read
 	
 	for (size_t i = 0; i < block.Length; i++)
 	{
-		int64_t number = ((int64_t)reader.read(metadata.MaxNeededBitsNeededBitsNumber)) * (is_negative ? -1 : 1);
+        if (!has_absolute_sign) {
+            is_negative = reader.read(1) > 0;
+        }
+
+		int64_t number = ((int64_t)reader.read(metadata.MaxNeededBitsNumber)) * (is_negative ? -1 : 1);
 		int16_t exp = block.Exponent;
 		auto value = BlockyNumber(number, exp);
-		// TODO: how the heck does one use write
-		// AAAAAAAAA ?
 		std::cout << "[floatsimilardecompression]" << "\n" << value.to_s() << "\n";
-		write(value);
+		saver.write(value);
 	}
 
 	return block.Length;

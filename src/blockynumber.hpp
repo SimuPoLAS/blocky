@@ -13,7 +13,7 @@ struct BlockyNumber
     uint8_t NeededBitsNumber;
     uint8_t NeededBitsExponent;
 
-	BlockyNumber();
+    BlockyNumber();
     BlockyNumber(int64_t number, int16_t exponent);
 
     BlockyNumber& add_each(BlockyNumber const& other);
