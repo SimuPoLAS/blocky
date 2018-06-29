@@ -1,4 +1,4 @@
-)# blocky
+# blocky
 
 
 ## Compression implementation
