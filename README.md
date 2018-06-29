@@ -16,8 +16,10 @@ In the **OpenFOAM-x.x/src/OpenFOAM/IOStrems/FStream** folder you need to change 
 #### New code:
 `ofPtr_ = new BlockyOutputStream((pathname + ".bky").c_str());`
 
+![Implemented code](https://github.com/SimuPoLAS/blocky/blob/master/resources/implement.png)
+
 The *files* text file within the **OpenFOAM-x.x/src/OpenFOAM/Make** folder has to contain all the .cpp files inside the folder **OpenFOAM-x.x/src/OpenFOAM/IOStreams/Blocky**:
 
-
+![Included files](https://github.com/SimuPoLAS/blocky/blob/master/resources/files.png)
 
 ## Decompression implementation
