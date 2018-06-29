@@ -16,7 +16,7 @@ In the **OpenFOAM-x.x/src/OpenFOAM/IOStrems/FStream** folder you need to change 
 #### New code:
 `ofPtr_ = new BlockyOutputStream((pathname + ".bky").c_str());`
 
-The *files* text file within the **OpenFOAM-x.x/src/OpenFOAM/Make** folder has to contain all the used blocky files:
+The *files* text file within the **OpenFOAM-x.x/src/OpenFOAM/Make** folder has to contain all the .cpp files inside the folder **OpenFOAM-x.x/src/OpenFOAM/IOStreams/Blocky**:
 
 
 
